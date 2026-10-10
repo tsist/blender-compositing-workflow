@@ -1,0 +1,21 @@
+name: Verify source release
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  static-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Verify public source inventory
+        run: python scripts/verify_release.py
+      - name: Build deterministic source archives
+        run: python scripts/build_release.py
+      - name: Confirm repeat build
+        run: python scripts/build_release.py

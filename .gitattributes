@@ -1,0 +1,2 @@
+# Preserve every published byte, including runtime hashes and deterministic ZIP inputs.
+* -text

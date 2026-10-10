@@ -1,0 +1,1361 @@
+{
+  "release": "0.4.0",
+  "cli": "0.63.0",
+  "addon": "0.4.0",
+  "runtime_identity": "9566cec1c2a9bf6db34c3085d964806b8ce7bafed1e0ae145bbb5259d655e629",
+  "runtime_documents": [
+    {
+      "file": "tools/blenderctl/adaptive_sampling.py",
+      "expected_sha256": "f148577f5f771db1a6ccd2102382ecae2d4370882379285dfdfedf3fbd17b220"
+    },
+    {
+      "file": "tools/blenderctl/asset_contract.py",
+      "expected_sha256": "e3a1273d94296a9afa791537ed0ccd40d98d2d42893b79459b27c916d12cf1d8"
+    },
+    {
+      "file": "tools/blenderctl/asset_previews.py",
+      "expected_sha256": "53b13bdc964935ff077631bd009923d3ec699cdc61968d5c69b4b3c010a0a51c"
+    },
+    {
+      "file": "tools/blenderctl/asset_validation.py",
+      "expected_sha256": "047db68732534da4217c01106f95ec5481da0203aceb0474ae0f779d67d65be7"
+    },
+    {
+      "file": "tools/blenderctl/assets.py",
+      "expected_sha256": "15ce8e4f4c25688c1c861e7bedd0b7f48bfd5f67c2abf8995b300b441e70e1a1"
+    },
+    {
+      "file": "tools/blenderctl/bootstrap.py",
+      "expected_sha256": "e91f623858909bed006f70cbe0b09f25acd946dfad388aabe526b11f0d83366e"
+    },
+    {
+      "file": "tools/blenderctl/cli.py",
+      "expected_sha256": "7dd2c78c0408119772057799a64b04a5da16e542a2804a3bbd12e9ad7a88beab"
+    },
+    {
+      "file": "tools/blenderctl/compositing_batch.py",
+      "expected_sha256": "fefa9aeaffae174284e9b68efca6cf410b94719509fa6f18dcd709cf99addb39"
+    },
+    {
+      "file": "tools/blenderctl/compositing_batch_contract.py",
+      "expected_sha256": "f76cd6ab3c4f88afe26ec74f06923af0c71c250951214cbf790cf960b658fa1b"
+    },
+    {
+      "file": "tools/blenderctl/compositing_encode.py",
+      "expected_sha256": "2183203d2d5cfd8fdfc81c1a8dc67a155f3987d561abcb9f9dcdcf49b3ddebce"
+    },
+    {
+      "file": "tools/blenderctl/compositing_encode_contract.py",
+      "expected_sha256": "1239827cf28674588349577eff2d511ac8b5b4eaef14211b647332df7f449bcd"
+    },
+    {
+      "file": "tools/blenderctl/compositing_encode_public.py",
+      "expected_sha256": "51ff18c290b30ce2d4a1b377c68aeb64dd492de014a99845e101ac79d2dafb3b"
+    },
+    {
+      "file": "tools/blenderctl/compositing_identity.py",
+      "expected_sha256": "48cbe5fd66634e1cabc25c1a39960e97182a303f4be0f3fd2c10702cd4492919"
+    },
+    {
+      "file": "tools/blenderctl/compositing_interface.py",
+      "expected_sha256": "28430c1536c9d6f5a7a597ce1c14afec56cacd7af1f36cc130f86182f2dedd94"
+    },
+    {
+      "file": "tools/blenderctl/compositing_m5_guards.py",
+      "expected_sha256": "63d73a59d29588abdc9d15f87f1fb0735ec688cb6a1c30ad2a269bf10c73406e"
+    },
+    {
+      "file": "tools/blenderctl/compositing_m5_schema_draft.py",
+      "expected_sha256": "58718622ef9d33054c77dad8d9f9f5458507682b6d0d2e82cbe297eafaf8b4a1"
+    },
+    {
+      "file": "tools/blenderctl/compositing_media.py",
+      "expected_sha256": "e0789873cb86e517f1225a0bc9ec53e09450cf13153b08330f50057bbfdaf3ac"
+    },
+    {
+      "file": "tools/blenderctl/compositing_movie.py",
+      "expected_sha256": "2018c0d937d6a2fd03d997b0b45a8da51d771ab3eb372795422f7c3d2457b8ec"
+    },
+    {
+      "file": "tools/blenderctl/compositing_orchestration_interface.py",
+      "expected_sha256": "ab3e24899998825caea58156415fccb57a3899f131134521098775d72a6aebdf"
+    },
+    {
+      "file": "tools/blenderctl/compositing_study.py",
+      "expected_sha256": "2591972a299012e098b5fc6e9c4c67c5fc4af8ffdb9e30200a45bb3eb612d8df"
+    },
+    {
+      "file": "tools/blenderctl/compositing_template_run.py",
+      "expected_sha256": "e4c43c53639894da490f3b1663bdaace066823a6fcf2bdcb351db29aee7bad75"
+    },
+    {
+      "file": "tools/blenderctl/compositing_template_run_contract.py",
+      "expected_sha256": "2f8c09c8969a924016b8b347a3191a598fdfdbd9a1f7e9574dce5c33f475262c"
+    },
+    {
+      "file": "tools/blenderctl/compositing_templates.py",
+      "expected_sha256": "3fd99e36ba0f929f26e8f508e1da03b4f77fa681db6af3a6152c6a432accfd5e"
+    },
+    {
+      "file": "tools/blenderctl/compositing_temporal.py",
+      "expected_sha256": "48f8fec8d9abc25136d9aad624bb624f84345d32515d3d2a32d31fc49d70d958"
+    },
+    {
+      "file": "tools/blenderctl/compositing_verifier.py",
+      "expected_sha256": "c33df6a8eb6e23559969af196f9654b088ce1bd1d09faac75d3afaa9ccb95a7e"
+    },
+    {
+      "file": "tools/blenderctl/compositing_workflow.py",
+      "expected_sha256": "8c1e60a48e0dc2d25dbbf379e78569b67c433bfbeddee7d866fe25129f089c17"
+    },
+    {
+      "file": "tools/blenderctl/compositing_workflow_contract.py",
+      "expected_sha256": "a0f3929aa5578bfb3ae112d2b399ebb3738db34bdd8524f2cc143bbc312975ec"
+    },
+    {
+      "file": "tools/blenderctl/curve_contract.py",
+      "expected_sha256": "bf4289b0cbd21861d08679eab56b9f6a7d51330eed355e5c54a69bfa05a1e0c1"
+    },
+    {
+      "file": "tools/blenderctl/dependencies.py",
+      "expected_sha256": "7bd212cf44e715edc8c693413dfce4ccc32fc2a83808fed3dd46475b137c8df5"
+    },
+    {
+      "file": "tools/blenderctl/dependency_contract.py",
+      "expected_sha256": "2a3a1d173490b7af656b8deee4cae7d777f2ece58f53c17a4d476bb14a1aeb4e"
+    },
+    {
+      "file": "tools/blenderctl/dependency_relink.py",
+      "expected_sha256": "b0090fde4d33a1448dfd7a7d0ecc747b0a7f06e7bd27e568467a8a6ad4bf03ff"
+    },
+    {
+      "file": "tools/blenderctl/directory_handles.py",
+      "expected_sha256": "91abeb61513e7e9d6dca13bdd94143d87d0cf17400ff359384f0d61ea1899b5e"
+    },
+    {
+      "file": "tools/blenderctl/driver_contract.py",
+      "expected_sha256": "08848753f342e523e81c98bb133c1c876f4b1b4f72875c100a695fd29518405d"
+    },
+    {
+      "file": "tools/blenderctl/driver_math.py",
+      "expected_sha256": "e5236871a599826581fc837a5d398c12bb869812d1c36e3474dda9c0dfc1db06"
+    },
+    {
+      "file": "tools/blenderctl/drivers.py",
+      "expected_sha256": "bbda9d0b49ca76e2f8e09ba287669b6d6ea6ca45f9d93daecbb0b3cd7889c1f4"
+    },
+    {
+      "file": "tools/blenderctl/exchange.py",
+      "expected_sha256": "a259b5c1b1a9f308c94befe1781a5f20e839d21576c79b10408565fceb3a128f"
+    },
+    {
+      "file": "tools/blenderctl/exchange_contract.py",
+      "expected_sha256": "4d420d2cac2d29303ab08c8e947f98bbcd40be62d618fa05fb8740adc70a4760"
+    },
+    {
+      "file": "tools/blenderctl/execution_contract.py",
+      "expected_sha256": "61aa44b45696bdc5562a319437fd09667a8cee593a77c591ec038f5ede180d18"
+    },
+    {
+      "file": "tools/blenderctl/extensions.py",
+      "expected_sha256": "69c6641cf5b9844ba7215728aa515478788316dacce377a17fcf22b348c14f47"
+    },
+    {
+      "file": "tools/blenderctl/fbx_clock.py",
+      "expected_sha256": "6c9b656129428b09ce5819112e7a878595904c17b9a0ad8d6b7b12cebc29c86d"
+    },
+    {
+      "file": "tools/blenderctl/fbx_compat.py",
+      "expected_sha256": "ffb28ff96538e492d1f5eb7d39b126ea46cfe871479b4f40f6aeec5bacb0af9e"
+    },
+    {
+      "file": "tools/blenderctl/filesystem.py",
+      "expected_sha256": "d8cb1f07feb9dac590ea1103d7d6c0a8c0fcdca6377c49b57cce07e0369bed0e"
+    },
+    {
+      "file": "tools/blenderctl/font_binary.py",
+      "expected_sha256": "4083f7ca7e6ac5bc0fcb78851fdadcdce25cc52f596926b3fc1fb6355c47c596"
+    },
+    {
+      "file": "tools/blenderctl/font_curves.py",
+      "expected_sha256": "d2dbd9b16b82f04bbb2cef787d47aa5834d5b70878e241209fe03d39fec0d178"
+    },
+    {
+      "file": "tools/blenderctl/geometry_cache_layout.py",
+      "expected_sha256": "52554037defe3c962ad3f0f9895f8416dc922584252fe4d521fb35a1934fdd39"
+    },
+    {
+      "file": "tools/blenderctl/geometry_cache_reader.py",
+      "expected_sha256": "11ce7e66666d6eb9769fb12d3a7b4ccd3931cdd6ac7ff73e68aa35762a32d859"
+    },
+    {
+      "file": "tools/blenderctl/geometry_identity.py",
+      "expected_sha256": "0d248906e3b81f5891315c8e2e2af51e66520463fcb2a6ddfbb3c7e85c1bac02"
+    },
+    {
+      "file": "tools/blenderctl/geometry_interface.py",
+      "expected_sha256": "9f26e67577f252b87ee78a52d56da41e480b84467a168b14b17187a4533e6ce9"
+    },
+    {
+      "file": "tools/blenderctl/geometry_session.py",
+      "expected_sha256": "09deebe731dd501c03af72f27e8d498bcf694c327f169f09ca0e0df3cd54e323"
+    },
+    {
+      "file": "tools/blenderctl/geometry_temporal.py",
+      "expected_sha256": "5a2329bdb52828ad79df7662d8751ebd69f67c266322d684fbff9283d3f0fc6a"
+    },
+    {
+      "file": "tools/blenderctl/geometry_verifier.py",
+      "expected_sha256": "dc7c7b3048f133eab37681ed25ad2ee7b698232fb3e0566f87fc2c0b5277443a"
+    },
+    {
+      "file": "tools/blenderctl/geometry_workflow.py",
+      "expected_sha256": "85d972479501f897afe1a41985b52bfaecb9b4a8871f01ef76c46d01c5cb25fd"
+    },
+    {
+      "file": "tools/blenderctl/geometry_workflow_contract.py",
+      "expected_sha256": "3feca73f0c11bf33c40ff452f4058e3be76a0a4c6575f29199fa2016237e208c"
+    },
+    {
+      "file": "tools/blenderctl/glb_clock.py",
+      "expected_sha256": "436163ce65913d293dc3c255f28ba15559caf1f2cf5e6833b94a5bf81abdac30"
+    },
+    {
+      "file": "tools/blenderctl/hair.py",
+      "expected_sha256": "d255a35c96119c07b89a333982e69ecba95a0488833cb77bd93d2bddda7ec54f"
+    },
+    {
+      "file": "tools/blenderctl/hair_collision.py",
+      "expected_sha256": "57f7d06b1cf7c7f0e30ec0d24a2ef26fbe73d4153c56f214153594d6d2557e14"
+    },
+    {
+      "file": "tools/blenderctl/hair_contract.py",
+      "expected_sha256": "c349999bfc71e68f2f9d02cb9b7847d20caa895166872bb9c0efb50726cb2af2"
+    },
+    {
+      "file": "tools/blenderctl/hair_density.py",
+      "expected_sha256": "a556da7d5bc039ee724e8f747c1eb27a5a752137e4fe1b03bc0a560d02fffa1a"
+    },
+    {
+      "file": "tools/blenderctl/hair_dynamics.py",
+      "expected_sha256": "7c4ace00cc52ecde89f93beb493d379afb7f5a1ba7fb309a6107d3d39dc237c4"
+    },
+    {
+      "file": "tools/blenderctl/hair_dynamics_contract.py",
+      "expected_sha256": "ffce203dfea964c028332f229f33473106624dfb8f310954f861bae8d16f1124"
+    },
+    {
+      "file": "tools/blenderctl/hair_shape.py",
+      "expected_sha256": "7bb80557c83e9fc1f6868997f8ef48ad75b54667f60e576cc2f3702710fb9cae"
+    },
+    {
+      "file": "tools/blenderctl/hair_shape_contract.py",
+      "expected_sha256": "279e0891e57d65681d1f5b6ab9d7a0fc8369869f56214c56ff38e336b7d47195"
+    },
+    {
+      "file": "tools/blenderctl/hair_shape_nodes.py",
+      "expected_sha256": "276199582afddb5bc58657c96d1e9db05de689e43482941f07314c66d5d7cbeb"
+    },
+    {
+      "file": "tools/blenderctl/hair_surface.py",
+      "expected_sha256": "c5835dc1e68d07fd13e6b65ade46e03e4e6b399e31c5abcec0388a709f992548"
+    },
+    {
+      "file": "tools/blenderctl/hair_volume.py",
+      "expected_sha256": "239f66b84b6e2f86923d244ead041304b9884f042d64b77e6dc357896924a273"
+    },
+    {
+      "file": "tools/blenderctl/hair_volume_contract.py",
+      "expected_sha256": "f52a649220ff4371935d216a333db0190bff34b17dc9f2f678b43b8e06b97fd4"
+    },
+    {
+      "file": "tools/blenderctl/hair_voxels.py",
+      "expected_sha256": "606f49731099429e27a2f909942fc9deb31aadf59896db43d759353d10c385f4"
+    },
+    {
+      "file": "tools/blenderctl/inspection.py",
+      "expected_sha256": "6620586b037744e32662d1dcc6f40e0c57a5cf53341023ee05922316d8dac740"
+    },
+    {
+      "file": "tools/blenderctl/installation.py",
+      "expected_sha256": "99c97dfe89663103492bd8024bed52399dcfcd9611043cf9608ff9eea8c39c1e"
+    },
+    {
+      "file": "tools/blenderctl/isolated_script_worker.py",
+      "expected_sha256": "a4b6d86cb12edf5227463d96465ef7df8b5d569aa82c4a5ad61fd9408856a315"
+    },
+    {
+      "file": "tools/blenderctl/isolation_lifecycle.py",
+      "expected_sha256": "890c2264b55a16206a0515fa89bb8851f194248129bc64a36f2a6b6bd6586f8d"
+    },
+    {
+      "file": "tools/blenderctl/library.py",
+      "expected_sha256": "ba2056bb6946cfc69fc483ceeb74b393be031b77e03eb623f553d25e51c65687"
+    },
+    {
+      "file": "tools/blenderctl/lighting_batch.py",
+      "expected_sha256": "dc2ca558b7a820838afd3070406699371a9b6c27a26339708d0b6c4cf786db21"
+    },
+    {
+      "file": "tools/blenderctl/lighting_identity.py",
+      "expected_sha256": "8f1b4e22fc81d3c21293f8e762e58c29ba102333ea5a0211365d75c36bbddfcb"
+    },
+    {
+      "file": "tools/blenderctl/lighting_interface.py",
+      "expected_sha256": "5be893198042f94950ebf1c72ae55a0ffd4395e1ec767edc062a1b7b7798edb7"
+    },
+    {
+      "file": "tools/blenderctl/lighting_verifier.py",
+      "expected_sha256": "60e35ebc0f4370d55677e9d8c9ddb63e5d7538b71ffbf79ae2cb6c5b0a9564a1"
+    },
+    {
+      "file": "tools/blenderctl/lighting_workflow.py",
+      "expected_sha256": "fad8f064cc6ab9667ebee0c6ef558c0d4e5c0948d989e736c6a036251bc03844"
+    },
+    {
+      "file": "tools/blenderctl/lighting_workflow_contract.py",
+      "expected_sha256": "7d83495ec04c7007769e5c77c20f821810e45d979297b21d82179bd6a9a77ed9"
+    },
+    {
+      "file": "tools/blenderctl/link_contract.py",
+      "expected_sha256": "308dd0d146363ac04cc55f52467c5fcdbcc34f774b06fc3a43313f0933281a80"
+    },
+    {
+      "file": "tools/blenderctl/linking.py",
+      "expected_sha256": "cf77b959a091c4cb1daf857aba87353435fa73ad96dfaa4529d403fa6b37389d"
+    },
+    {
+      "file": "tools/blenderctl/liquid.py",
+      "expected_sha256": "533c76b50e82317aa78576efb455398a54e2d0e5be7a0d384a81ca09a6bc17d3"
+    },
+    {
+      "file": "tools/blenderctl/material_batch.py",
+      "expected_sha256": "948acb68efbd45944394fe411d640148fd250953250eb863f5ca06585786f4f4"
+    },
+    {
+      "file": "tools/blenderctl/material_batch_contract.py",
+      "expected_sha256": "e14b68e59b1284c0649efdb1a7ec536d5379e4d3d1da6a29747593725fc8d003"
+    },
+    {
+      "file": "tools/blenderctl/material_deformation.py",
+      "expected_sha256": "b5834d09d16a94a9548a957bea873bed1e9c2ab647e371fa01634b60ea1de57f"
+    },
+    {
+      "file": "tools/blenderctl/material_interface.py",
+      "expected_sha256": "a21412a713e95b8ea840d0b5d33e9f3326a7bc3e5782b93394791bb8f58179d4"
+    },
+    {
+      "file": "tools/blenderctl/material_interface_contract.py",
+      "expected_sha256": "e69d50d9be4147e2e2f5f0aa75ad7f1a773ac34bd1fd43854ef87cd96cfc09e0"
+    },
+    {
+      "file": "tools/blenderctl/material_outputs.py",
+      "expected_sha256": "e38d623c2def39457205e3154ef1a57d20575e142223eebdc580662347bcee27"
+    },
+    {
+      "file": "tools/blenderctl/material_progress.py",
+      "expected_sha256": "87f9682655be53bca4a211f3734b6edb61a96435e2cf41b907c4294b92b27541"
+    },
+    {
+      "file": "tools/blenderctl/material_study.py",
+      "expected_sha256": "1f460999fe60b533bae56ffbfc178546deeabf2f039ed169f7d6c33e6606d14b"
+    },
+    {
+      "file": "tools/blenderctl/material_study_contract.py",
+      "expected_sha256": "f35b8dc7358bfc3899e81b70cad23a221eea03bbd70bd62406e50e592b8423d7"
+    },
+    {
+      "file": "tools/blenderctl/material_workflow.py",
+      "expected_sha256": "1095a47635b8927156c24739ccbc5fe7201360ce61e369fa81f0691fb890cd13"
+    },
+    {
+      "file": "tools/blenderctl/material_workflow_contract.py",
+      "expected_sha256": "b64dc84f2df5be58e517c494079e43ad2990d5efcc33a612968d3fd09e3db9f5"
+    },
+    {
+      "file": "tools/blenderctl/media.py",
+      "expected_sha256": "2fad9d525c5d36f746996caf1f5155beeae5d48993754f3ee9356d4d1cd593b0"
+    },
+    {
+      "file": "tools/blenderctl/mesh_clip.py",
+      "expected_sha256": "e50ffc32ba790a07dc0c243902cd63e560682e4f841752ded2712237e9b67fe6"
+    },
+    {
+      "file": "tools/blenderctl/mesh_clip_analysis.py",
+      "expected_sha256": "90baa811e98dd9c64c8bf1640556310c45c974eb580f5f8b4f02cef438bae16a"
+    },
+    {
+      "file": "tools/blenderctl/model_contract.py",
+      "expected_sha256": "bc9f9e13ae67f5335092b45465539a5d82b0e41e8c9fd8fd8fe199e43268637e"
+    },
+    {
+      "file": "tools/blenderctl/modeling.py",
+      "expected_sha256": "b090bd6c13db381ec3c880c6de4153e3242a6019bb47818e25432d05eb4f7d47"
+    },
+    {
+      "file": "tools/blenderctl/native_mesh_cache.py",
+      "expected_sha256": "51920753a9af143de0f579ee3f7b73b14320dde5b9c878e938fe2d76f0f5847b"
+    },
+    {
+      "file": "tools/blenderctl/node_contract.py",
+      "expected_sha256": "34326e9a2fb5b5fd842b4a54565554587272e54e35b9b848eb328084602d52b0"
+    },
+    {
+      "file": "tools/blenderctl/node_zones.py",
+      "expected_sha256": "1a3f4a12b4d32f2649478b986f0e0c64156c73cfeebf8ca8f6dbfd2e767afe30"
+    },
+    {
+      "file": "tools/blenderctl/nodes.py",
+      "expected_sha256": "008104cd8113d98c5684181e2ac914d692bd80492cc8f939992d3dc867dc2448"
+    },
+    {
+      "file": "tools/blenderctl/operations.py",
+      "expected_sha256": "1436b109e066abd3baa4652451864e379272d8ceaebce6a79a0695d71b585133"
+    },
+    {
+      "file": "tools/blenderctl/operations_contract.py",
+      "expected_sha256": "494092de3d74c4bb2f2ebeaafe266e8159f13a5f1710295915fbc75a548ffe06"
+    },
+    {
+      "file": "tools/blenderctl/pipeline.py",
+      "expected_sha256": "d78b0bfdc655aa4b7eacd16bf18f6eecaf6de543368614278dc22c55bbb9bdb9"
+    },
+    {
+      "file": "tools/blenderctl/pipeline_contract.py",
+      "expected_sha256": "6069a01487e205869fd202fa5b71375367e3b0b5dcd7c984684d9c643fc7b5f3"
+    },
+    {
+      "file": "tools/blenderctl/preview_contract.py",
+      "expected_sha256": "6caea67d6af02cb101a167028248b35050a9274a11b8c0aaeab4fe2eae7071d4"
+    },
+    {
+      "file": "tools/blenderctl/preview_framing.py",
+      "expected_sha256": "ef4efb178f8be0a75d72820c63fa348542e6be00105e1a8d756795de8f1b6826"
+    },
+    {
+      "file": "tools/blenderctl/probes.py",
+      "expected_sha256": "53ea8742f76ea8c514301ad5d03edb8cdfdcc83b45120d9be348750425d19d0d"
+    },
+    {
+      "file": "tools/blenderctl/processes.py",
+      "expected_sha256": "2ce3f395008a75534c93976d2204b5e4d66b6338ddff471163778cf160709dc9"
+    },
+    {
+      "file": "tools/blenderctl/project_contract.py",
+      "expected_sha256": "dc64bc637c84c48f2f41ff0aca16bd18c424076b34b2c23608dda31b677daf1c"
+    },
+    {
+      "file": "tools/blenderctl/projects.py",
+      "expected_sha256": "2b09cd41e5170677a624b514e3aec39099b90421548de649ef62bb866867b130"
+    },
+    {
+      "file": "tools/blenderctl/protocol.py",
+      "expected_sha256": "7c7fa63d0c9306feff8b1b92a13f2cc8700753404f43bd11b734f0ff152acff0"
+    },
+    {
+      "file": "tools/blenderctl/render_contract.py",
+      "expected_sha256": "7bb62a297b5dec81eba752cd15bede472d66e89636160c05479130ed8f6e0335"
+    },
+    {
+      "file": "tools/blenderctl/rendering.py",
+      "expected_sha256": "0f8ab588ae4ee9134afa6b9452d000c95caa1227fe43a1a47f271dc1afe7970f"
+    },
+    {
+      "file": "tools/blenderctl/resource_leases.py",
+      "expected_sha256": "d91cc702ae67d5414c26642610d8d9c6bf99bcd5696b76bd4db8fbb81d6450b7"
+    },
+    {
+      "file": "tools/blenderctl/retarget_actions.py",
+      "expected_sha256": "6bf366f34d9ef4b6baee7cd255276df34034db9a9340862ee2e05b3a3d0ce1d2"
+    },
+    {
+      "file": "tools/blenderctl/retarget_affine.py",
+      "expected_sha256": "aa207a2f46a1c25321e7e2c9237af05f837e49b0ebe982c9a24f9a2a2cf586bd"
+    },
+    {
+      "file": "tools/blenderctl/retarget_contract.py",
+      "expected_sha256": "722a0ec17f8fa39e05b74cc79d9c11614bf9b900484595944e8f63ae51f301a8"
+    },
+    {
+      "file": "tools/blenderctl/retarget_controls.py",
+      "expected_sha256": "5b89b6611edff2b8ba64326ffa287daa4ce7def3213f8a097e5ac014ce8256e1"
+    },
+    {
+      "file": "tools/blenderctl/retargeting.py",
+      "expected_sha256": "3a6e1e7ff3581a8781f2e4eb68077a3f4ecf88abfb4f9b212cd7d7a123f99b07"
+    },
+    {
+      "file": "tools/blenderctl/retopology.py",
+      "expected_sha256": "11c9d4a03879c6517f0b80a78b1975f2d4fee646c2c48576f024eb4721169295"
+    },
+    {
+      "file": "tools/blenderctl/retopology_contract.py",
+      "expected_sha256": "848abbed8e0c55e2f34ab8ec9057275c7420925803820403458a6467fa30e651"
+    },
+    {
+      "file": "tools/blenderctl/review_contract.py",
+      "expected_sha256": "8e071da5bc0a600f10f61958791134c0b71a8384340e06160d9b4c1528f69bd8"
+    },
+    {
+      "file": "tools/blenderctl/reviews.py",
+      "expected_sha256": "02c4993e57c36c0802535a78616bfef30b13d3d38d41e660b117e77f63044dc0"
+    },
+    {
+      "file": "tools/blenderctl/rig_adapter_contract.py",
+      "expected_sha256": "57ffc4d3c64539115fcbe3472e2657899528de1f242a253afefd2e8c91dccc57"
+    },
+    {
+      "file": "tools/blenderctl/rig_cloth.py",
+      "expected_sha256": "d3b4706e9b47b5a05e406c0cc70b1585eead7a580013eb49d807ef9bc8deea60"
+    },
+    {
+      "file": "tools/blenderctl/rig_contract.py",
+      "expected_sha256": "15db1f6498f7b9f092727adf4ff2bf026d322b0011c6700db3a9e450d90d421a"
+    },
+    {
+      "file": "tools/blenderctl/rig_exchange.py",
+      "expected_sha256": "6e0579cf7485f3211f073edc026f0709feaf9ab22a34a32820fdc1e53213f8c2"
+    },
+    {
+      "file": "tools/blenderctl/rig_package.py",
+      "expected_sha256": "90012da4b41a547095158d8ec9caaa50b50fdfae951fb2c76a3cffa0f40b6e84"
+    },
+    {
+      "file": "tools/blenderctl/rig_package_contract.py",
+      "expected_sha256": "526ee8191275cb253f6906f8c5b49b3982f10252baea533a7c778391ec86f4b2"
+    },
+    {
+      "file": "tools/blenderctl/rig_profile.py",
+      "expected_sha256": "84e1e686e4d45b7fedc46938e968fcee7c08985fea9869cc84125497ac684c1a"
+    },
+    {
+      "file": "tools/blenderctl/rig_profile_contract.py",
+      "expected_sha256": "c9121899b3198ca46958d305ae66d82855f3cba947c4301e81ead02c22ff96cb"
+    },
+    {
+      "file": "tools/blenderctl/rigging.py",
+      "expected_sha256": "848a81f6da39296adb5a02e4a0ec331750d31a9dc6ac392e268fb2ed7fa0c842"
+    },
+    {
+      "file": "tools/blenderctl/runner.py",
+      "expected_sha256": "6aacbca315bdaa4a90c82291a38eea09dea3e0fdec306a7b8082b1ff64672b5e"
+    },
+    {
+      "file": "tools/blenderctl/scene_contract.py",
+      "expected_sha256": "f46c9f0cc38d9cedc2e68d6cb5e249e9930bbc11e34e33f2960438d166700208"
+    },
+    {
+      "file": "tools/blenderctl/scenes.py",
+      "expected_sha256": "bfafcc63b5bfb38bf2d956b05de300aa16d5a210c26a0a770e386d36fde7b833"
+    },
+    {
+      "file": "tools/blenderctl/script_isolation.py",
+      "expected_sha256": "4a1540f6001d939acf13f2f9d20d02404891b5012933b37b13f072ea00736886"
+    },
+    {
+      "file": "tools/blenderctl/sculpt_contract.py",
+      "expected_sha256": "6f440224842f9cf3e8cec7ee43674fec0f92248fb3d26cb8a0d67734c012140f"
+    },
+    {
+      "file": "tools/blenderctl/sculpt_host.py",
+      "expected_sha256": "f6046e5a3a9d9907e7689cf5c31f9610e3086aeb3d57b988c961a8350b424908"
+    },
+    {
+      "file": "tools/blenderctl/sculpt_review.py",
+      "expected_sha256": "e2f7cc01a33c7460fa3ce399c694f61e03255d697e3f8ab8364e7a58f9586db1"
+    },
+    {
+      "file": "tools/blenderctl/sculpt_state.py",
+      "expected_sha256": "fe57bf0ba169ae7e217116dbe1d4825f30153942499b10f03eb39b85c6838492"
+    },
+    {
+      "file": "tools/blenderctl/sculpt_worker.py",
+      "expected_sha256": "d712d6db687bd5a69c1ae4f37253beea552047a9b061562a583c5c9be31c3bd4"
+    },
+    {
+      "file": "tools/blenderctl/simulation.py",
+      "expected_sha256": "0e815b29d659dfd09d03026ef1f2aec2de228421682ae0c6d2cb280d7f0efb8e"
+    },
+    {
+      "file": "tools/blenderctl/simulation_contract.py",
+      "expected_sha256": "ab6be266b41a5b6d59d76eb58c83e505f513b4590c8a4004ef8c7c689eddc17d"
+    },
+    {
+      "file": "tools/blenderctl/skin_exchange.py",
+      "expected_sha256": "d17065ad992ae42a39e2a358b355902bc02dfddd7ad996ebf68d68b70d929439"
+    },
+    {
+      "file": "tools/blenderctl/skin_rebind.py",
+      "expected_sha256": "24fc20b09be76764c93cc30ee2fa8f4a46d3c900c4137e7e82789a443cf775af"
+    },
+    {
+      "file": "tools/blenderctl/telemetry.py",
+      "expected_sha256": "d705892949f28c13dfc91e20072989a7e7537aa77407c9e6fed1abe4554cf452"
+    },
+    {
+      "file": "tools/blenderctl/timing.py",
+      "expected_sha256": "5738b873aaa8f0852ba4f0af595e57dd79b6e92752311bbb403736a025e516df"
+    },
+    {
+      "file": "tools/blenderctl/tracking.py",
+      "expected_sha256": "43fa730eca67cb7066fc2761bbb37a11e70767ab77c2a28983c9d5be4230d02b"
+    },
+    {
+      "file": "tools/blenderctl/tracking_contract.py",
+      "expected_sha256": "0e3c15157b24c79a4fa2077ee97e05c07af03a41c6b6a93629be789ba3f03db2"
+    },
+    {
+      "file": "tools/blenderctl/tracking_input.py",
+      "expected_sha256": "6f4f68627c1534248a269b8baec71eaf78edbc27d88b5232b3a3b18ba241f4ed"
+    },
+    {
+      "file": "tools/blenderctl/tracking_preview.py",
+      "expected_sha256": "ea58e1db142b842746a4be21111ff62b35945c22c39c9a275b4bc4b09a283e26"
+    },
+    {
+      "file": "tools/blenderctl/tracking_quality.py",
+      "expected_sha256": "c6c9c57b33e8e247e8412ab841b31769a2e219e88a32c42bcbda0397ef939c9c"
+    },
+    {
+      "file": "tools/blenderctl/transactions.py",
+      "expected_sha256": "c411c2ea8c14853b6dac984bc10b40ea13b6fdf55805815483a0c7125b0274d0"
+    },
+    {
+      "file": "tools/blenderctl/typed_dependencies.py",
+      "expected_sha256": "b3147afa940771961ef944211230bb0275207620cf0b799088156a3d4dc80757"
+    },
+    {
+      "file": "tools/blenderctl/uv_contract.py",
+      "expected_sha256": "013bbce2b294f59a6db2e9cf36a80cede845330c846c5028bcb62e056b01609e"
+    },
+    {
+      "file": "tools/blenderctl/uv_layout.py",
+      "expected_sha256": "eab105932f3141bc93c36dec555caabe04c76e5be7e1bb656421e7b94ef1618a"
+    },
+    {
+      "file": "tools/blenderctl/verification.py",
+      "expected_sha256": "6077cddc44356cf8b47946773463fe9401d4a4470d5e7c0f443c6b9088e08f1a"
+    },
+    {
+      "file": "tools/blenderctl/verification_contract.py",
+      "expected_sha256": "ec1ce4664afc96c694485386cc41bb365176e86d4273bfd181c0579f0e256acc"
+    },
+    {
+      "file": "tools/blenderctl/weight_transfer.py",
+      "expected_sha256": "33e441a6dbd6499c65fa70e9c1e49e9bcd5e7c1c31dd76b695f1b5eaeeaa2b3b"
+    },
+    {
+      "file": "tools/blenderctl/weight_transfer_contract.py",
+      "expected_sha256": "50f7e12cbab0e90b9f71955b31a853852507985225c94bfd86cefef982290f00"
+    },
+    {
+      "file": "tools/blenderctl/win_appcontainer.py",
+      "expected_sha256": "c00d0bc4c029ec53bd30f00ec1396b40e95a67a244dc7334f414a624da7872bb"
+    },
+    {
+      "file": "tools/blenderctl/worker.py",
+      "expected_sha256": "7024493967fb31c66cc7d013a84ea791f14e4668c01d7c95a5fd7d29c6829927"
+    },
+    {
+      "file": "tools/blenderctl/workflow_contract.py",
+      "expected_sha256": "2e4c1c0308608be996adcec88b4271612b3a72838f44ed26fd0fe67f7cfc7a84"
+    },
+    {
+      "file": "tools/blenderctl/workflow_evidence.py",
+      "expected_sha256": "40e028a3be718336d514e039740c89389701590297feb6dc746257df37c2e21f"
+    },
+    {
+      "file": "tools/blenderctl/workflow_identity.py",
+      "expected_sha256": "27d41674b7fdcb417ce04f38aa55b19272ccaef86389398a9164d59ee5b3b193"
+    },
+    {
+      "file": "tools/blenderctl/workflow_preflight.py",
+      "expected_sha256": "f057f7d9622e5d57b3159f04d91eae693af2105a214b82e6a7e7152737f582ac"
+    },
+    {
+      "file": "tools/blenderctl/workflow_runtime.py",
+      "expected_sha256": "ec827180906d90a32e72d50f1da7af97d038f14c3c14a3de6b03da6fad9742a2"
+    },
+    {
+      "file": "tools/blenderctl/zone_cache.py",
+      "expected_sha256": "ae053c1227773aa04ebcc789e57f8bcb33df63a856077d6ade368bad433c19a4"
+    },
+    {
+      "file": "tools/blenderctl/zone_cache_contract.py",
+      "expected_sha256": "0e92fda9ef8ae615d2c6dcb44408a2679cfa03688b52531eb04119b31d447cc2"
+    },
+    {
+      "file": "tools/blenderctl/zone_contract.py",
+      "expected_sha256": "83b6264814c0bdd800ea337218b8215848a5d5e907a01b854a72bc50f4c43ed3"
+    },
+    {
+      "file": "tools/blenderctl/zone_state_oracle.py",
+      "expected_sha256": "09e97cdb80321ef68913e9c5fb0d53b8d84b5f64139c3b883c7670d2b1efb46b"
+    },
+    {
+      "file": "tools/compositing_workflow_addon/__init__.py",
+      "expected_sha256": "d9b318495d7edd2cf668b980acf472e34254f191c3b184886daeef364fffc9a2"
+    },
+    {
+      "file": "tools/compositing_workflow_addon/blender_manifest.toml",
+      "expected_sha256": "14f9ae21085ce6a62e960df3ff5605c55ba0e88719e1b9142bb0f2c67746b66b"
+    },
+    {
+      "file": "tools/compositing_workflow_addon/contract.py",
+      "expected_sha256": "1b51b7bef6aa4a02a2f05e5d28236d9de30e0e9c0c2fcc3d47c9a1d91899b80b"
+    },
+    {
+      "file": "tools/compositing_workflow_addon/core.py",
+      "expected_sha256": "700130e16f8481e96a9b84c4eac5e5321e863c9e7669fe3b83d7a6dc21fcb704"
+    },
+    {
+      "file": "tools/compositing_workflow_addon/movie_contract.py",
+      "expected_sha256": "46ea7b1159541c268a79c103a85505d1839fd4c572e867074870269b52e60172"
+    }
+  ],
+  "schema_documents": [
+    {
+      "file": "docs/cli/schemas/animation-sample-manifest.schema.json",
+      "expected_sha256": "9c12357d5fbb5036c8cc3c6464cd088e3fc2a5c38f478231b47d5775ac420099"
+    },
+    {
+      "file": "docs/cli/schemas/animation-sample-report.schema.json",
+      "expected_sha256": "12d80ec641eee0c2dbc8723e3d0d01025670fefa00384124c6aa90b7a4aa3761"
+    },
+    {
+      "file": "docs/cli/schemas/asset-record.schema.json",
+      "expected_sha256": "0beaccf2e8031eb0ec91bd6cbe44749a3aa830e8f688852a42829679fb8c63d0"
+    },
+    {
+      "file": "docs/cli/schemas/cache-policy.schema.json",
+      "expected_sha256": "4489928f91885f78841755e33ce11d222b99e3c08da0b74eb211bcfe41f72f73"
+    },
+    {
+      "file": "docs/cli/schemas/compositing-batch-report.schema.json",
+      "expected_sha256": "7c7ebedfaaf6748322093bb800657409955c33537ed66b91ac2aa48d380cd0b2"
+    },
+    {
+      "file": "docs/cli/schemas/compositing-batch-request.schema.json",
+      "expected_sha256": "19e4f8a221e310be916ea72c93b3acf6c5ea2badf228aec34e901bcecd6266a4"
+    },
+    {
+      "file": "docs/cli/schemas/compositing-compact-result.schema.json",
+      "expected_sha256": "931de88ab76c9c8611ff0bd0873b69c529cdf217d13dd4848762a59b82b73808"
+    },
+    {
+      "file": "docs/cli/schemas/compositing-encode-request.schema.json",
+      "expected_sha256": "b32b0d7b71a65e16aa70e7e27934c89735e6f7ca1213cb9d020d8449853fb85c"
+    },
+    {
+      "file": "docs/cli/schemas/compositing-inspect-request.schema.json",
+      "expected_sha256": "99d3e6fa65a79f7ed5b0c30980adc8313ecb9b85c3a629c44eccba89559abb3b"
+    },
+    {
+      "file": "docs/cli/schemas/compositing-manifest.schema.json",
+      "expected_sha256": "02ddb41bf7378878986388952bfcfcbca80eb5035314e83e6e4f60a289f39848"
+    },
+    {
+      "file": "docs/cli/schemas/compositing-orchestration-compact-data.schema.json",
+      "expected_sha256": "3df312ce50b2bfb3ff687a1e83dad911313572404b9c9c478f19273e8e2c4178"
+    },
+    {
+      "file": "docs/cli/schemas/compositing-orchestration-compact-result.schema.json",
+      "expected_sha256": "b3875f56f47a51ecdc999be5a0cb6bf79ac6e43481fb970aa34e3b7e5a436514"
+    },
+    {
+      "file": "docs/cli/schemas/compositing-preview.schema.json",
+      "expected_sha256": "a2ba64365cefb92ab55fefb6a677dca3ad5d6bf2eab1404eaa8198864895ff2c"
+    },
+    {
+      "file": "docs/cli/schemas/compositing-report.schema.json",
+      "expected_sha256": "5bbac0d8ccf2f135eb216040f49d8ad32170dffa98c887bd6fbce490b43bd0fe"
+    },
+    {
+      "file": "docs/cli/schemas/compositing-run-request.schema.json",
+      "expected_sha256": "4a9b37ec9334c1c8e23c3453418fd57f33009a15e427738759b918c16dd08df8"
+    },
+    {
+      "file": "docs/cli/schemas/compositing-study-report.schema.json",
+      "expected_sha256": "efb2d1226f8094ce4eff0fe54b7bea0baa34933ec78c9604e7c4cac44d5370a4"
+    },
+    {
+      "file": "docs/cli/schemas/compositing-study-request.schema.json",
+      "expected_sha256": "7505c41d142b7a433d53ec6c1742130b63aa412bcf65440c876fc9ab8f5dde2f"
+    },
+    {
+      "file": "docs/cli/schemas/compositing-template-document.schema.json",
+      "expected_sha256": "cb492aa52de0f563b8a53fd3b8e0329092c66f668e1e960ced978e67af0d1014"
+    },
+    {
+      "file": "docs/cli/schemas/compositing-template-run-report.schema.json",
+      "expected_sha256": "f49470c2727892f993646d3aa644ec2b06cc555a9babe475de5690b6f45ef6e5"
+    },
+    {
+      "file": "docs/cli/schemas/compositing-template-run-request.schema.json",
+      "expected_sha256": "096f0c3171661b7d24d3b0034f635067c36a1ce5db2b181d1f8f6a79ba778fe5"
+    },
+    {
+      "file": "docs/cli/schemas/compositing-template-save-report.schema.json",
+      "expected_sha256": "61af47d01fe5f072f148028192124eb327e763d6fe6b4bd992327b7eb901ee79"
+    },
+    {
+      "file": "docs/cli/schemas/compositing-template-save-request.schema.json",
+      "expected_sha256": "fff9ae54c86adfb2813577188fa5b2b2b26facae853f8d4545673b352cb44354"
+    },
+    {
+      "file": "docs/cli/schemas/dependency-audit.schema.json",
+      "expected_sha256": "5892bab71e695c2e6ac02b27a16fed6a2713c3ec97b001f53d36d8520766df35"
+    },
+    {
+      "file": "docs/cli/schemas/dependency-closure.schema.json",
+      "expected_sha256": "b8a27ad8b1061c67de817c56bb17d94f0da743c68cd555cae65d13519cc9df7e"
+    },
+    {
+      "file": "docs/cli/schemas/dependency-relink-manifest.schema.json",
+      "expected_sha256": "ace6147dc924e81bdb38ca357bc1fb0d405fa2cf977792410ae6534e05660d46"
+    },
+    {
+      "file": "docs/cli/schemas/dependency-relink-plan.schema.json",
+      "expected_sha256": "d7a5c9305c6fd045d4dc93a476a404a66891aec5defe27449ddc68f915e68297"
+    },
+    {
+      "file": "docs/cli/schemas/dependency-relink-report.schema.json",
+      "expected_sha256": "feb9b515316e04530b830d496b2efb832592e5365929abcc4033b77c890e0225"
+    },
+    {
+      "file": "docs/cli/schemas/driver-audit.schema.json",
+      "expected_sha256": "eed81170fe24b07d058767e6dc199a81f752615cae8e3b35b745eac628d02967"
+    },
+    {
+      "file": "docs/cli/schemas/driver-profile.schema.json",
+      "expected_sha256": "8f3d9ddef9f56aa3c3f6e764a92e752aa31115ffe5419f902bc3776f0e09c4c7"
+    },
+    {
+      "file": "docs/cli/schemas/exchange-analysis-report.schema.json",
+      "expected_sha256": "4c20d74f18925de181188aaa7b67b110696d4b9a97cca155745b7e8d6b82353e"
+    },
+    {
+      "file": "docs/cli/schemas/exchange-analyze-manifest.schema.json",
+      "expected_sha256": "07d9c9492336561cf3b9cc8c9c397b9e2418460849af754ce0a0e1b424a23ca6"
+    },
+    {
+      "file": "docs/cli/schemas/exchange-batch-report.schema.json",
+      "expected_sha256": "0059f0851941a6fd4708596a6eeb95d75be160295aaef8ff97466669c28a4818"
+    },
+    {
+      "file": "docs/cli/schemas/exchange-checks.schema.json",
+      "expected_sha256": "51115c102cfe124bd05da65ea05ca3bf1f627d01c3e75d3c7650014a11e3bea8"
+    },
+    {
+      "file": "docs/cli/schemas/exchange-convert-manifest.schema.json",
+      "expected_sha256": "673d9124bebb40298a57b6c957ec7714cd8c390691066d43bad26fe3ff747805"
+    },
+    {
+      "file": "docs/cli/schemas/exchange-export-manifest.schema.json",
+      "expected_sha256": "1da6979af72e2d0f64e54f791021990bb410627f72e8d39a2968813fc073cdfb"
+    },
+    {
+      "file": "docs/cli/schemas/exchange-import-manifest.schema.json",
+      "expected_sha256": "b78d508d2d095ad37647f49b9e0ddd7734568b357ea7fbd2566d8474869f5501"
+    },
+    {
+      "file": "docs/cli/schemas/exchange-report.schema.json",
+      "expected_sha256": "531adde8d887bcfc86cc9ed6340e2ec89bacedac83affc7124961895b7593909"
+    },
+    {
+      "file": "docs/cli/schemas/exchange-samples.schema.json",
+      "expected_sha256": "afd62821b8a4a92924ee27231148385b44ff9db61d051f9b459948e6dd3dfb4f"
+    },
+    {
+      "file": "docs/cli/schemas/execution-contract.schema.json",
+      "expected_sha256": "6ab79463896df95d6acabbaa1d790ded61d059afa0c76e95d6ad54a20b366125"
+    },
+    {
+      "file": "docs/cli/schemas/extension-approval-receipt.schema.json",
+      "expected_sha256": "5440210d27bf85e8077e2b27300f0cca972c21868238ed72f1268a6aae7f75d1"
+    },
+    {
+      "file": "docs/cli/schemas/extension-approve-manifest.schema.json",
+      "expected_sha256": "98e85f85ee10442a024a562d483b31ba7ee51715bbd9bb02b89b96f001d818bf"
+    },
+    {
+      "file": "docs/cli/schemas/extension-report.schema.json",
+      "expected_sha256": "ab185ae81cdd0c899830d65057b753dd8aac91836f7f752bd010fcaa7eb26adf"
+    },
+    {
+      "file": "docs/cli/schemas/extension-review-manifest.schema.json",
+      "expected_sha256": "30af54b385ac454615df6b6b0feb7ee965354c1577ed86b984b6f89d1c21514a"
+    },
+    {
+      "file": "docs/cli/schemas/extension-review.schema.json",
+      "expected_sha256": "cece77ada36407d4a758c64e01f2421ef77be6b19e4ce1787393b1e2a07c9ea9"
+    },
+    {
+      "file": "docs/cli/schemas/extension-run-manifest.schema.json",
+      "expected_sha256": "a0d40d7bb7af07bc3be667231c523cd16a7dd02fc3e5cc1d12fb906a58bc5a19"
+    },
+    {
+      "file": "docs/cli/schemas/extension-script-manifest.schema.json",
+      "expected_sha256": "bb6c1537c8c5e70c5583624923191885ee3ec4960956843361cb2c9cbfa144d5"
+    },
+    {
+      "file": "docs/cli/schemas/extension-star-manifest.schema.json",
+      "expected_sha256": "efe52672bef7d8ec07a2350704d682e6fc2df584788a497f7ec5b1addeb0571c"
+    },
+    {
+      "file": "docs/cli/schemas/geometry-cache-manifest.schema.json",
+      "expected_sha256": "72d4eec8492952d08e8319b3c9bef11cf8e95d52a403a443673bd52446dc9d76"
+    },
+    {
+      "file": "docs/cli/schemas/geometry-compact-result.schema.json",
+      "expected_sha256": "ef06b154e16fec6eaa550346c89d6a7ea4ea2eefebbb4d37f337318ce0c87b60"
+    },
+    {
+      "file": "docs/cli/schemas/geometry-inspect-request.schema.json",
+      "expected_sha256": "d6a46f1f2b025d2f4b4ed26de3f010662ea53ecfa9be71747e3ffd34465ac84f"
+    },
+    {
+      "file": "docs/cli/schemas/geometry-operation-report.schema.json",
+      "expected_sha256": "ed95cb73ac537bacdbf9aeface2bc5b7283e95fedad3595cc2f0b14d04446414"
+    },
+    {
+      "file": "docs/cli/schemas/geometry-run-request.schema.json",
+      "expected_sha256": "d5b2bcbabd6272987171d59f0f70ba9c056b977087252d9a9986faa56d6222c7"
+    },
+    {
+      "file": "docs/cli/schemas/geometry-workflow-manifest.schema.json",
+      "expected_sha256": "760579c0a696980fa74040ca24e8f35b96c339b1dce5530c9c0d227101d7a48d"
+    },
+    {
+      "file": "docs/cli/schemas/geometry-workflow-report.schema.json",
+      "expected_sha256": "2b2174375a7ab5886975d8703285992ebfe9dbe79004b6b82a504a4ba1de5fd9"
+    },
+    {
+      "file": "docs/cli/schemas/hair-report.schema.json",
+      "expected_sha256": "ec35b6bcbdfe9bb99a10b9936532bc35f15f680f6782bec14ecfa6cb9763f00f"
+    },
+    {
+      "file": "docs/cli/schemas/hair-samples.schema.json",
+      "expected_sha256": "c069f4b57e61c9d71a6918f18558ec0e2f387fccfab276009624c37de76c58cf"
+    },
+    {
+      "file": "docs/cli/schemas/job-resources.schema.json",
+      "expected_sha256": "9c6c3054a9b2948d9725557efcff6cc2edea4df15b57b3ac6c52075aff79a320"
+    },
+    {
+      "file": "docs/cli/schemas/lighting-batch-request.schema.json",
+      "expected_sha256": "2f0d5240b4c6d0118b235aabd912b971b376f501f662521b7c2716aac3585ab7"
+    },
+    {
+      "file": "docs/cli/schemas/lighting-inspect-request.schema.json",
+      "expected_sha256": "bdb9ecf90f649dd255f485ba33493e0b241300b2168b3fe2f63efe96d2dae780"
+    },
+    {
+      "file": "docs/cli/schemas/lighting-manifest.schema.json",
+      "expected_sha256": "91dbc19cf01212606326afa5d5ec3204050b952828e35db68bf8d97c8a559126"
+    },
+    {
+      "file": "docs/cli/schemas/lighting-run-request.schema.json",
+      "expected_sha256": "f0ca158d4e116de37c9f4dd17811c00904149ef60c7a2136b173e0a9ea1b65dc"
+    },
+    {
+      "file": "docs/cli/schemas/lighting-target.schema.json",
+      "expected_sha256": "b15c754c50f4ea9ecb45c108568f22e19fa70f5114c82ec6b5edd985d53bb56d"
+    },
+    {
+      "file": "docs/cli/schemas/lighting-template-edit-request.schema.json",
+      "expected_sha256": "0ef28b12ef254ffed092c1b465ca4e34b2ad23b825cba62f3d736402c5de7839"
+    },
+    {
+      "file": "docs/cli/schemas/lighting-template-save-request.schema.json",
+      "expected_sha256": "0a22b29be9dd06282af6a26a22ea07c3f4f98ad9c35ed4a2204c99b6b3a145b1"
+    },
+    {
+      "file": "docs/cli/schemas/lighting-template.schema.json",
+      "expected_sha256": "2ec6149a4af7d16ea8e5c4d81ef67e7c48ebba2a5a1442685c1e1c5ddbfeb0fa"
+    },
+    {
+      "file": "docs/cli/schemas/link-manifest.schema.json",
+      "expected_sha256": "fa53f43c753e3783707876543eea54f9cb248fc9dfa742393d42b64aafa3021c"
+    },
+    {
+      "file": "docs/cli/schemas/link-report.schema.json",
+      "expected_sha256": "5ef6b3f67643174d44da8c43f67cf44b186b71b0e82f3346a8dccd3679237672"
+    },
+    {
+      "file": "docs/cli/schemas/material-batch-manifest.schema.json",
+      "expected_sha256": "d59b2b3c0882b0247752ae16959c07e0b51f3a8ce5782eafabe59132e21b65cc"
+    },
+    {
+      "file": "docs/cli/schemas/material-batch-report.schema.json",
+      "expected_sha256": "45421f632148bec9a67f2663cd57f205c45757cfd026adc261e2c108d4715a2c"
+    },
+    {
+      "file": "docs/cli/schemas/material-batch-request.schema.json",
+      "expected_sha256": "f78fa23303b653423eb5901bc4feee6b77295c67dac3cf758a3164645c0c91ad"
+    },
+    {
+      "file": "docs/cli/schemas/material-compact-result.schema.json",
+      "expected_sha256": "67132fca3f5201345bc3632f35a0832676b208fb20f3e753bcff0d7e77ce9c10"
+    },
+    {
+      "file": "docs/cli/schemas/material-run-request.schema.json",
+      "expected_sha256": "97ebf5c3b4730003e32751d1e093652137e94fb95eee532d7b130270e956ae98"
+    },
+    {
+      "file": "docs/cli/schemas/material-study-report.schema.json",
+      "expected_sha256": "80ced5ff5c12e7480bbf2707941f3a519183e57ec04b147ff907b5fc4fed2494"
+    },
+    {
+      "file": "docs/cli/schemas/material-study-request.schema.json",
+      "expected_sha256": "2ba0603cbf2e9c53f5a8f3dd6acd22a5f99dad80dd7702869d9a8e6503cdd04e"
+    },
+    {
+      "file": "docs/cli/schemas/material-template-save-request.schema.json",
+      "expected_sha256": "23a18b1e9f98180ca7bf973a7434d7bc56ecc0db8ad053bad10afca3e666b239"
+    },
+    {
+      "file": "docs/cli/schemas/material-workflow-bindings.schema.json",
+      "expected_sha256": "c160c2dff0ec1164969d81ed1adc53cf3ccf19fd8401cd36648f58e081f85123"
+    },
+    {
+      "file": "docs/cli/schemas/material-workflow-manifest.schema.json",
+      "expected_sha256": "a2961bf37055fca304ac6d3a18aba47bdd5fb260afbf7a4706572ec12b38df97"
+    },
+    {
+      "file": "docs/cli/schemas/material-workflow-report.schema.json",
+      "expected_sha256": "0fa70ba5c5d48bacb668c08a0586c6592ef16ea1f3b605411ac634ec8ee3bdaa"
+    },
+    {
+      "file": "docs/cli/schemas/material-workflow-template-report.schema.json",
+      "expected_sha256": "c5892402c6c09a7243db643a4324f2b5918c44cb02a9504b2d6be8343102062f"
+    },
+    {
+      "file": "docs/cli/schemas/material-workflow-template.schema.json",
+      "expected_sha256": "2663719313ec6c67f9185577d0f6f9114f5f58cfc948e0b8786a485f5e6ad97e"
+    },
+    {
+      "file": "docs/cli/schemas/media-export-manifest.schema.json",
+      "expected_sha256": "a8a627c77ebfebaf7c3fa8fb203d784bad97f13b952719147a7164482017a7f5"
+    },
+    {
+      "file": "docs/cli/schemas/media-export-report.schema.json",
+      "expected_sha256": "243376e02321dc44cf3cd127bbb2cea00b00ed25ba3620c8d77893fb946be045"
+    },
+    {
+      "file": "docs/cli/schemas/media-manifest.schema.json",
+      "expected_sha256": "6e6de4c288f884e6ff350cd4d5b5042a3208a5cb0d2714aaf6836330aa76a994"
+    },
+    {
+      "file": "docs/cli/schemas/media-report.schema.json",
+      "expected_sha256": "0751dd7ff2b7afb0c29a0ccb7daf7ba6af1c5a3d47acdf387409b52ba6406d07"
+    },
+    {
+      "file": "docs/cli/schemas/model-evaluation-reopen.schema.json",
+      "expected_sha256": "bbebe0fdbdea87af74d95c6cb3b624ca6fb10114acbe605f929bfd0ccf876bb1"
+    },
+    {
+      "file": "docs/cli/schemas/model-manifest.schema.json",
+      "expected_sha256": "4b58df1106c2f1511b4b55f40bd9afff110da9c162f43c098a7df7b36533dafe"
+    },
+    {
+      "file": "docs/cli/schemas/model-report.schema.json",
+      "expected_sha256": "8392509c1467ed09c9fd2879a0ae161fd18d2961816c11ffbc38c7753f49b0f4"
+    },
+    {
+      "file": "docs/cli/schemas/node-manifest.schema.json",
+      "expected_sha256": "2b8503460e087560dbee20caa4cf22663d1fc969790a6a28693e4d74cf32a481"
+    },
+    {
+      "file": "docs/cli/schemas/node-report.schema.json",
+      "expected_sha256": "67c25c509fda368249820c1316dde025418363d2f5d5a4635c3d0ca6b0867211"
+    },
+    {
+      "file": "docs/cli/schemas/override-manifest.schema.json",
+      "expected_sha256": "f456e5407f2e0e049a0b4b807f2486e0b0e5e4f931d860e9eb6bbef6d9e4d393"
+    },
+    {
+      "file": "docs/cli/schemas/override-receipt.schema.json",
+      "expected_sha256": "31fed771d42122cfe2c31100ae4787f840dcd1ef54e56b3b35c062d40a211378"
+    },
+    {
+      "file": "docs/cli/schemas/override-resync-manifest.schema.json",
+      "expected_sha256": "67b8916f4978ae3759a2a2d15a1e0f962a8f330f7c16b46a51ddbf925f8168b6"
+    },
+    {
+      "file": "docs/cli/schemas/package-policy.schema.json",
+      "expected_sha256": "f4e3c9151e54ebce2fe903dc5dd5e9648c88ee808608c66651124d6581fd10a4"
+    },
+    {
+      "file": "docs/cli/schemas/pipeline-manifest.schema.json",
+      "expected_sha256": "5603af7bd887858720e8c35ce9a6524c9c58bef8cb3bdf4fdae672ebf4883ce8"
+    },
+    {
+      "file": "docs/cli/schemas/pipeline-report.schema.json",
+      "expected_sha256": "84acbe9a6d1bc5c4f74a82be33f66e3cd7a17d93448e294ca9e58f89269786f2"
+    },
+    {
+      "file": "docs/cli/schemas/pipeline-runtime.schema.json",
+      "expected_sha256": "b1d50d064645357eb91c11713463afcd88a83f88b67c9df4ef50a0829d98b5e7"
+    },
+    {
+      "file": "docs/cli/schemas/preview-batch-manifest.schema.json",
+      "expected_sha256": "e56e18a2cd399d0ca06da4b9a1f9e4858921cd1a4eefde60cff949be15e5516e"
+    },
+    {
+      "file": "docs/cli/schemas/preview-batch-report.schema.json",
+      "expected_sha256": "7bfbfb6a146a178a86e58c169952bf6fe78170c119633a528c0d3ab20280d7cc"
+    },
+    {
+      "file": "docs/cli/schemas/preview-manifest.schema.json",
+      "expected_sha256": "6f7c0b1720f6db820682dfabc30de8394b37c0aec62456f9d23589ef61291faf"
+    },
+    {
+      "file": "docs/cli/schemas/preview-receipt.schema.json",
+      "expected_sha256": "bad22152980596fb0aee241b6447190363a99c0edb26df83a3c574301c484380"
+    },
+    {
+      "file": "docs/cli/schemas/preview-report.schema.json",
+      "expected_sha256": "84c376a9f0f7f6f0d098bc30189fd2cedb7a5818cff52af1dcf49afcb1aee85e"
+    },
+    {
+      "file": "docs/cli/schemas/project-copy-manifest.schema.json",
+      "expected_sha256": "cf5fecb50630c1f5abef4ecfbc9ffb22baa539e554c960f92b1a102ce3c5eba4"
+    },
+    {
+      "file": "docs/cli/schemas/project-report.schema.json",
+      "expected_sha256": "aea37a6b03e78c4b533d08f4843afaec2b118006b2dcaf4b38c9fd83f1bb1b5c"
+    },
+    {
+      "file": "docs/cli/schemas/render-manifest.schema.json",
+      "expected_sha256": "9e580315ecf354e858b811ce9b67535afad83311f713c2b76bb81d1f276aa2d8"
+    },
+    {
+      "file": "docs/cli/schemas/render-report.schema.json",
+      "expected_sha256": "c037be1655f91e84760d9184e315a87678b51f673c6fce0f59be339438ad0567"
+    },
+    {
+      "file": "docs/cli/schemas/render-run-request.schema.json",
+      "expected_sha256": "e7b9e6be65672d3136bda77b5bff11e19599ff51a11894a1627f41c5e00d989c"
+    },
+    {
+      "file": "docs/cli/schemas/request.schema.json",
+      "expected_sha256": "c2e7dd63235ab1b4fbb912812ebebae90c08aa705c11a9407f4a81b0ff634b3b"
+    },
+    {
+      "file": "docs/cli/schemas/resource-budget.schema.json",
+      "expected_sha256": "1bca7b345d7410d4b2bbc822b4021849bb390321253c04e411721427762d8639"
+    },
+    {
+      "file": "docs/cli/schemas/result.schema.json",
+      "expected_sha256": "aab25154c85945ef1e38230d7f4dba0ff20800752b634f48a06be1670b27e0c3"
+    },
+    {
+      "file": "docs/cli/schemas/rig-adapter-report.schema.json",
+      "expected_sha256": "0d3e7b2ca686dc283c3a018c2fe1165a96c1bdac9d1808d684065e4ea2b88ad4"
+    },
+    {
+      "file": "docs/cli/schemas/rig-manifest.schema.json",
+      "expected_sha256": "fe50b95d525e7a4481ecb5c9228ac58691a1e1a85b9f87f152309b4a41c8b03b"
+    },
+    {
+      "file": "docs/cli/schemas/rig-package-manifest.schema.json",
+      "expected_sha256": "d757e4e7623e94535d4707c33a26c8306d2ea26973d05b0774ee9feffedc2a52"
+    },
+    {
+      "file": "docs/cli/schemas/rig-package-report.schema.json",
+      "expected_sha256": "4aabc7c94af3fe0b359dfd1aecbebc5288cc1e2128b3f2bfd1b910ac4b5f13d4"
+    },
+    {
+      "file": "docs/cli/schemas/rig-profile.schema.json",
+      "expected_sha256": "c68be70ab3b44faea00baf5f95e64d66819ba027dbaf1aa70a5bc2faf7f5039c"
+    },
+    {
+      "file": "docs/cli/schemas/rig-report.schema.json",
+      "expected_sha256": "93fe064e3ebffbe6edc37db8fe1c270cd8ff31e62344b48f8e46945206198f7b"
+    },
+    {
+      "file": "docs/cli/schemas/scene-manifest.schema.json",
+      "expected_sha256": "d0c5ca72aa8e23d56a45a42c3f99bc94782ef28c970ed66ecf03565367c7ec30"
+    },
+    {
+      "file": "docs/cli/schemas/scene-report.schema.json",
+      "expected_sha256": "59de5cadca1a702d8404599a373d5a874067c57ea48a7dfccfcbcb13bae09332"
+    },
+    {
+      "file": "docs/cli/schemas/sculpt-replay-manifest.schema.json",
+      "expected_sha256": "cf3b8fba72b480670bfcaac4a38e14a47d1900a0d25dbf209b90d955638bc81f"
+    },
+    {
+      "file": "docs/cli/schemas/sculpt-replay-report.schema.json",
+      "expected_sha256": "e84695b7f3fb76f6397573b52efe65dd723491517f11ade60749c602ddbb95be"
+    },
+    {
+      "file": "docs/cli/schemas/sculpt-review-manifest.schema.json",
+      "expected_sha256": "72dfe0a56b6bcf3f38ab137e26d99e0fddee9c45d7283201f227123227c86645"
+    },
+    {
+      "file": "docs/cli/schemas/sculpt-review.schema.json",
+      "expected_sha256": "1101e94ef783f94929164968174c2c4cd89458d9ad749c43eee6d5c2848a62a2"
+    },
+    {
+      "file": "docs/cli/schemas/simulation-bake-manifest.schema.json",
+      "expected_sha256": "c0e4620e8ee49ce163163a12a0c8c6e55616c6fc5216d37eb5a8971c0e62c137"
+    },
+    {
+      "file": "docs/cli/schemas/simulation-manifest.schema.json",
+      "expected_sha256": "296fba11a8a903b69c2fe334bed84ddd01dbc43d60a47c93e9dc2ff672d119f9"
+    },
+    {
+      "file": "docs/cli/schemas/simulation-receipt.schema.json",
+      "expected_sha256": "0e1543a62ab4d5bad6debf333469494c6f85d920ee703cab6d9d449382de1c68"
+    },
+    {
+      "file": "docs/cli/schemas/simulation-report.schema.json",
+      "expected_sha256": "a534e75df5fdbf651a78d1db4494cd16aeada71a12fce349333eb1088f07334e"
+    },
+    {
+      "file": "docs/cli/schemas/simulation-samples.schema.json",
+      "expected_sha256": "b9216c191d07f45a1223b7f055130469de23fae722e22899ac400c24dfa28994"
+    },
+    {
+      "file": "docs/cli/schemas/snapshot.schema.json",
+      "expected_sha256": "156edd3db4fe36a46d70b812fedf1925551d15e7c713acbee98d15d4a1bb72da"
+    },
+    {
+      "file": "docs/cli/schemas/tracking-input.schema.json",
+      "expected_sha256": "49ac608faabae5684bd76c2c88e98d4b99f367f7bab022068ede166efa3c8937"
+    },
+    {
+      "file": "docs/cli/schemas/tracking-observation.schema.json",
+      "expected_sha256": "27c27bada9177a6295eb8be3d0d364e3302116b965df672a4a7423e17962a44c"
+    },
+    {
+      "file": "docs/cli/schemas/tracking-prepare-manifest.schema.json",
+      "expected_sha256": "65c98fbb80cd8bedf7c2ccdcc1a3d5937f936976f6c0649034f76550785056b2"
+    },
+    {
+      "file": "docs/cli/schemas/tracking-quality.schema.json",
+      "expected_sha256": "b2bc152cd59a1d61f7f6d3dfbcb2dcd9d28b6f198d6ae042882d94ce89060a5d"
+    },
+    {
+      "file": "docs/cli/schemas/tracking-report.schema.json",
+      "expected_sha256": "16a479aef2ce395045cd9988538e0c0229bbfe4d73b380ab0056884824d51579"
+    },
+    {
+      "file": "docs/cli/schemas/tracking-resources.schema.json",
+      "expected_sha256": "346deee379cbc8b52f76e34d0cb654f4b50515040762a708b8be53431940aa9b"
+    },
+    {
+      "file": "docs/cli/schemas/tracking-review.schema.json",
+      "expected_sha256": "d0ca8813d0f41b960e311dc915d1119e5c3d3197dfb504269af9700789e6789d"
+    },
+    {
+      "file": "docs/cli/schemas/tracking-solve-manifest.schema.json",
+      "expected_sha256": "472195797c2a8a2f6ccd3d515d4d97a4605ddfb05262eca65a65a74126cd7029"
+    },
+    {
+      "file": "docs/cli/schemas/transaction-plan.schema.json",
+      "expected_sha256": "370d977832899b01281c30bcfd7de7f7aba7f318152291860e714941db1a673b"
+    },
+    {
+      "file": "docs/cli/schemas/uv-layout-report.schema.json",
+      "expected_sha256": "da5891ee8b050fafa38a96cedcfe081200ac1df1686e16df38da052d5d52600b"
+    },
+    {
+      "file": "docs/cli/schemas/validation-profile.schema.json",
+      "expected_sha256": "71f218f24c3a6c9ebb543830f44c8854010798b397f67bfbef6f6285f540cf2f"
+    },
+    {
+      "file": "docs/cli/schemas/validation.schema.json",
+      "expected_sha256": "c6be1f4f2e3203e952862d99691a07f038a8abea2eb8e61c61d6a147f0837190"
+    },
+    {
+      "file": "docs/cli/schemas/workflow-acceptance-recipe.schema.json",
+      "expected_sha256": "c3476c9ca3f5a7b20ce32cea7a6e6d020a684fa7f478158c77b2cf200755fb62"
+    },
+    {
+      "file": "docs/cli/schemas/workflow-manifest.schema.json",
+      "expected_sha256": "1eb6eb4369c8b956534940b26fdf38a4fd0385c799f0d4f4e8789dbfbadaa609"
+    },
+    {
+      "file": "docs/cli/schemas/workflow-preflight-request.schema.json",
+      "expected_sha256": "353a3637e5215c90582c1bfe4315e22e98c24e5de604190acc908c269421c11a"
+    },
+    {
+      "file": "docs/cli/schemas/workflow-resume-request.schema.json",
+      "expected_sha256": "3e494cd16c2371b7e91fbc00264b3d13d0aaae7007f0919e9a88bff11ed72c2b"
+    },
+    {
+      "file": "docs/cli/schemas/workflow-run-request.schema.json",
+      "expected_sha256": "9c0b6650e2ad0a4de80bb11bd061d86ee2b67666b7e90477991a7186a385d3e4"
+    },
+    {
+      "file": "docs/cli/schemas/zone-cache-samples.schema.json",
+      "expected_sha256": "c4495be47d6471b63effabaf3bbc9f0bbac95505aed2eec7b0242ca3680f85c9"
+    }
+  ],
+  "license": "GPL-3.0-or-later",
+  "scope": "Compatible CLI source snapshot; runtime files unchanged. Packaging, public docs, launcher and skill navigation are separate from runtime identity.",
+  "tested_environment": {
+    "os": "Windows",
+    "blender": "5.2.1 LTS",
+    "build": "9e2066aef7ef"
+  },
+  "external_dependencies": {
+    "python": "3.13.13 observed for release smoke",
+    "numpy": "2.3.4 observed for release smoke; historical M5 used 2.4.1",
+    "OpenImageIO": "3.1.13.1 tested",
+    "PyOpenColorIO": "2.5.0 tested",
+    "ffmpeg_ffprobe": "Explicit binaries and SHA required by Movie/encode; not bundled"
+  },
+  "not_bundled": [
+    "Blender/Python binaries",
+    "external libraries",
+    "production assets",
+    "private audit and Wiki",
+    "credentials",
+    "user configuration"
+  ],
+  "support_documents": [
+    {
+      "file": "tools/geometry_nodes_workflow_addon/__init__.py",
+      "expected_sha256": "dbd2930497290e9e5d294674f7704d46b8c784b9e8e483493515c83e8f05e5f9"
+    },
+    {
+      "file": "tools/geometry_nodes_workflow_addon/blender_manifest.toml",
+      "expected_sha256": "8756dafda4f7367d15f5338ee7ac62f068b6d9c3bf64777b08e54d445070e2d7"
+    },
+    {
+      "file": "tools/geometry_nodes_workflow_addon/contract.py",
+      "expected_sha256": "e2c040e5dc26b0b85a97001cfee5d392b0d9a547590143caed02653f2cb4f85a"
+    },
+    {
+      "file": "tools/geometry_nodes_workflow_addon/core.py",
+      "expected_sha256": "35e3ccb2fbabb13b7be10baad8738ac77af67a3fa7a18937234253c949f6470f"
+    },
+    {
+      "file": "tools/geometry_nodes_workflow_addon/inspection.py",
+      "expected_sha256": "5f3ce81d7a4f40bdf5350559e10e2e49e6f59348b5f354b84f73187eb5c45e7d"
+    },
+    {
+      "file": "tools/geometry_nodes_workflow_addon/recipes.py",
+      "expected_sha256": "d66733930ab900c66fb9fca0dd8ad3de8d273814d606eabc8476af71f1982dbb"
+    },
+    {
+      "file": "tools/geometry_nodes_workflow_addon/session.py",
+      "expected_sha256": "e176fcf39355fcb3b9c1d0ce24304ce225a6819634552d8a50b4281ea0a20833"
+    },
+    {
+      "file": "tools/geometry_nodes_workflow_addon/ui.py",
+      "expected_sha256": "a97ddb23158a2166700462f27089df81f4d467d149b64c4d08e7b5a687ccccfe"
+    }
+  ],
+  "support_scope": "Original geometry workflow package required by compositing persistence helper import; separate from the 177-file compositing runtime identity. No separate geometry feature certification.",
+  "public_documents": [
+    {
+      "file": "docs/cli/通用化开发清单.json",
+      "expected_sha256": "10a1e0b126e3f7d48d37889907526576a669438ad08b46692105f0304cf9f3ec"
+    }
+  ]
+}

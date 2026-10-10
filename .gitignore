@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+.venv/
+runtime/
+dist/
+.env
+.env.*
+*.blend
+*.blend1
+*.exr
+*.png
+*.mp4
+*.log
