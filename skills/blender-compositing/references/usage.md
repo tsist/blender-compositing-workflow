@@ -1,6 +1,6 @@
 # Public CLI usage
 
-Use this checkout's `blenderctl.ps1` and matching addon/CLI snapshot. Set `BLENDERCTL_ROOT` to its actual root. The launcher needs an explicit `BLENDERCTL_PYTHON` or a suitable Python 3.12+ on PATH; pass `--blender` to use the actual Blender 5.2.1 executable. Dependencies and tested versions are listed in `docs/DEPENDENCIES.md`.
+Use this checkout's `blenderctl.ps1` and matching addon/CLI snapshot. Set `BLENDERCTL_ROOT` to its actual root. Set `BLENDERCTL_PYTHON` explicitly to the approved Host bundled Python; Python 3.12+ alone does not establish numeric runtime admission. Pass `--blender` for the actual Blender 5.2.1 executable. Dependencies and tested versions are listed in [dependencies](dependencies.md).
 
 ## Discover contracts
 
@@ -12,7 +12,7 @@ Use this checkout's `blenderctl.ps1` and matching addon/CLI snapshot. Set `BLEND
 & (Join-Path $env:BLENDERCTL_ROOT 'blenderctl.ps1') compositing describe --section source
 ```
 
-`describe` does not launch Blender or create a job. Seven public operations are run, inspect, encode, template-save, template-run, batch and study. create/update/adopt/detach remain `manifest.operation` actions within run. Read the selected operation's live schema; file existence and JSON Schema do not replace semantic preflight or actual node/RNA/image validation.
+`describe` does not launch Blender or create a job. The 13 public operations are run, inspect, encode, template-save, template-run, batch, study, depth-prepare, depth-inspect, depth-estimate, depth-relight, depth-session, depth-sequence. create/update/adopt/detach remain `manifest.operation` actions within run. Read the selected operation's live schema; file existence and JSON Schema do not replace semantic preflight or actual node/RNA/image validation.
 
 ## Submit and retrieve
 
@@ -31,7 +31,7 @@ Global options precede subcommands. Keep the same explicit jobs directory across
 
 Render Layers bind an explicit Scene/View Layer and actual pass set. Image/EXR inputs require explicit colorspace and alpha mode; multilayer inputs require the actual layer. Preview dimensions define the output canvas, not automatic fit. Match input dimensions or author an explicit Scale/Transform to avoid unintended center crop. Compare the original image as well as baseline/result.
 
-Already display-encoded sRGB PNG can be mapped again if the source scene uses AgX. When the target is retaining that existing appearance, prepare an independent Standard/sRGB source with None look, view exposure 0 and gamma 1; do not overwrite the original or global preferences. See `docs/COLOR-HDR.md`. EXR values and their color/Alpha identity remain separately verified.
+Already display-encoded sRGB PNG can be mapped again if the source scene uses AgX. When the target is retaining that existing appearance, prepare an independent Standard/sRGB source with None look, view exposure 0 and gamma 1; do not overwrite the original or global preferences. See [color/HDR](color-hdr.md). EXR values and their color/Alpha identity remain separately verified.
 
 `engine=SOURCE` retains the source engine; it does not mean `device=SOURCE`. Declare the desired device behavior and report requested/used/fallback. Selected GPU is not proof of GPU kernel utilization or OIDN backend. Preview configuration is temporary; the saved candidate can retain the original source resolution/settings. For manual final rendering, set the intended dimensions and quality explicitly.
 
@@ -53,6 +53,12 @@ The source-only example creates its own 128×128 linear RGBA source/EXR, then bu
 & (Join-Path $env:BLENDERCTL_ROOT 'blenderctl.ps1') --blender $env:BLENDER_PATH --jobs-dir '<absolute-example-jobs>' --transactions-dir '<absolute-example-transactions>' --timeout 240 --compact request '<absolute-request.json>'
 ```
 
-Inspect the generated request and exact local resource paths/SHAs. Use the returned editable candidate and live inspect schema to build an independent inspect request. `docs/VALIDATION.md` records final clean-checkout execution and decoding; script presence alone is not an execution claim.
+Inspect the generated request and exact local resource paths/SHAs. Use the returned editable candidate and live inspect schema to build an independent inspect request. [validation](validation.md) records final clean-checkout execution and decoding; script presence alone is not an execution claim.
 
 For final delivery provide the editable candidate, actual before/after images, required EXR/video, full report and resource/recovery references. Record technical status, AI visual observation, user acceptance and HDR-device viewing separately.
+
+## Depth and finite sessions
+
+Choose the corresponding contract before building the request: [data preparation](depth-data.md), [RGB estimate](rgb-estimate.md), [single-batch relight](depth-relight.md), [live session](relight-session.md), [imported Normal](imported-normal.md), [shot sequence](depth-sequence.md) or [finite helper](finite-relight-study.md). The six depth operations are independent experimental public jobs, outside pipeline ALLOWED DAG.
+
+Read fields with `compositing describe --operation depth-session --param relight` or the chosen operation's `--schema`. `--param` requires an operation and is exclusive with `--schema/--section`. A live session must not idle while an agent chooses a picture: prepare finite actions first, execute, stop, verify parent/worker closure, then select an immutable revision offline. A normally closed session without final output is not a final deliverable.

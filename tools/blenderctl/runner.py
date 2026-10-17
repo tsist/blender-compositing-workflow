@@ -10,7 +10,7 @@ import traceback
 import uuid
 
 from protocol import (CODES, DEFAULT_BLENDER, DEFAULT_JOBS, DEFAULT_TRANSACTIONS, HOST_COMMANDS, OPERATIONS, Failure, atomic_json,
-                      digest, envelope, read_json, timeout_value, validate)
+                      DEPTH_COMMANDS,ESTIMATE_COMMANDS,RELIGHT_COMMANDS,SESSION_COMMANDS,SEQUENCE_COMMANDS,digest, envelope, read_json, timeout_value, validate)
 from processes import ProcessTree
 
 
@@ -33,6 +33,32 @@ def prepare(request, blender=DEFAULT_BLENDER, root=DEFAULT_JOBS, timeout=120, tr
     else:
         request = validate(request)
     timeout_value(timeout)
+    if request['command'] in SEQUENCE_COMMANDS:
+        if limits is not None:raise Failure('UNSUPPORTED','Sequence has explicit frame/pixel/time budgets; OS RAM/VRAM limits are not qualified')
+        budget=request['params'].get('budget',{}).get('timeout_seconds',30)
+        if timeout<budget+90:raise Failure('INVALID_REQUEST','Sequence parent timeout must cover worker budget plus90s cleanup allowance')
+    if request['command'] in SESSION_COMMANDS:
+        if limits is not None:raise Failure('UNSUPPORTED','Hot session has explicit lifetime/pixel/time/work budgets, not OS RAM/VRAM limits')
+        params=request['params']
+        if timeout<params['lifetime_seconds']+params['relight']['budget']['timeout_seconds']+90:
+            raise Failure('INVALID_REQUEST','Session launch timeout must cover lifetime and numeric stage budget plus90s runtime/cleanup allowance')
+    if request['command'] in RELIGHT_COMMANDS:
+        if limits is not None:raise Failure('UNSUPPORTED','Relight has explicit pixel/time/work budgets, not OS RAM/VRAM limits')
+        if timeout<request['params']['budget']['timeout_seconds']+90:
+            raise Failure('INVALID_REQUEST','Relight launch timeout must cover numeric stage budget plus90s runtime/cleanup allowance')
+    if request['command'] in ESTIMATE_COMMANDS:
+        if limits is not None:raise Failure('UNSUPPORTED','DAV2 Host inference does not certify RAM/VRAM limits')
+        params=request['params'];budget=params['budget']
+        if params['domain']['width']*params['domain']['height']>budget['max_pixels']:
+            raise Failure('RESOURCE_LIMIT','Estimate original RGB exceeds its declared pixel budget')
+        if timeout<budget['timeout_seconds']+90:
+            raise Failure('INVALID_REQUEST','Estimate launch timeout must cover raw worker budget plus90s preimport/cleanup allowance')
+    if request['command'] in DEPTH_COMMANDS:
+        if limits is not None:raise Failure('UNSUPPORTED','Depth Host work units do not certify RAM/VRAM limits')
+        if request['command']=='compositing.depth-prepare' and timeout<request['params']['budget']['timeout_seconds']+30:
+            raise Failure('INVALID_REQUEST','Depth launch timeout must cover the explicit preparation budget plus30s cleanup grace')
+        if request['command']=='compositing.depth-inspect' and timeout<30:
+            raise Failure('INVALID_REQUEST','Depth cold inspection launch timeout must be at least30s')
     if request["command"]=="compositing.encode" and limits is not None:
         raise Failure("UNSUPPORTED","M4 only has explicit pixel/time budgets; Host Job RAM/VRAM integration not qualified")
     if limits is not None:
@@ -42,7 +68,8 @@ def prepare(request, blender=DEFAULT_BLENDER, root=DEFAULT_JOBS, timeout=120, tr
     if request["command"]=="compositing.encode" and timeout<request["params"]["budget"]["timeout_seconds"]+30:
         raise Failure("INVALID_REQUEST","M4 launch timeout must cover explicit worker budget plus30s cleanup grace")
     blender = Path(blender).resolve()
-    if not blender.is_file() and request["command"] not in (*OPERATIONS,"transaction.status", "transaction.rollback", "transaction.recover", "compositing.encode"):
+    modeling_host=request['command']=='modeling.run' and request['params']['manifest']['operation']!='import_local'
+    if not blender.is_file() and not modeling_host and request["command"] not in (*OPERATIONS,*DEPTH_COMMANDS,*ESTIMATE_COMMANDS,*RELIGHT_COMMANDS,*SESSION_COMMANDS,*SEQUENCE_COMMANDS,"transaction.status", "transaction.rollback", "transaction.recover", "compositing.encode"):
         raise Failure("NOT_FOUND", f"Blender executable not found: {blender}")
     job = Path(root).resolve() / uuid.uuid4().hex
     job.mkdir(parents=True, exist_ok=False)
@@ -55,6 +82,36 @@ def prepare(request, blender=DEFAULT_BLENDER, root=DEFAULT_JOBS, timeout=120, tr
         launch=read_json(job/"launch.json")
         launch.update(encode_identity=launch_identity(),encode_request_signature=__import__("compositing_encode_contract").signature(request["params"]))
         atomic_json(job/"launch.json",launch)
+    if request['command'] in DEPTH_COMMANDS:
+        from compositing_depth_public import launch_identity
+        from compositing_depth_contract import signature
+        launch=read_json(job/'launch.json')
+        launch.update(depth_identity=launch_identity(),depth_request_signature=signature(request['params']))
+        atomic_json(job/'launch.json',launch)
+    if request['command'] in SESSION_COMMANDS:
+        from compositing_relight_session_public import launch_identity
+        from compositing_relight_session_contract import signature
+        launch=read_json(job/'launch.json')
+        launch.update(session_identity=launch_identity(),session_request_signature=signature(request['params']))
+        atomic_json(job/'launch.json',launch)
+    if request['command'] in RELIGHT_COMMANDS:
+        from compositing_relight_public import launch_identity
+        from compositing_relight_contract import signature
+        launch=read_json(job/'launch.json')
+        launch.update(relight_identity=launch_identity(),relight_request_signature=signature(request['params']))
+        atomic_json(job/'launch.json',launch)
+    if request['command'] in ESTIMATE_COMMANDS:
+        from compositing_depth_estimate_public import launch_identity
+        from compositing_depth_estimate_contract import signature
+        launch=read_json(job/'launch.json')
+        launch.update(estimate_identity=launch_identity(),estimate_request_signature=signature(request['params']))
+        atomic_json(job/'launch.json',launch)
+    if request['command'] in SEQUENCE_COMMANDS:
+        from compositing_relight_sequence_public import launch_identity
+        from compositing_relight_sequence_contract import signature
+        launch=read_json(job/'launch.json')
+        launch.update(sequence_identity=launch_identity(),sequence_request_signature=signature(request['params']))
+        atomic_json(job/'launch.json',launch)
     return job
 
 
@@ -189,7 +246,7 @@ def _execute_worker(job, parent_checkpoint=None):
             for d in (request['params']['manifest']['before'],request['params']['manifest']['after']):
                 protect(d,input_guards,checkpoint)
                 input_hashes[d['file']]=d['expected_sha256']
-        if request["command"] in ("compositing.run", "compositing.inspect", "compositing.template-save", "compositing.template-run", "compositing.batch", "compositing.study", "lighting.run", "lighting.inspect", "lighting.template-save", "lighting.template-edit", "lighting.batch", "geometry.run", "geometry.inspect", "inspect", "project.verify", "project.prepare_copy", "tracking.prepare", "tracking.inspect", "tracking.solve", "asset.preview.prepare", "query", "diff", "dependency.audit", "dependency.plan-relink", "dependency.prepare", "project.link.prepare", "project.override.prepare", "project.override.resync", "validate", "identity.prepare", "asset.prepare", "asset.index", "scene.prepare", "scene.inspect", "model.prepare", "model.inspect", "node.prepare", "node.inspect", "material.preview", "material.run", "material.template-save", "material.batch", "material.study", "texture.bake", "rig.prepare", "rig.inspect", "rig.package", "animation.sample", "simulation.prepare", "simulation.inspect", "simulation.bake", "render.run", "media.prepare", "media.export", "exchange.analyze", "exchange.export", "exchange.import", "exchange.convert", "extension.run", "extension.prepare"):
+        if request["command"] in ("modeling.run", "compositing.run", "compositing.inspect", "compositing.template-save", "compositing.template-run", "compositing.batch", "compositing.study", "lighting.run", "lighting.inspect", "lighting.template-save", "lighting.template-edit", "lighting.batch", "geometry.run", "geometry.inspect", "inspect", "project.verify", "project.prepare_copy", "tracking.prepare", "tracking.inspect", "tracking.solve", "asset.preview.prepare", "query", "diff", "dependency.audit", "dependency.plan-relink", "dependency.prepare", "project.link.prepare", "project.override.prepare", "project.override.resync", "validate", "identity.prepare", "asset.prepare", "asset.index", "scene.prepare", "scene.inspect", "model.prepare", "model.inspect", "node.prepare", "node.inspect", "material.preview", "material.run", "material.template-save", "material.batch", "material.study", "texture.bake", "rig.prepare", "rig.inspect", "rig.package", "animation.sample", "simulation.prepare", "simulation.inspect", "simulation.bake", "render.run", "media.prepare", "media.export", "exchange.analyze", "exchange.export", "exchange.import", "exchange.convert", "extension.run", "extension.prepare"):
             from filesystem import FileGuard
             for key, expected in (("file", "expected_sha256"), ("other", "other_sha256")):
                 filename = request["params"].get(key)
@@ -250,6 +307,9 @@ def _execute_worker(job, parent_checkpoint=None):
                         guard=input_guards.enter_context(FileGuard(filename));input_hashes[filename]=guard.sha256(checkpoint)
                     if input_hashes[filename]!=anchor['expected_sha256']:raise Failure('CONFLICT','Compositing descriptor changed')
                 documents+=input_documents(request['params'],request['command'])
+            if request['command']=='modeling.run':
+                from modeling_workflow_contract import input_documents
+                documents+=input_documents(request['params'])
             if request['command'].startswith('lighting.'):
                 from lighting_workflow_contract import anchor_documents, input_documents
                 for anchor in anchor_documents(request['params'],request['command']):
@@ -378,7 +438,7 @@ def _execute_worker(job, parent_checkpoint=None):
             raise Failure(code if code in CODES else "WORKER_FAILED", f"Worker exit={worker_exit}; {details or 'no result'}")
         result = read_json(result_file)
         if not result.get("ok"):
-            if request['command'] in ('sculpt.replay','material.run','material.template-save','material.batch','material.study','geometry.run','geometry.inspect','lighting.run','lighting.inspect','lighting.template-save','lighting.template-edit','lighting.batch'):
+            if request['command'] in ('modeling.run','sculpt.replay','material.run','material.template-save','material.batch','material.study','geometry.run','geometry.inspect','lighting.run','lighting.inspect','lighting.template-save','lighting.template-edit','lighting.batch'):
                 detail=result.get('error') or {}
                 raise Failure(detail.get('code') if detail.get('code') in CODES else 'WORKER_FAILED',str(detail.get('message',detail)))
             raise Failure("VALIDATION_FAILED", str(result.get("error")))
@@ -411,6 +471,10 @@ def _execute_worker(job, parent_checkpoint=None):
             # Own-tree paths only; ancestor paths stay in hashed domain anchors.
             for path in job.rglob('*'):
                 if path.is_file():artifacts[str(path.relative_to(job))]=str(path)
+        if request['command']=='modeling.run':
+            for path in job.rglob('*'):
+                if path.is_file() and (path.name.startswith('modeling-') or path.suffix.lower() in ('.blend','.png')):
+                    artifacts[str(path.relative_to(job))]=str(path)
         if request['command'].startswith('lighting.'):
             for path in job.rglob('*'):
                 if path.is_file() and (path.name.startswith('lighting-') or 'previews' in path.parts or 'items' in path.parts or 'resources' in path.parts):
@@ -456,7 +520,7 @@ def _execute_worker(job, parent_checkpoint=None):
                 if path.is_file():artifacts[path.name]=str(path)
         for name in ('rig-before.json','rig-expected.json','rig-report.json','rig-actions.json','rig-change.json','rig-candidate.blend','animation-samples.json','rig-profile.json','rig-mapping-suggestions.json','rig-adapter-report.json','action-set-progress.json','action-set-quality.json'):
             if (job/name).is_file():artifacts[name]=str(job/name)
-        for name in ('node-before.json','node-expected.json','node-report.json','node-actions.json','node-change.json','node-candidate.blend','material-preview.png','material-preview.json','baked-texture.png','bake-report.json'):
+        for name in ('node-before.json','node-expected.json','node-report.json','node-actions.json','node-change.json','node-candidate.blend','material-preservation.json','material-preview.png','material-preview.json','baked-texture.png','bake-report.json'):
             if (job/name).is_file():artifacts[name]=str(job/name)
         for name in ('model-before.json','model-expected.json','model-report.json','model-actions.json','model-change.json','model-candidate.blend','uv-layout-report.json','model-evaluation-reopen.json','geometry-operation-report.json'):
             if (job/name).is_file():artifacts[name]=str(job/name)
@@ -503,6 +567,8 @@ def execute(job, parent_checkpoint=None):
     if request['command'].startswith('pipeline.') or request['command']=='asset.preview.batch':
         import pipeline
         return pipeline.execute(job,parent_checkpoint)
+    if request['command']=='modeling.run' and request['params']['manifest']['operation']=='import_local':
+        return execute_worker(job,parent_checkpoint)
     if request["command"] not in HOST_COMMANDS:
         return execute_worker(job, parent_checkpoint)
     import transactions
@@ -511,14 +577,24 @@ def execute(job, parent_checkpoint=None):
     started = time.monotonic()
     state.update(state="running", supervisor_pid=os.getpid(), started_at=time.time())
     data, error = None, None
-    if request["command"]=="compositing.encode":
+    if request["command"]=="compositing.encode" or request['command'] in (*DEPTH_COMMANDS,*ESTIMATE_COMMANDS,*RELIGHT_COMMANDS,*SESSION_COMMANDS,*SEQUENCE_COMMANDS):
         state["process_tree_root_pid"]=os.getpid()  # Host supervisor roots its actual numeric/codec descendants.
     def checkpoint():
         if parent_checkpoint:
             parent_checkpoint()
         if (job / "cancel.request").exists():
+            if request['command'] in SEQUENCE_COMMANDS:raise Failure('CANCELLED','Sequence cancelled; partial frames cannot authorize a complete shot')
+            if request['command'] in SESSION_COMMANDS:raise Failure('CANCELLED','Owned session cancelled; retained previews are diagnostic and no final closed receipt is authorized')
+            if request['command'] in RELIGHT_COMMANDS:raise Failure('CANCELLED','Relight partial retained; cancelled parent cannot authorize output')
+            if request['command'] in ESTIMATE_COMMANDS:raise Failure('CANCELLED','Estimate partial retained; cancelled parent cannot authorize raw or prepare recipe')
+            if request['command'] in DEPTH_COMMANDS:raise Failure('CANCELLED','Depth partial retained; cancelled parent does not qualify a bundle')
             raise Failure("CANCELLED", "Encoder partial retained; only passed final output can resume" if request["command"]=="compositing.encode" else "Transaction job cancelled; inspect journal before recovery")
         if time.monotonic() - started > launch["timeout_seconds"]:
+            if request['command'] in SEQUENCE_COMMANDS:raise Failure('TIMEOUT','Sequence timed out; partial frames remain diagnostic')
+            if request['command'] in SESSION_COMMANDS:raise Failure('TIMEOUT','Owned session parent timeout; retained previews are diagnostic and no final closed receipt is authorized')
+            if request['command'] in RELIGHT_COMMANDS:raise Failure('TIMEOUT','Relight partial retained; timed-out parent cannot authorize output')
+            if request['command'] in ESTIMATE_COMMANDS:raise Failure('TIMEOUT','Estimate parent timeout; partial remains diagnostic only')
+            if request['command'] in DEPTH_COMMANDS:raise Failure('TIMEOUT','Depth parent timeout; partial remains diagnostic only')
             raise Failure("TIMEOUT", "Encoder job timeout; partial evidence retained" if request["command"]=="compositing.encode" else "Transaction job exceeded timeout; journal retained")
         if time.time() - state["heartbeat_at"] >= 1:
             state["heartbeat_at"] = time.time()
@@ -527,7 +603,69 @@ def execute(job, parent_checkpoint=None):
     try:
         checkpoint()
         from protocol import OPERATIONS,REVIEWS
-        if request['command']=='compositing.encode':
+        if request['command']=='modeling.run':
+            from modeling_host import run
+            data=run(request['params'],job,checkpoint)
+        elif request['command'] in SEQUENCE_COMMANDS:
+            from compositing_relight_sequence_public import launch_identity,run
+            from compositing_relight_sequence_contract import signature,DepthError
+            if launch.get('sequence_identity')!=launch_identity() or launch.get('sequence_request_signature')!=signature(request['params']):
+                raise Failure('CONFLICT','Sequence queued implementation/request changed')
+            try:
+                data=run(request['params'],job,cancel_parent=checkpoint,expected_identity=launch['sequence_identity'])
+                checkpoint()
+            except DepthError as exc:raise Failure(exc.code if exc.code in CODES else 'WORKER_FAILED',str(exc)) from exc
+        elif request['command'] in SESSION_COMMANDS:
+            from compositing_relight_session_public import launch_identity,run
+            from compositing_relight_session_contract import signature,DepthError
+            if launch.get('session_identity')!=launch_identity() or launch.get('session_request_signature')!=signature(request['params']):
+                raise Failure('CONFLICT','Session queued implementation/request changed')
+            try:
+                data=run(request['params'],job,checkpoint,expected_identity=launch['session_identity'])
+                checkpoint()
+                complete_path=job/'session-complete.json'
+                if data.get('status')!='closed' or not complete_path.is_file():
+                    raise Failure('VALIDATION_FAILED','Session success requires an explicitly closed complete receipt')
+                receipt=read_json(complete_path);declared=data.get('complete',{})
+                report_path=job/'session-report.json';report_ref=receipt.get('report',{})
+                if (receipt.get('schema')!='relight-session-closed-v1' or receipt.get('status')!='complete'
+                    or receipt.get('parent_job_id')!=job.name or declared.get('file')!=str(complete_path)
+                    or declared.get('sha256')!=digest(complete_path) or not report_path.is_file()
+                    or report_ref.get('file')!=str(report_path) or report_ref.get('sha256')!=digest(report_path)):
+                    raise Failure('CONFLICT','Session closed receipt/report binding differs')
+            except DepthError as exc:raise Failure(exc.code if exc.code in CODES else 'WORKER_FAILED',str(exc)) from exc
+        elif request['command'] in RELIGHT_COMMANDS:
+            from compositing_relight_public import launch_identity,run
+            from compositing_relight_contract import signature,DepthError
+            if launch.get('relight_identity')!=launch_identity() or launch.get('relight_request_signature')!=signature(request['params']):
+                raise Failure('CONFLICT','Relight queued implementation/request changed')
+            try:
+                data=run(request['params'],job,checkpoint,launch['relight_identity'])
+                checkpoint()
+            except DepthError as exc:raise Failure(exc.code if exc.code in CODES else 'WORKER_FAILED',str(exc)) from exc
+        elif request['command'] in ESTIMATE_COMMANDS:
+            from compositing_depth_estimate_public import launch_identity,run
+            from compositing_depth_estimate_contract import signature,DepthError
+            if launch.get('estimate_identity') is None or launch['estimate_identity']!=launch_identity():
+                raise Failure('CONFLICT','Estimate Host implementation differs from queued launch')
+            if launch.get('estimate_request_signature')!=signature(request['params']):
+                raise Failure('CONFLICT','Estimate queued request changed')
+            try:
+                data=run(request['params'],job,cancel_parent=checkpoint,expected_identity=launch['estimate_identity'])
+                checkpoint()
+            except DepthError as exc:raise Failure(exc.code if exc.code in CODES else 'WORKER_FAILED',str(exc)) from exc
+        elif request['command'] in DEPTH_COMMANDS:
+            from compositing_depth_public import launch_identity,run
+            from compositing_depth_contract import signature,DepthError
+            if launch.get('depth_identity') is None or launch['depth_identity']!=launch_identity():
+                raise Failure('CONFLICT','Depth Host implementation differs from queued launch')
+            if launch.get('depth_request_signature')!=signature(request['params']):
+                raise Failure('CONFLICT','Depth queued request changed')
+            try:
+                data=run(request['params'],job,request['command'].split('.')[1],cancel_parent=checkpoint,expected_identity=launch['depth_identity'])
+                checkpoint()  # A returned bundle cannot bypass late parent cancel/timeout.
+            except DepthError as exc:raise Failure(exc.code if exc.code in CODES else 'WORKER_FAILED',str(exc)) from exc
+        elif request['command']=='compositing.encode':
             from compositing_encode_public import run_public
             data=run_public(request['params'],job,launch,checkpoint)
         elif request['command'] == 'workflow.preflight':
@@ -556,12 +694,32 @@ def execute(job, parent_checkpoint=None):
     state.update(state="cancelled" if code == 7 else "timed_out" if code == 6 else "failed" if code else "succeeded",
                  exit_code=code, finished_at=time.time(), heartbeat_at=time.time(), elapsed_seconds=round(time.monotonic() - started, 3))
     artifacts = {"job_directory": str(job)}
+    if request['command'] in SEQUENCE_COMMANDS:
+        for name,key in [('sequence-report.json','sequence_report'),('sequence-bundle.json','sequence_bundle'),('sequence-failure.json','sequence_failure')]:
+            if (job/name).is_file():artifacts[key]=str(job/name)
+    if request['command'] in SESSION_COMMANDS:
+        for name,key in [('session-ready.json','session_ready'),('session-report.json','session_report'),('session-complete.json','session_complete'),('session-failure.json','session_failure')]:
+            if (job/name).is_file():artifacts[key]=str(job/name)
+    if request['command'] in RELIGHT_COMMANDS:
+        for name,key in [('relight-report.json','relight_report'),('relight-bundle.json','relight_bundle'),('relight-failure.json','relight_failure')]:
+            if (job/name).is_file():artifacts[key]=str(job/name)
+    if request['command'] in ESTIMATE_COMMANDS:
+        for name,key in [('model-report.json','model_report'),('depth-prepare-params.json','estimate_prepare_params'),('model-lifecycle.json','estimate_lifecycle')]:
+            if (job/name).is_file():artifacts[key]=str(job/name)
+    if request['command'] in DEPTH_COMMANDS:
+        for name,key in [('depth-report.json','depth_report')]:
+            if (job/name).is_file():artifacts[key]=str(job/name)
+        if request['command']=='compositing.depth-prepare' and (job/'depth-bundle.json').is_file():
+            artifacts['depth_bundle']=str(job/'depth-bundle.json')
     if request['command'] == 'workflow.preflight' and (job / 'workflow-preflight.json').is_file():
         artifacts['preflight_report'] = str(job / 'workflow-preflight.json')
     if request["command"]=="compositing.encode" and (job/"encode-report.json").is_file():
         artifacts["encode_report"]=str(job/"encode-report.json")
         if (job/"encode-public-receipt.json").is_file():artifacts["encode_public_receipt"]=str(job/"encode-public-receipt.json")
         if (job/"encode-lifecycle.json").is_file():artifacts["encode_lifecycle"]=str(job/"encode-lifecycle.json")
+    if request['command']=='modeling.run':
+        for path in job.rglob('modeling-*'):
+            if path.is_file():artifacts[str(path.relative_to(job))]=str(path)
     if data and "transaction_directory" in data:
         artifacts["transaction_directory"] = data["transaction_directory"]
     elif request["command"].startswith("transaction."):

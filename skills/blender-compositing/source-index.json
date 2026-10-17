@@ -1,0 +1,853 @@
+{
+  "schema": "relight-helper-source-index-v1",
+  "files": [
+    {
+      "path": "tools/blenderctl/adaptive_sampling.py",
+      "sha256": "f148577f5f771db1a6ccd2102382ecae2d4370882379285dfdfedf3fbd17b220"
+    },
+    {
+      "path": "tools/blenderctl/asset_contract.py",
+      "sha256": "e3a1273d94296a9afa791537ed0ccd40d98d2d42893b79459b27c916d12cf1d8"
+    },
+    {
+      "path": "tools/blenderctl/asset_previews.py",
+      "sha256": "53b13bdc964935ff077631bd009923d3ec699cdc61968d5c69b4b3c010a0a51c"
+    },
+    {
+      "path": "tools/blenderctl/asset_validation.py",
+      "sha256": "047db68732534da4217c01106f95ec5481da0203aceb0474ae0f779d67d65be7"
+    },
+    {
+      "path": "tools/blenderctl/assets.py",
+      "sha256": "15ce8e4f4c25688c1c861e7bedd0b7f48bfd5f67c2abf8995b300b441e70e1a1"
+    },
+    {
+      "path": "tools/blenderctl/bootstrap.py",
+      "sha256": "e91f623858909bed006f70cbe0b09f25acd946dfad388aabe526b11f0d83366e"
+    },
+    {
+      "path": "tools/blenderctl/cli.py",
+      "sha256": "add5b5b4080dbc9965e1a4275d62c246fd239ecedcfaa890bfae1ec1cd5fce08"
+    },
+    {
+      "path": "tools/blenderctl/compositing_batch.py",
+      "sha256": "fefa9aeaffae174284e9b68efca6cf410b94719509fa6f18dcd709cf99addb39"
+    },
+    {
+      "path": "tools/blenderctl/compositing_batch_contract.py",
+      "sha256": "f76cd6ab3c4f88afe26ec74f06923af0c71c250951214cbf790cf960b658fa1b"
+    },
+    {
+      "path": "tools/blenderctl/compositing_depth_contract.py",
+      "sha256": "70a64ede66bfeae4254a62dcf5658793e8c83d10563f2075eb82db0930d6d969"
+    },
+    {
+      "path": "tools/blenderctl/compositing_depth_estimate_contract.py",
+      "sha256": "64fa20b37a8d38c90f9698ddbc7122f5edabdeab55ea7538fb337a5e65ad9515"
+    },
+    {
+      "path": "tools/blenderctl/compositing_depth_estimate_public.py",
+      "sha256": "de2da95ab3048543a720d57f3fa749b9016fe950fff563234c023b4446a30cdb"
+    },
+    {
+      "path": "tools/blenderctl/compositing_depth_estimate_worker.py",
+      "sha256": "6108c21e318d239e5a3e34d481c4349f47a09da5b093b331b9f0aa45891dc6d9"
+    },
+    {
+      "path": "tools/blenderctl/compositing_depth_io.py",
+      "sha256": "17369950ec14f33c08e32daaf06128faf9c8a3ee0d9bc0b6fa9090a3af299b8d"
+    },
+    {
+      "path": "tools/blenderctl/compositing_depth_model_admission.py",
+      "sha256": "4ac20fb9985120c14e73b64e416b4a99109f0f5746b9f100df102d82ef3fcdd3"
+    },
+    {
+      "path": "tools/blenderctl/compositing_depth_public.py",
+      "sha256": "22cb13fbe73676a6275ff2aef5d51fc1f175d57bdc2c2b7db4c7bdbc3abc810b"
+    },
+    {
+      "path": "tools/blenderctl/compositing_depth_worker.py",
+      "sha256": "e748536832e380176aae599333c7fdbe5f53b881b151e975afe8e060dd1cd497"
+    },
+    {
+      "path": "tools/blenderctl/compositing_encode.py",
+      "sha256": "2183203d2d5cfd8fdfc81c1a8dc67a155f3987d561abcb9f9dcdcf49b3ddebce"
+    },
+    {
+      "path": "tools/blenderctl/compositing_encode_contract.py",
+      "sha256": "1239827cf28674588349577eff2d511ac8b5b4eaef14211b647332df7f449bcd"
+    },
+    {
+      "path": "tools/blenderctl/compositing_encode_public.py",
+      "sha256": "51ff18c290b30ce2d4a1b377c68aeb64dd492de014a99845e101ac79d2dafb3b"
+    },
+    {
+      "path": "tools/blenderctl/compositing_identity.py",
+      "sha256": "48cbe5fd66634e1cabc25c1a39960e97182a303f4be0f3fd2c10702cd4492919"
+    },
+    {
+      "path": "tools/blenderctl/compositing_interface.py",
+      "sha256": "17551ed4df7f7c612d9a08d7de94feeedf3df56c4ac21d507adc670a9743190a"
+    },
+    {
+      "path": "tools/blenderctl/compositing_m5_guards.py",
+      "sha256": "63d73a59d29588abdc9d15f87f1fb0735ec688cb6a1c30ad2a269bf10c73406e"
+    },
+    {
+      "path": "tools/blenderctl/compositing_m5_schema_draft.py",
+      "sha256": "58718622ef9d33054c77dad8d9f9f5458507682b6d0d2e82cbe297eafaf8b4a1"
+    },
+    {
+      "path": "tools/blenderctl/compositing_media.py",
+      "sha256": "e0789873cb86e517f1225a0bc9ec53e09450cf13153b08330f50057bbfdaf3ac"
+    },
+    {
+      "path": "tools/blenderctl/compositing_movie.py",
+      "sha256": "2018c0d937d6a2fd03d997b0b45a8da51d771ab3eb372795422f7c3d2457b8ec"
+    },
+    {
+      "path": "tools/blenderctl/compositing_orchestration_interface.py",
+      "sha256": "ab3e24899998825caea58156415fccb57a3899f131134521098775d72a6aebdf"
+    },
+    {
+      "path": "tools/blenderctl/compositing_relight_color_io.py",
+      "sha256": "f9e056076f9b14966ba10fa99d5b809ada460a12552adcf32ecb80cab6bb1709"
+    },
+    {
+      "path": "tools/blenderctl/compositing_relight_contract.py",
+      "sha256": "b050acb7714add3cf888e9c110b7a8b397bcffa914b70a3d9d317f00a156a535"
+    },
+    {
+      "path": "tools/blenderctl/compositing_relight_gpu_worker.py",
+      "sha256": "0087f1a5487ec70a827dbd940be205aee128f5778a204f16505d23b16514447a"
+    },
+    {
+      "path": "tools/blenderctl/compositing_relight_io_worker.py",
+      "sha256": "5eafae652f35d16e2f5f8365d3386328dc026fc6bf832165e51b2439f8200170"
+    },
+    {
+      "path": "tools/blenderctl/compositing_relight_kernel.py",
+      "sha256": "22daaff307e7025a62d18d4a5bc1831c379549ae75017cc53aeb1c74d11de533"
+    },
+    {
+      "path": "tools/blenderctl/compositing_relight_local_edits.py",
+      "sha256": "cfe5be79d8fc201ff16d81e3715f1b1553fee6694f052b3a3bead2ddd1277a2a"
+    },
+    {
+      "path": "tools/blenderctl/compositing_relight_public.py",
+      "sha256": "9bb828a9146f1bcc22a4a294b881a9175a92b378f13da14ed1ee5a340cf6f48e"
+    },
+    {
+      "path": "tools/blenderctl/compositing_relight_revision.py",
+      "sha256": "3cd58f67a430c12621e8db7e1e47025729acf5a7fc9e17c992b8f37eb5811665"
+    },
+    {
+      "path": "tools/blenderctl/compositing_relight_sequence_contract.py",
+      "sha256": "135649ffa2d10aa9e9cfea7b182d05407bb4b1526cdbd2e7345234240b1039f5"
+    },
+    {
+      "path": "tools/blenderctl/compositing_relight_sequence_gpu_worker.py",
+      "sha256": "6aecc2be48b6255b8b403ac2d229168edadf351119cb4981ad6247da3bb4c277"
+    },
+    {
+      "path": "tools/blenderctl/compositing_relight_sequence_public.py",
+      "sha256": "04885cdc977cc087bc638272eec1236fd0a2fd0527a6ac231b28d22153199df9"
+    },
+    {
+      "path": "tools/blenderctl/compositing_relight_sequence_worker.py",
+      "sha256": "4ec4e21649951720d67c4ee5f391191e5799f8c0bb69c585c38cfa48ba3eff44"
+    },
+    {
+      "path": "tools/blenderctl/compositing_relight_session_client.py",
+      "sha256": "94f80b84c7b29bbfa65152c9d645df8dc7c981e6321eda3043e4649aeaf064e3"
+    },
+    {
+      "path": "tools/blenderctl/compositing_relight_session_contract.py",
+      "sha256": "e00b330992d1a1cf9bda509c4bcdfa14d7d868ab41f766da1b78c3ca99ab0464"
+    },
+    {
+      "path": "tools/blenderctl/compositing_relight_session_gpu_worker.py",
+      "sha256": "e49486e34368a08498240b089b4d94553fe94e26f951469dd0730a8c904b517a"
+    },
+    {
+      "path": "tools/blenderctl/compositing_relight_session_owned_worker.py",
+      "sha256": "ddfe11fe0f77df71c36ceb0c4e39e0d63d826c9c96b46cc6de6465b27427856c"
+    },
+    {
+      "path": "tools/blenderctl/compositing_relight_session_public.py",
+      "sha256": "d2b5e45feac8af800aef9728de19c19ae75dc9b6b7365ad48668d0bbd5af1c99"
+    },
+    {
+      "path": "tools/blenderctl/compositing_study.py",
+      "sha256": "2591972a299012e098b5fc6e9c4c67c5fc4af8ffdb9e30200a45bb3eb612d8df"
+    },
+    {
+      "path": "tools/blenderctl/compositing_template_run.py",
+      "sha256": "e4c43c53639894da490f3b1663bdaace066823a6fcf2bdcb351db29aee7bad75"
+    },
+    {
+      "path": "tools/blenderctl/compositing_template_run_contract.py",
+      "sha256": "2f8c09c8969a924016b8b347a3191a598fdfdbd9a1f7e9574dce5c33f475262c"
+    },
+    {
+      "path": "tools/blenderctl/compositing_templates.py",
+      "sha256": "3fd99e36ba0f929f26e8f508e1da03b4f77fa681db6af3a6152c6a432accfd5e"
+    },
+    {
+      "path": "tools/blenderctl/compositing_temporal.py",
+      "sha256": "48f8fec8d9abc25136d9aad624bb624f84345d32515d3d2a32d31fc49d70d958"
+    },
+    {
+      "path": "tools/blenderctl/compositing_verifier.py",
+      "sha256": "c33df6a8eb6e23559969af196f9654b088ce1bd1d09faac75d3afaa9ccb95a7e"
+    },
+    {
+      "path": "tools/blenderctl/compositing_workflow.py",
+      "sha256": "24adec7903471d2fc0f24d64f5b67465247aec99ba4ad2e1962a489b678492be"
+    },
+    {
+      "path": "tools/blenderctl/compositing_workflow_contract.py",
+      "sha256": "a0f3929aa5578bfb3ae112d2b399ebb3738db34bdd8524f2cc143bbc312975ec"
+    },
+    {
+      "path": "tools/blenderctl/curve_contract.py",
+      "sha256": "bf4289b0cbd21861d08679eab56b9f6a7d51330eed355e5c54a69bfa05a1e0c1"
+    },
+    {
+      "path": "tools/blenderctl/dependencies.py",
+      "sha256": "7bd212cf44e715edc8c693413dfce4ccc32fc2a83808fed3dd46475b137c8df5"
+    },
+    {
+      "path": "tools/blenderctl/dependency_contract.py",
+      "sha256": "2a3a1d173490b7af656b8deee4cae7d777f2ece58f53c17a4d476bb14a1aeb4e"
+    },
+    {
+      "path": "tools/blenderctl/dependency_relink.py",
+      "sha256": "b0090fde4d33a1448dfd7a7d0ecc747b0a7f06e7bd27e568467a8a6ad4bf03ff"
+    },
+    {
+      "path": "tools/blenderctl/directory_handles.py",
+      "sha256": "91abeb61513e7e9d6dca13bdd94143d87d0cf17400ff359384f0d61ea1899b5e"
+    },
+    {
+      "path": "tools/blenderctl/driver_contract.py",
+      "sha256": "08848753f342e523e81c98bb133c1c876f4b1b4f72875c100a695fd29518405d"
+    },
+    {
+      "path": "tools/blenderctl/driver_math.py",
+      "sha256": "e5236871a599826581fc837a5d398c12bb869812d1c36e3474dda9c0dfc1db06"
+    },
+    {
+      "path": "tools/blenderctl/drivers.py",
+      "sha256": "bbda9d0b49ca76e2f8e09ba287669b6d6ea6ca45f9d93daecbb0b3cd7889c1f4"
+    },
+    {
+      "path": "tools/blenderctl/exchange.py",
+      "sha256": "a259b5c1b1a9f308c94befe1781a5f20e839d21576c79b10408565fceb3a128f"
+    },
+    {
+      "path": "tools/blenderctl/exchange_contract.py",
+      "sha256": "4d420d2cac2d29303ab08c8e947f98bbcd40be62d618fa05fb8740adc70a4760"
+    },
+    {
+      "path": "tools/blenderctl/execution_contract.py",
+      "sha256": "797959fdd750eb487092bb206b20bf2d1895eda84039449ec532a3a1b9b30092"
+    },
+    {
+      "path": "tools/blenderctl/extensions.py",
+      "sha256": "69c6641cf5b9844ba7215728aa515478788316dacce377a17fcf22b348c14f47"
+    },
+    {
+      "path": "tools/blenderctl/fbx_clock.py",
+      "sha256": "6c9b656129428b09ce5819112e7a878595904c17b9a0ad8d6b7b12cebc29c86d"
+    },
+    {
+      "path": "tools/blenderctl/fbx_compat.py",
+      "sha256": "ffb28ff96538e492d1f5eb7d39b126ea46cfe871479b4f40f6aeec5bacb0af9e"
+    },
+    {
+      "path": "tools/blenderctl/filesystem.py",
+      "sha256": "d8cb1f07feb9dac590ea1103d7d6c0a8c0fcdca6377c49b57cce07e0369bed0e"
+    },
+    {
+      "path": "tools/blenderctl/font_binary.py",
+      "sha256": "4083f7ca7e6ac5bc0fcb78851fdadcdce25cc52f596926b3fc1fb6355c47c596"
+    },
+    {
+      "path": "tools/blenderctl/font_curves.py",
+      "sha256": "d2dbd9b16b82f04bbb2cef787d47aa5834d5b70878e241209fe03d39fec0d178"
+    },
+    {
+      "path": "tools/blenderctl/geometry_cache_layout.py",
+      "sha256": "52554037defe3c962ad3f0f9895f8416dc922584252fe4d521fb35a1934fdd39"
+    },
+    {
+      "path": "tools/blenderctl/geometry_cache_reader.py",
+      "sha256": "11ce7e66666d6eb9769fb12d3a7b4ccd3931cdd6ac7ff73e68aa35762a32d859"
+    },
+    {
+      "path": "tools/blenderctl/geometry_identity.py",
+      "sha256": "0d248906e3b81f5891315c8e2e2af51e66520463fcb2a6ddfbb3c7e85c1bac02"
+    },
+    {
+      "path": "tools/blenderctl/geometry_interface.py",
+      "sha256": "9f26e67577f252b87ee78a52d56da41e480b84467a168b14b17187a4533e6ce9"
+    },
+    {
+      "path": "tools/blenderctl/geometry_session.py",
+      "sha256": "09deebe731dd501c03af72f27e8d498bcf694c327f169f09ca0e0df3cd54e323"
+    },
+    {
+      "path": "tools/blenderctl/geometry_temporal.py",
+      "sha256": "5a2329bdb52828ad79df7662d8751ebd69f67c266322d684fbff9283d3f0fc6a"
+    },
+    {
+      "path": "tools/blenderctl/geometry_verifier.py",
+      "sha256": "dc7c7b3048f133eab37681ed25ad2ee7b698232fb3e0566f87fc2c0b5277443a"
+    },
+    {
+      "path": "tools/blenderctl/geometry_workflow.py",
+      "sha256": "85d972479501f897afe1a41985b52bfaecb9b4a8871f01ef76c46d01c5cb25fd"
+    },
+    {
+      "path": "tools/blenderctl/geometry_workflow_contract.py",
+      "sha256": "3feca73f0c11bf33c40ff452f4058e3be76a0a4c6575f29199fa2016237e208c"
+    },
+    {
+      "path": "tools/blenderctl/glb_clock.py",
+      "sha256": "436163ce65913d293dc3c255f28ba15559caf1f2cf5e6833b94a5bf81abdac30"
+    },
+    {
+      "path": "tools/blenderctl/hair.py",
+      "sha256": "d255a35c96119c07b89a333982e69ecba95a0488833cb77bd93d2bddda7ec54f"
+    },
+    {
+      "path": "tools/blenderctl/hair_collision.py",
+      "sha256": "57f7d06b1cf7c7f0e30ec0d24a2ef26fbe73d4153c56f214153594d6d2557e14"
+    },
+    {
+      "path": "tools/blenderctl/hair_contract.py",
+      "sha256": "c349999bfc71e68f2f9d02cb9b7847d20caa895166872bb9c0efb50726cb2af2"
+    },
+    {
+      "path": "tools/blenderctl/hair_density.py",
+      "sha256": "a556da7d5bc039ee724e8f747c1eb27a5a752137e4fe1b03bc0a560d02fffa1a"
+    },
+    {
+      "path": "tools/blenderctl/hair_dynamics.py",
+      "sha256": "7c4ace00cc52ecde89f93beb493d379afb7f5a1ba7fb309a6107d3d39dc237c4"
+    },
+    {
+      "path": "tools/blenderctl/hair_dynamics_contract.py",
+      "sha256": "ffce203dfea964c028332f229f33473106624dfb8f310954f861bae8d16f1124"
+    },
+    {
+      "path": "tools/blenderctl/hair_shape.py",
+      "sha256": "7bb80557c83e9fc1f6868997f8ef48ad75b54667f60e576cc2f3702710fb9cae"
+    },
+    {
+      "path": "tools/blenderctl/hair_shape_contract.py",
+      "sha256": "279e0891e57d65681d1f5b6ab9d7a0fc8369869f56214c56ff38e336b7d47195"
+    },
+    {
+      "path": "tools/blenderctl/hair_shape_nodes.py",
+      "sha256": "276199582afddb5bc58657c96d1e9db05de689e43482941f07314c66d5d7cbeb"
+    },
+    {
+      "path": "tools/blenderctl/hair_surface.py",
+      "sha256": "c5835dc1e68d07fd13e6b65ade46e03e4e6b399e31c5abcec0388a709f992548"
+    },
+    {
+      "path": "tools/blenderctl/hair_volume.py",
+      "sha256": "239f66b84b6e2f86923d244ead041304b9884f042d64b77e6dc357896924a273"
+    },
+    {
+      "path": "tools/blenderctl/hair_volume_contract.py",
+      "sha256": "f52a649220ff4371935d216a333db0190bff34b17dc9f2f678b43b8e06b97fd4"
+    },
+    {
+      "path": "tools/blenderctl/hair_voxels.py",
+      "sha256": "606f49731099429e27a2f909942fc9deb31aadf59896db43d759353d10c385f4"
+    },
+    {
+      "path": "tools/blenderctl/inspection.py",
+      "sha256": "9920fefc5734d217c370aa9f418b94013295a64d12f4883e1edbcff72685f927"
+    },
+    {
+      "path": "tools/blenderctl/installation.py",
+      "sha256": "99c97dfe89663103492bd8024bed52399dcfcd9611043cf9608ff9eea8c39c1e"
+    },
+    {
+      "path": "tools/blenderctl/isolated_script_worker.py",
+      "sha256": "a4b6d86cb12edf5227463d96465ef7df8b5d569aa82c4a5ad61fd9408856a315"
+    },
+    {
+      "path": "tools/blenderctl/isolation_lifecycle.py",
+      "sha256": "890c2264b55a16206a0515fa89bb8851f194248129bc64a36f2a6b6bd6586f8d"
+    },
+    {
+      "path": "tools/blenderctl/library.py",
+      "sha256": "ba2056bb6946cfc69fc483ceeb74b393be031b77e03eb623f553d25e51c65687"
+    },
+    {
+      "path": "tools/blenderctl/lighting_batch.py",
+      "sha256": "dc2ca558b7a820838afd3070406699371a9b6c27a26339708d0b6c4cf786db21"
+    },
+    {
+      "path": "tools/blenderctl/lighting_identity.py",
+      "sha256": "8f1b4e22fc81d3c21293f8e762e58c29ba102333ea5a0211365d75c36bbddfcb"
+    },
+    {
+      "path": "tools/blenderctl/lighting_interface.py",
+      "sha256": "5be893198042f94950ebf1c72ae55a0ffd4395e1ec767edc062a1b7b7798edb7"
+    },
+    {
+      "path": "tools/blenderctl/lighting_verifier.py",
+      "sha256": "60e35ebc0f4370d55677e9d8c9ddb63e5d7538b71ffbf79ae2cb6c5b0a9564a1"
+    },
+    {
+      "path": "tools/blenderctl/lighting_workflow.py",
+      "sha256": "fad8f064cc6ab9667ebee0c6ef558c0d4e5c0948d989e736c6a036251bc03844"
+    },
+    {
+      "path": "tools/blenderctl/lighting_workflow_contract.py",
+      "sha256": "7d83495ec04c7007769e5c77c20f821810e45d979297b21d82179bd6a9a77ed9"
+    },
+    {
+      "path": "tools/blenderctl/link_contract.py",
+      "sha256": "308dd0d146363ac04cc55f52467c5fcdbcc34f774b06fc3a43313f0933281a80"
+    },
+    {
+      "path": "tools/blenderctl/linking.py",
+      "sha256": "cf77b959a091c4cb1daf857aba87353435fa73ad96dfaa4529d403fa6b37389d"
+    },
+    {
+      "path": "tools/blenderctl/liquid.py",
+      "sha256": "533c76b50e82317aa78576efb455398a54e2d0e5be7a0d384a81ca09a6bc17d3"
+    },
+    {
+      "path": "tools/blenderctl/material_batch.py",
+      "sha256": "948acb68efbd45944394fe411d640148fd250953250eb863f5ca06585786f4f4"
+    },
+    {
+      "path": "tools/blenderctl/material_batch_contract.py",
+      "sha256": "e14b68e59b1284c0649efdb1a7ec536d5379e4d3d1da6a29747593725fc8d003"
+    },
+    {
+      "path": "tools/blenderctl/material_deformation.py",
+      "sha256": "b5834d09d16a94a9548a957bea873bed1e9c2ab647e371fa01634b60ea1de57f"
+    },
+    {
+      "path": "tools/blenderctl/material_interface.py",
+      "sha256": "a21412a713e95b8ea840d0b5d33e9f3326a7bc3e5782b93394791bb8f58179d4"
+    },
+    {
+      "path": "tools/blenderctl/material_interface_contract.py",
+      "sha256": "e69d50d9be4147e2e2f5f0aa75ad7f1a773ac34bd1fd43854ef87cd96cfc09e0"
+    },
+    {
+      "path": "tools/blenderctl/material_node_snapshot.py",
+      "sha256": "2034891590b4ef97e0510bf0917206811025a7c8e767b0336132985b61796394"
+    },
+    {
+      "path": "tools/blenderctl/material_outputs.py",
+      "sha256": "e38d623c2def39457205e3154ef1a57d20575e142223eebdc580662347bcee27"
+    },
+    {
+      "path": "tools/blenderctl/material_progress.py",
+      "sha256": "87f9682655be53bca4a211f3734b6edb61a96435e2cf41b907c4294b92b27541"
+    },
+    {
+      "path": "tools/blenderctl/material_study.py",
+      "sha256": "1f460999fe60b533bae56ffbfc178546deeabf2f039ed169f7d6c33e6606d14b"
+    },
+    {
+      "path": "tools/blenderctl/material_study_contract.py",
+      "sha256": "f35b8dc7358bfc3899e81b70cad23a221eea03bbd70bd62406e50e592b8423d7"
+    },
+    {
+      "path": "tools/blenderctl/material_workflow.py",
+      "sha256": "1095a47635b8927156c24739ccbc5fe7201360ce61e369fa81f0691fb890cd13"
+    },
+    {
+      "path": "tools/blenderctl/material_workflow_contract.py",
+      "sha256": "b64dc84f2df5be58e517c494079e43ad2990d5efcc33a612968d3fd09e3db9f5"
+    },
+    {
+      "path": "tools/blenderctl/media.py",
+      "sha256": "2fad9d525c5d36f746996caf1f5155beeae5d48993754f3ee9356d4d1cd593b0"
+    },
+    {
+      "path": "tools/blenderctl/mesh_clip.py",
+      "sha256": "e50ffc32ba790a07dc0c243902cd63e560682e4f841752ded2712237e9b67fe6"
+    },
+    {
+      "path": "tools/blenderctl/mesh_clip_analysis.py",
+      "sha256": "90baa811e98dd9c64c8bf1640556310c45c974eb580f5f8b4f02cef438bae16a"
+    },
+    {
+      "path": "tools/blenderctl/model_contract.py",
+      "sha256": "bc9f9e13ae67f5335092b45465539a5d82b0e41e8c9fd8fd8fe199e43268637e"
+    },
+    {
+      "path": "tools/blenderctl/modeling.py",
+      "sha256": "b090bd6c13db381ec3c880c6de4153e3242a6019bb47818e25432d05eb4f7d47"
+    },
+    {
+      "path": "tools/blenderctl/modeling_host.py",
+      "sha256": "6742330115ebadef37716ededf04c26e79fd3f0ddc99fc2576f4f407e9a0934b"
+    },
+    {
+      "path": "tools/blenderctl/modeling_identity.py",
+      "sha256": "71ce6130a069ee70cf61417de5815ace9c45b648d7b22a3834c58e5de0b0347e"
+    },
+    {
+      "path": "tools/blenderctl/modeling_interface.py",
+      "sha256": "8c5c49566983e2f2deaacf91dbc04b94326d452f921f715287d11490c8fd536d"
+    },
+    {
+      "path": "tools/blenderctl/modeling_verifier.py",
+      "sha256": "0b22f6197b09383f569448c65ced32088a0ae11abfb247cc68ec7395c3bf86cc"
+    },
+    {
+      "path": "tools/blenderctl/modeling_workflow.py",
+      "sha256": "c4a41f9bd99e392e38b887b4eb8c83536346ec0de8681f2b59bd8509506a68c7"
+    },
+    {
+      "path": "tools/blenderctl/modeling_workflow_contract.py",
+      "sha256": "c5ee1e43bb172f9c6a2654e61c7ddf80a9f828c04c839b5837cb78af15c0ab08"
+    },
+    {
+      "path": "tools/blenderctl/native_mesh_cache.py",
+      "sha256": "51920753a9af143de0f579ee3f7b73b14320dde5b9c878e938fe2d76f0f5847b"
+    },
+    {
+      "path": "tools/blenderctl/node_contract.py",
+      "sha256": "577cb6958c35676321ec8c6fd6da2edd260b46049d7e1f81ceee15a44c8d9325"
+    },
+    {
+      "path": "tools/blenderctl/node_zones.py",
+      "sha256": "1a3f4a12b4d32f2649478b986f0e0c64156c73cfeebf8ca8f6dbfd2e767afe30"
+    },
+    {
+      "path": "tools/blenderctl/nodes.py",
+      "sha256": "cea65d87fd8cbefc6c37eed3b7b0de567bba1a3f18dcd535356ad55a27eccd33"
+    },
+    {
+      "path": "tools/blenderctl/operations.py",
+      "sha256": "1436b109e066abd3baa4652451864e379272d8ceaebce6a79a0695d71b585133"
+    },
+    {
+      "path": "tools/blenderctl/operations_contract.py",
+      "sha256": "494092de3d74c4bb2f2ebeaafe266e8159f13a5f1710295915fbc75a548ffe06"
+    },
+    {
+      "path": "tools/blenderctl/pipeline.py",
+      "sha256": "d78b0bfdc655aa4b7eacd16bf18f6eecaf6de543368614278dc22c55bbb9bdb9"
+    },
+    {
+      "path": "tools/blenderctl/pipeline_contract.py",
+      "sha256": "6069a01487e205869fd202fa5b71375367e3b0b5dcd7c984684d9c643fc7b5f3"
+    },
+    {
+      "path": "tools/blenderctl/preview_contract.py",
+      "sha256": "6caea67d6af02cb101a167028248b35050a9274a11b8c0aaeab4fe2eae7071d4"
+    },
+    {
+      "path": "tools/blenderctl/preview_framing.py",
+      "sha256": "ef4efb178f8be0a75d72820c63fa348542e6be00105e1a8d756795de8f1b6826"
+    },
+    {
+      "path": "tools/blenderctl/probes.py",
+      "sha256": "53ea8742f76ea8c514301ad5d03edb8cdfdcc83b45120d9be348750425d19d0d"
+    },
+    {
+      "path": "tools/blenderctl/processes.py",
+      "sha256": "2ce3f395008a75534c93976d2204b5e4d66b6338ddff471163778cf160709dc9"
+    },
+    {
+      "path": "tools/blenderctl/project_contract.py",
+      "sha256": "dc64bc637c84c48f2f41ff0aca16bd18c424076b34b2c23608dda31b677daf1c"
+    },
+    {
+      "path": "tools/blenderctl/projects.py",
+      "sha256": "2b09cd41e5170677a624b514e3aec39099b90421548de649ef62bb866867b130"
+    },
+    {
+      "path": "tools/blenderctl/protocol.py",
+      "sha256": "895ae6ca16c425d74ecffa5cf6c1ab8d0a59023021b1fccf34cb1c495fd0fe65"
+    },
+    {
+      "path": "tools/blenderctl/render_contract.py",
+      "sha256": "633c130a316ce7a41fc45c0902aac148de63c55de61adab4a54d39d8cd391eb1"
+    },
+    {
+      "path": "tools/blenderctl/rendering.py",
+      "sha256": "fc61df2870a61140c02a0862fba01c8815bf9978bbc43ee30f39848bef8dfc6b"
+    },
+    {
+      "path": "tools/blenderctl/resource_leases.py",
+      "sha256": "d91cc702ae67d5414c26642610d8d9c6bf99bcd5696b76bd4db8fbb81d6450b7"
+    },
+    {
+      "path": "tools/blenderctl/retarget_actions.py",
+      "sha256": "6bf366f34d9ef4b6baee7cd255276df34034db9a9340862ee2e05b3a3d0ce1d2"
+    },
+    {
+      "path": "tools/blenderctl/retarget_affine.py",
+      "sha256": "aa207a2f46a1c25321e7e2c9237af05f837e49b0ebe982c9a24f9a2a2cf586bd"
+    },
+    {
+      "path": "tools/blenderctl/retarget_contract.py",
+      "sha256": "722a0ec17f8fa39e05b74cc79d9c11614bf9b900484595944e8f63ae51f301a8"
+    },
+    {
+      "path": "tools/blenderctl/retarget_controls.py",
+      "sha256": "5b89b6611edff2b8ba64326ffa287daa4ce7def3213f8a097e5ac014ce8256e1"
+    },
+    {
+      "path": "tools/blenderctl/retargeting.py",
+      "sha256": "3a6e1e7ff3581a8781f2e4eb68077a3f4ecf88abfb4f9b212cd7d7a123f99b07"
+    },
+    {
+      "path": "tools/blenderctl/retopology.py",
+      "sha256": "11c9d4a03879c6517f0b80a78b1975f2d4fee646c2c48576f024eb4721169295"
+    },
+    {
+      "path": "tools/blenderctl/retopology_contract.py",
+      "sha256": "848abbed8e0c55e2f34ab8ec9057275c7420925803820403458a6467fa30e651"
+    },
+    {
+      "path": "tools/blenderctl/review_contract.py",
+      "sha256": "8e071da5bc0a600f10f61958791134c0b71a8384340e06160d9b4c1528f69bd8"
+    },
+    {
+      "path": "tools/blenderctl/reviews.py",
+      "sha256": "02c4993e57c36c0802535a78616bfef30b13d3d38d41e660b117e77f63044dc0"
+    },
+    {
+      "path": "tools/blenderctl/rig_adapter_contract.py",
+      "sha256": "57ffc4d3c64539115fcbe3472e2657899528de1f242a253afefd2e8c91dccc57"
+    },
+    {
+      "path": "tools/blenderctl/rig_cloth.py",
+      "sha256": "d3b4706e9b47b5a05e406c0cc70b1585eead7a580013eb49d807ef9bc8deea60"
+    },
+    {
+      "path": "tools/blenderctl/rig_contract.py",
+      "sha256": "15db1f6498f7b9f092727adf4ff2bf026d322b0011c6700db3a9e450d90d421a"
+    },
+    {
+      "path": "tools/blenderctl/rig_exchange.py",
+      "sha256": "6e0579cf7485f3211f073edc026f0709feaf9ab22a34a32820fdc1e53213f8c2"
+    },
+    {
+      "path": "tools/blenderctl/rig_package.py",
+      "sha256": "90012da4b41a547095158d8ec9caaa50b50fdfae951fb2c76a3cffa0f40b6e84"
+    },
+    {
+      "path": "tools/blenderctl/rig_package_contract.py",
+      "sha256": "526ee8191275cb253f6906f8c5b49b3982f10252baea533a7c778391ec86f4b2"
+    },
+    {
+      "path": "tools/blenderctl/rig_profile.py",
+      "sha256": "84e1e686e4d45b7fedc46938e968fcee7c08985fea9869cc84125497ac684c1a"
+    },
+    {
+      "path": "tools/blenderctl/rig_profile_contract.py",
+      "sha256": "c9121899b3198ca46958d305ae66d82855f3cba947c4301e81ead02c22ff96cb"
+    },
+    {
+      "path": "tools/blenderctl/rigging.py",
+      "sha256": "848a81f6da39296adb5a02e4a0ec331750d31a9dc6ac392e268fb2ed7fa0c842"
+    },
+    {
+      "path": "tools/blenderctl/runner.py",
+      "sha256": "7556f96b80d0597edc26a945a3ef19c738ff9f4bb832e49250191ec37e66ab13"
+    },
+    {
+      "path": "tools/blenderctl/scene_contract.py",
+      "sha256": "f46c9f0cc38d9cedc2e68d6cb5e249e9930bbc11e34e33f2960438d166700208"
+    },
+    {
+      "path": "tools/blenderctl/scenes.py",
+      "sha256": "fb8b77239691cdcb8ca4181a232aecae08243d110972e27ecb74827a5d7eb073"
+    },
+    {
+      "path": "tools/blenderctl/script_isolation.py",
+      "sha256": "4a1540f6001d939acf13f2f9d20d02404891b5012933b37b13f072ea00736886"
+    },
+    {
+      "path": "tools/blenderctl/sculpt_contract.py",
+      "sha256": "6f440224842f9cf3e8cec7ee43674fec0f92248fb3d26cb8a0d67734c012140f"
+    },
+    {
+      "path": "tools/blenderctl/sculpt_host.py",
+      "sha256": "f6046e5a3a9d9907e7689cf5c31f9610e3086aeb3d57b988c961a8350b424908"
+    },
+    {
+      "path": "tools/blenderctl/sculpt_review.py",
+      "sha256": "e2f7cc01a33c7460fa3ce399c694f61e03255d697e3f8ab8364e7a58f9586db1"
+    },
+    {
+      "path": "tools/blenderctl/sculpt_state.py",
+      "sha256": "fe57bf0ba169ae7e217116dbe1d4825f30153942499b10f03eb39b85c6838492"
+    },
+    {
+      "path": "tools/blenderctl/sculpt_worker.py",
+      "sha256": "d712d6db687bd5a69c1ae4f37253beea552047a9b061562a583c5c9be31c3bd4"
+    },
+    {
+      "path": "tools/blenderctl/simulation.py",
+      "sha256": "0e815b29d659dfd09d03026ef1f2aec2de228421682ae0c6d2cb280d7f0efb8e"
+    },
+    {
+      "path": "tools/blenderctl/simulation_contract.py",
+      "sha256": "ab6be266b41a5b6d59d76eb58c83e505f513b4590c8a4004ef8c7c689eddc17d"
+    },
+    {
+      "path": "tools/blenderctl/skin_exchange.py",
+      "sha256": "d17065ad992ae42a39e2a358b355902bc02dfddd7ad996ebf68d68b70d929439"
+    },
+    {
+      "path": "tools/blenderctl/skin_rebind.py",
+      "sha256": "24fc20b09be76764c93cc30ee2fa8f4a46d3c900c4137e7e82789a443cf775af"
+    },
+    {
+      "path": "tools/blenderctl/telemetry.py",
+      "sha256": "d705892949f28c13dfc91e20072989a7e7537aa77407c9e6fed1abe4554cf452"
+    },
+    {
+      "path": "tools/blenderctl/timing.py",
+      "sha256": "5738b873aaa8f0852ba4f0af595e57dd79b6e92752311bbb403736a025e516df"
+    },
+    {
+      "path": "tools/blenderctl/tracking.py",
+      "sha256": "43fa730eca67cb7066fc2761bbb37a11e70767ab77c2a28983c9d5be4230d02b"
+    },
+    {
+      "path": "tools/blenderctl/tracking_contract.py",
+      "sha256": "0e3c15157b24c79a4fa2077ee97e05c07af03a41c6b6a93629be789ba3f03db2"
+    },
+    {
+      "path": "tools/blenderctl/tracking_input.py",
+      "sha256": "6f4f68627c1534248a269b8baec71eaf78edbc27d88b5232b3a3b18ba241f4ed"
+    },
+    {
+      "path": "tools/blenderctl/tracking_preview.py",
+      "sha256": "ea58e1db142b842746a4be21111ff62b35945c22c39c9a275b4bc4b09a283e26"
+    },
+    {
+      "path": "tools/blenderctl/tracking_quality.py",
+      "sha256": "c6c9c57b33e8e247e8412ab841b31769a2e219e88a32c42bcbda0397ef939c9c"
+    },
+    {
+      "path": "tools/blenderctl/transactions.py",
+      "sha256": "c411c2ea8c14853b6dac984bc10b40ea13b6fdf55805815483a0c7125b0274d0"
+    },
+    {
+      "path": "tools/blenderctl/typed_dependencies.py",
+      "sha256": "b3147afa940771961ef944211230bb0275207620cf0b799088156a3d4dc80757"
+    },
+    {
+      "path": "tools/blenderctl/uv_contract.py",
+      "sha256": "013bbce2b294f59a6db2e9cf36a80cede845330c846c5028bcb62e056b01609e"
+    },
+    {
+      "path": "tools/blenderctl/uv_layout.py",
+      "sha256": "eab105932f3141bc93c36dec555caabe04c76e5be7e1bb656421e7b94ef1618a"
+    },
+    {
+      "path": "tools/blenderctl/verification.py",
+      "sha256": "6077cddc44356cf8b47946773463fe9401d4a4470d5e7c0f443c6b9088e08f1a"
+    },
+    {
+      "path": "tools/blenderctl/verification_contract.py",
+      "sha256": "ec1ce4664afc96c694485386cc41bb365176e86d4273bfd181c0579f0e256acc"
+    },
+    {
+      "path": "tools/blenderctl/weight_transfer.py",
+      "sha256": "33e441a6dbd6499c65fa70e9c1e49e9bcd5e7c1c31dd76b695f1b5eaeeaa2b3b"
+    },
+    {
+      "path": "tools/blenderctl/weight_transfer_contract.py",
+      "sha256": "50f7e12cbab0e90b9f71955b31a853852507985225c94bfd86cefef982290f00"
+    },
+    {
+      "path": "tools/blenderctl/win_appcontainer.py",
+      "sha256": "c00d0bc4c029ec53bd30f00ec1396b40e95a67a244dc7334f414a624da7872bb"
+    },
+    {
+      "path": "tools/blenderctl/worker.py",
+      "sha256": "2a62a5209bbf2053d6007ae7b52d3d067c65796a993f44bec439dc21206a7465"
+    },
+    {
+      "path": "tools/blenderctl/workflow_contract.py",
+      "sha256": "2e4c1c0308608be996adcec88b4271612b3a72838f44ed26fd0fe67f7cfc7a84"
+    },
+    {
+      "path": "tools/blenderctl/workflow_evidence.py",
+      "sha256": "40e028a3be718336d514e039740c89389701590297feb6dc746257df37c2e21f"
+    },
+    {
+      "path": "tools/blenderctl/workflow_identity.py",
+      "sha256": "27d41674b7fdcb417ce04f38aa55b19272ccaef86389398a9164d59ee5b3b193"
+    },
+    {
+      "path": "tools/blenderctl/workflow_preflight.py",
+      "sha256": "f057f7d9622e5d57b3159f04d91eae693af2105a214b82e6a7e7152737f582ac"
+    },
+    {
+      "path": "tools/blenderctl/workflow_runtime.py",
+      "sha256": "ec827180906d90a32e72d50f1da7af97d038f14c3c14a3de6b03da6fad9742a2"
+    },
+    {
+      "path": "tools/blenderctl/zone_cache.py",
+      "sha256": "ae053c1227773aa04ebcc789e57f8bcb33df63a856077d6ade368bad433c19a4"
+    },
+    {
+      "path": "tools/blenderctl/zone_cache_contract.py",
+      "sha256": "0e92fda9ef8ae615d2c6dcb44408a2679cfa03688b52531eb04119b31d447cc2"
+    },
+    {
+      "path": "tools/blenderctl/zone_contract.py",
+      "sha256": "83b6264814c0bdd800ea337218b8215848a5d5e907a01b854a72bc50f4c43ed3"
+    },
+    {
+      "path": "tools/blenderctl/zone_state_oracle.py",
+      "sha256": "09e97cdb80321ef68913e9c5fb0d53b8d84b5f64139c3b883c7670d2b1efb46b"
+    },
+    {
+      "path": "tools/compositing_workflow_addon/__init__.py",
+      "sha256": "206523731566adee7743a49c2678cb2f446e69f43d3e591f9b4ac98077677f97"
+    },
+    {
+      "path": "tools/compositing_workflow_addon/contract.py",
+      "sha256": "1b51b7bef6aa4a02a2f05e5d28236d9de30e0e9c0c2fcc3d47c9a1d91899b80b"
+    },
+    {
+      "path": "tools/compositing_workflow_addon/core.py",
+      "sha256": "53a804868181dc2ed66ec4f0e29e28e6c929cacee04d05e64a066aca797e33ac"
+    },
+    {
+      "path": "tools/compositing_workflow_addon/depth_contract.py",
+      "sha256": "fa0b1b7bdeb96533a523181972e42dcecf4dcbf26030b55e008c5fa0c7e472cc"
+    },
+    {
+      "path": "tools/compositing_workflow_addon/depth_estimate_contract.py",
+      "sha256": "730163fb09abb055e5f7f12eb76c1d6c79c6d13dd34ffdf2262ba3f91014a436"
+    },
+    {
+      "path": "tools/compositing_workflow_addon/depth_math.py",
+      "sha256": "93ea6367c428c8afee171a2169d738e17413bd2e5597c4b18add150f74492a3d"
+    },
+    {
+      "path": "tools/compositing_workflow_addon/movie_contract.py",
+      "sha256": "46ea7b1159541c268a79c103a85505d1839fd4c572e867074870269b52e60172"
+    },
+    {
+      "path": "tools/compositing_workflow_addon/relight_preview_ui.py",
+      "sha256": "1f72848d363aeca455883ac5fcdbc1439aee0f44808443ee1ceff615aa45d2dd"
+    }
+  ]
+}

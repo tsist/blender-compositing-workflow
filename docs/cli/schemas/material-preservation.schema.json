@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Static material content preservation receipt 1.0",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "material_preservation_version": {
+      "const": "1.0"
+    },
+    "snapshot_mode": {
+      "const": "material_only_v1"
+    },
+    "ok": {
+      "const": true
+    },
+    "source_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "original_to_memory": {
+      "const": "pass"
+    },
+    "original_to_reopen": {
+      "const": "pass"
+    },
+    "expected_to_observed": {
+      "const": "pass"
+    },
+    "allowed_new_materials": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "allowed_data_slots": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "object": {
+            "type": "string",
+            "minLength": 1
+          },
+          "mesh": {
+            "type": "object"
+          },
+          "slot": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 63
+          },
+          "material": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "object",
+          "mesh",
+          "slot",
+          "material"
+        ]
+      }
+    },
+    "retained_orphan_fake_user_false_to_true": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "protected": {
+      "type": "string",
+      "minLength": 1
+    },
+    "not_run": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "limits": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "required": [
+    "material_preservation_version",
+    "snapshot_mode",
+    "ok",
+    "source_sha256",
+    "original_to_memory",
+    "original_to_reopen",
+    "expected_to_observed",
+    "allowed_new_materials",
+    "allowed_data_slots",
+    "retained_orphan_fake_user_false_to_true",
+    "protected",
+    "not_run",
+    "limits"
+  ]
+}

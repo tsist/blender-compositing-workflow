@@ -1,4 +1,4 @@
-name: Verify source release
+name: Static source release checks
 on:
   push:
   pull_request:
@@ -19,3 +19,6 @@ jobs:
         run: python scripts/build_release.py
       - name: Confirm repeat build
         run: python scripts/build_release.py
+      - name: Independently extract all three packages
+        run: python scripts/verify_archives.py --dist dist --work-dir '${{ runner.temp }}/compositing-unpacked'
+      # These jobs intentionally do not run Blender/GPU or certify visual work.

@@ -28,7 +28,7 @@ def select_device(scene,spec):
     selected[0].use=True;scene.cycles.device='GPU'
     return {'backend':d['backend'],'id':selected[0].id,'name':selected[0].name}
 def color_settings(scene,spec):
-    scene.display_settings.display_device='sRGB';scene.view_settings.view_transform=spec['view'];scene.view_settings.look='None';scene.view_settings.exposure=spec['exposure'];scene.view_settings.gamma=spec['gamma'];scene.view_settings.use_curve_mapping=False
+    scene.display_settings.display_device='sRGB';scene.view_settings.view_transform=spec['view'];scene.view_settings.look=spec.get('look','None');scene.view_settings.exposure=spec['exposure'];scene.view_settings.gamma=spec['gamma'];scene.view_settings.use_curve_mapping=False
     scene.render.dither_intensity=0
 def disable_external_writes(scene):
     scene.render.use_render_cache=False;scene.render.use_texture_cache=False;scene.render.use_auto_generate_texture_cache=False
@@ -247,11 +247,17 @@ def _run_timed(params,job,trace,*,prepared_hashes=None,preserve_color_settings=F
             for view in s.view_layers:view.use=view==layer
             for marker in s.timeline_markers:marker.camera=None
             s.render.resolution_x=spec['width'];s.render.resolution_y=spec['height'];s.render.resolution_percentage=100;s.render.pixel_aspect_x=s.render.pixel_aspect_y=1;s.render.use_border=False;s.render.use_multiview=False;s.render.film_transparent=spec['transparent'];s.render.use_motion_blur=bool(spec['motion_blur']);s.render.motion_blur_shutter=spec['motion_blur'];s.render.motion_blur_position='CENTER';s.render.use_persistent_data=False
-            if spec['engine']=='CYCLES':s.cycles.samples=spec['samples'];s.cycles.use_adaptive_sampling=False;s.cycles.use_denoising=spec['denoise'];s.cycles.denoiser='OPENIMAGEDENOISE';s.cycles.seed=0;s.cycles.use_animated_seed=False
+            if spec['engine']=='CYCLES':
+                s.cycles.samples=spec['samples'];s.cycles.use_adaptive_sampling=False;s.cycles.use_denoising=spec['denoise'];s.cycles.denoiser=spec.get('denoiser','OPENIMAGEDENOISE');s.cycles.seed=0;s.cycles.use_animated_seed=False
+                if 'denoising_use_gpu' in spec:
+                    if not hasattr(s.cycles,'denoising_use_gpu'):raise Failure('UNSUPPORTED','This Blender runtime cannot declare GPU denoising')
+                    s.cycles.denoising_use_gpu=spec['denoising_use_gpu']
+                if s.cycles.denoiser!=spec.get('denoiser','OPENIMAGEDENOISE') or ('denoising_use_gpu' in spec and s.cycles.denoising_use_gpu!=spec['denoising_use_gpu']):raise Failure('CONFLICT','Requested denoising settings did not persist; no fallback is allowed')
             elif spec['engine']=='BLENDER_EEVEE':s.eevee.taa_render_samples=spec['samples']
             else:s.display.render_aa='8'
             if preserve_color_settings:
                 actual={'view':s.view_settings.view_transform,'exposure':s.view_settings.exposure,'gamma':s.view_settings.gamma}
+                if 'look' in spec['color']:actual['look']=s.view_settings.look
                 if actual!=spec['color']:raise Failure('CONFLICT','Preserved source color settings differ from declared render')
             else:
                 color_settings(s,spec['color'])
@@ -326,6 +332,7 @@ def run(params,job,*,prepared_hashes=None,preserve_color_settings=False):
     report['color_settings_preserved']=preserve_color_settings
     scene=bpy.data.scenes[params['manifest']['scene']]
     report['actual_display_settings']={'view':scene.view_settings.view_transform,'look':scene.view_settings.look,'exposure':scene.view_settings.exposure,'gamma':scene.view_settings.gamma,'use_curve_mapping':scene.view_settings.use_curve_mapping,'display_device':scene.display_settings.display_device}
+    if scene.render.engine=='CYCLES':report['actual_denoising_settings']={'enabled':scene.cycles.use_denoising,'denoiser':scene.cycles.denoiser,'use_gpu':getattr(scene.cycles,'denoising_use_gpu',None),'evidence_scope':'Settings readback and completed native render; not kernel utilization telemetry'}
     report['timing']=trace.descriptor()
     report['frame_timing']=trace.frame_projection()
     atomic_json(job/'render-report.json',report)

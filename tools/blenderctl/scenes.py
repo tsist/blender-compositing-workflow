@@ -252,8 +252,8 @@ def prepare_context(context):
         if layers:bpy.context.window.view_layer=layers[0]
         matches[0].frame_set(context['frame'])
 
-def state():
-    update();blocks=sorted((record(i) for i in all_ids()),key=lambda r:key({k:r[k] for k in ('type','name','library')}))
+def state(record_fn=None):
+    update();blocks=sorted(((record_fn or record)(i) for i in all_ids()),key=lambda r:key({k:r[k] for k in ('type','name','library')}))
     scenes=[]
     for scene in sorted(bpy.data.scenes,key=lambda s:s.name):
         layers=[]

@@ -47,6 +47,12 @@
           "type": "number",
           "minimum": 0.25,
           "maximum": 4
+        },
+        "look": {
+          "enum": [
+            "None",
+            "AgX - Medium High Contrast"
+          ]
         }
       },
       "required": [

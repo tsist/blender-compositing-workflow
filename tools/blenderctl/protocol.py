@@ -7,7 +7,7 @@ from pathlib import Path
 import time
 import uuid
 
-VERSION = "0.63.0"
+VERSION = "0.75.0"
 SCHEMA = "1.0"
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_BLENDER = ROOT / "runtime/blender/releases/5.2.1/blender-5.2.1-windows-x64/blender.exe"
@@ -15,7 +15,7 @@ DEFAULT_JOBS = ROOT / "runtime/blenderctl/jobs"
 DEFAULT_TRANSACTIONS = ROOT / "runtime/blenderctl/transactions"
 CODES = {"INVALID_REQUEST": 2, "NOT_FOUND": 3, "CONFLICT": 4,
          "WORKER_FAILED": 5, "TIMEOUT": 6, "CANCELLED": 7,
-         "VALIDATION_FAILED": 8, "IO_ERROR": 9, "UNSUPPORTED": 10, "RESOURCE_LIMIT":11}
+         "VALIDATION_FAILED": 8, "IO_ERROR": 9, "UNSUPPORTED": 10, "RESOURCE_LIMIT":11, "RATE_LIMITED":12, "ARTIFACT_UNAVAILABLE":13}
 HOST_COMMANDS = ("pipeline.plan", "pipeline.run", "pipeline.resume", "asset.plan", "project.plan_copy", "project.plan_batch", "project.plan_files", "transaction.apply", "transaction.recover", "transaction.rollback", "transaction.status")
 COMMANDS = ("doctor", "capabilities", "inspect", "query", "diff", "dependency.audit", "validate", "identity.prepare", "asset.prepare", "asset.index", "scene.prepare", "scene.inspect", "model.prepare", "model.inspect", "node.prepare", "node.inspect", "material.preview", "texture.bake", "rig.prepare", "rig.inspect", "rig.package", "animation.sample", "simulation.prepare", "simulation.inspect", "simulation.bake", "render.devices", "render.run", "media.prepare", "media.export", "exchange.formats", "exchange.analyze", "exchange.export", "exchange.import", "exchange.convert", "extension.inspect", "extension.prepare", "extension.run", "probe", *HOST_COMMANDS)
 
@@ -36,8 +36,25 @@ COMMANDS=(*COMMANDS,'geometry.run','geometry.inspect','geometry.session')
 COMMANDS=(*COMMANDS,'lighting.run','lighting.inspect','lighting.template-save','lighting.template-edit','lighting.batch')
 COMMANDS=(*COMMANDS,'compositing.run','compositing.inspect','compositing.encode','compositing.template-save','compositing.template-run','compositing.batch','compositing.study')
 HOST_COMMANDS=(*HOST_COMMANDS,'compositing.encode')
+DEPTH_COMMANDS=('compositing.depth-prepare','compositing.depth-inspect')
+COMMANDS=(*COMMANDS,*DEPTH_COMMANDS)
+HOST_COMMANDS=(*HOST_COMMANDS,*DEPTH_COMMANDS)
+RELIGHT_COMMANDS=('compositing.depth-relight',)
+COMMANDS=(*COMMANDS,*RELIGHT_COMMANDS)
+HOST_COMMANDS=(*HOST_COMMANDS,*RELIGHT_COMMANDS)
+SESSION_COMMANDS=('compositing.depth-session',)
+COMMANDS=(*COMMANDS,*SESSION_COMMANDS)
+HOST_COMMANDS=(*HOST_COMMANDS,*SESSION_COMMANDS)
+ESTIMATE_COMMANDS=('compositing.depth-estimate',)
+COMMANDS=(*COMMANDS,*ESTIMATE_COMMANDS)
+HOST_COMMANDS=(*HOST_COMMANDS,*ESTIMATE_COMMANDS)
+SEQUENCE_COMMANDS=('compositing.depth-sequence',)
+COMMANDS=(*COMMANDS,*SEQUENCE_COMMANDS)
+HOST_COMMANDS=(*HOST_COMMANDS,*SEQUENCE_COMMANDS)
 HOST_COMMANDS=(*HOST_COMMANDS,'workflow.preflight','workflow.run','workflow.resume')
 COMMANDS=(*COMMANDS,'workflow.preflight','workflow.run','workflow.resume')
+COMMANDS=(*COMMANDS,'modeling.run')
+HOST_COMMANDS=(*HOST_COMMANDS,'modeling.run')
 
 
 def resource_schema(command):
@@ -116,6 +133,9 @@ def validate(request):
     if not isinstance(command, str) or command not in COMMANDS:
         raise Failure("INVALID_REQUEST", f"Unknown command: {command}")
     params = request.get("params", {})
+    if command == 'modeling.run':
+        from modeling_workflow_contract import normalize_params
+        return {'schema_version': SCHEMA, 'command': command, 'params': normalize_params(params)}
     if command == 'workflow.preflight':
         if not isinstance(params, dict) or set(params) != {'requests'}:
             raise Failure('INVALID_REQUEST', 'Preflight requires requests')
@@ -127,6 +147,31 @@ def validate(request):
     if command in ('workflow.run', 'workflow.resume'):
         from workflow_contract import normalize_request
         return {'schema_version': SCHEMA, 'command': command, 'params': normalize_request(command, params)}
+    if command in SEQUENCE_COMMANDS:
+        from compositing_relight_sequence_contract import normalize_params,DepthError
+        try:normalized=normalize_params(params)
+        except DepthError as exc:raise Failure(exc.code if exc.code in CODES else 'INVALID_REQUEST',str(exc)) from exc
+        return {'schema_version':SCHEMA,'command':command,'params':normalized}
+    if command in SESSION_COMMANDS:
+        from compositing_relight_session_contract import normalize_params,DepthError
+        try:normalized=normalize_params(params)
+        except DepthError as exc:raise Failure(exc.code if exc.code in CODES else 'INVALID_REQUEST',str(exc)) from exc
+        return {'schema_version':SCHEMA,'command':command,'params':normalized}
+    if command in RELIGHT_COMMANDS:
+        from compositing_relight_contract import normalize_params,DepthError
+        try:normalized=normalize_params(params)
+        except DepthError as exc:raise Failure(exc.code if exc.code in CODES else 'INVALID_REQUEST',str(exc)) from exc
+        return {'schema_version':SCHEMA,'command':command,'params':normalized}
+    if command in ESTIMATE_COMMANDS:
+        from compositing_depth_estimate_contract import normalize_params,DepthError
+        try:normalized=normalize_params(params)
+        except DepthError as exc:raise Failure(exc.code if exc.code in CODES else 'INVALID_REQUEST',str(exc)) from exc
+        return {'schema_version':SCHEMA,'command':command,'params':normalized}
+    if command in DEPTH_COMMANDS:
+        from compositing_depth_contract import normalize_params,DepthError
+        try:normalized=normalize_params(params,command.split('.')[1])
+        except DepthError as exc:raise Failure(exc.code if exc.code in CODES else 'INVALID_REQUEST',str(exc)) from exc
+        return {'schema_version':SCHEMA,'command':command,'params':normalized}
     if command=='compositing.encode':
         from compositing_encode_public import normalize
         return {'schema_version':SCHEMA,'command':command,'params':normalize(params)}

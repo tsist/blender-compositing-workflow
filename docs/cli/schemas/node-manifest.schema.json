@@ -1,9 +1,15 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Node manifest 1.0",
+  "title": "Node manifest 1.1: explicit static material snapshot",
   "type": "object",
   "additionalProperties": false,
   "properties": {
+    "snapshot_mode": {
+      "enum": [
+        "full",
+        "material_only_v1"
+      ]
+    },
     "initial_scene": {
       "type": "string",
       "minLength": 1,
@@ -1951,6 +1957,261 @@
             ]
           },
           {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "op": {
+                "const": "uv.layout"
+              },
+              "adapter": {
+                "const": "DETERMINISTIC_UDIM_V1"
+              },
+              "targets": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "object": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 63,
+                      "pattern": "^[^\\x00-\\x1f\\x7f]+$"
+                    },
+                    "data_scope": {
+                      "enum": [
+                        "reject_shared",
+                        "single_user",
+                        "shared"
+                      ]
+                    },
+                    "layer": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 63,
+                      "pattern": "^[^\\x00-\\x1f\\x7f]+$"
+                    },
+                    "topology_sha256": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    },
+                    "uv_sha256": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    },
+                    "source_resolution": {
+                      "type": "integer",
+                      "minimum": 16,
+                      "maximum": 16384
+                    },
+                    "islands": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "properties": {
+                          "seed_face": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 999999
+                          },
+                          "tile": {
+                            "type": "integer",
+                            "minimum": 1001,
+                            "maximum": 1100
+                          },
+                          "locked": {
+                            "type": "boolean"
+                          }
+                        },
+                        "required": [
+                          "seed_face",
+                          "locked"
+                        ]
+                      },
+                      "minItems": 1,
+                      "maxItems": 512
+                    }
+                  },
+                  "required": [
+                    "object",
+                    "data_scope",
+                    "layer",
+                    "topology_sha256",
+                    "uv_sha256",
+                    "source_resolution",
+                    "islands"
+                  ]
+                },
+                "minItems": 1,
+                "maxItems": 32
+              },
+              "tiles": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "number": {
+                      "type": "integer",
+                      "minimum": 1001,
+                      "maximum": 1100
+                    },
+                    "resolution": {
+                      "type": "integer",
+                      "minimum": 16,
+                      "maximum": 16384
+                    }
+                  },
+                  "required": [
+                    "number",
+                    "resolution"
+                  ]
+                },
+                "minItems": 1,
+                "maxItems": 100
+              },
+              "density": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "mode": {
+                        "const": "PRESERVE"
+                      }
+                    },
+                    "required": [
+                      "mode"
+                    ]
+                  },
+                  {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "mode": {
+                        "const": "TARGET"
+                      },
+                      "pixels_per_meter": {
+                        "type": "number",
+                        "minimum": 1e-06,
+                        "maximum": 10000000.0
+                      }
+                    },
+                    "required": [
+                      "mode",
+                      "pixels_per_meter"
+                    ]
+                  }
+                ]
+              },
+              "meters_per_unit": {
+                "type": "number",
+                "minimum": 1e-06,
+                "maximum": 1000000.0
+              },
+              "margin_pixels": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1024
+              },
+              "allow_rotate": {
+                "type": "boolean"
+              },
+              "allow_scale": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "op",
+              "adapter",
+              "targets",
+              "tiles",
+              "density",
+              "meters_per_unit",
+              "margin_pixels",
+              "allow_rotate",
+              "allow_scale"
+            ]
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "op": {
+                "const": "mesh.retopology"
+              },
+              "object": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 63,
+                "pattern": "^[^\\x00-\\x1f\\x7f]+$"
+              },
+              "data_scope": {
+                "enum": [
+                  "reject_shared",
+                  "single_user"
+                ]
+              },
+              "topology_sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "adapter": {
+                "const": "QUADRIFLOW_CLOSED_V1"
+              },
+              "target_faces": {
+                "type": "integer",
+                "minimum": 16,
+                "maximum": 10000
+              },
+              "seed": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 2147483647
+              },
+              "face_count_tolerance": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "max_surface_distance": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1000000
+              },
+              "max_normal_angle_degrees": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 180
+              },
+              "boundary_policy": {
+                "const": "REJECT_OPEN"
+              },
+              "sharp_policy": {
+                "const": "REJECT"
+              },
+              "attribute_policy": {
+                "const": "REJECT_NONTRIVIAL"
+              }
+            },
+            "required": [
+              "op",
+              "object",
+              "data_scope",
+              "topology_sha256",
+              "adapter",
+              "target_faces",
+              "seed",
+              "face_count_tolerance",
+              "max_surface_distance",
+              "max_normal_angle_degrees",
+              "boundary_policy",
+              "sharp_policy",
+              "attribute_policy"
+            ]
+          },
+          {
             "oneOf": [
               {
                 "type": "object",
@@ -2506,6 +2767,84 @@
                 "type": "integer",
                 "minimum": 1,
                 "maximum": 32
+              },
+              "settings": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "dimensions": {
+                        "const": "2D"
+                      },
+                      "fill_mode": {
+                        "enum": [
+                          "NONE",
+                          "FRONT",
+                          "BACK",
+                          "BOTH"
+                        ]
+                      },
+                      "bevel_resolution": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 8
+                      },
+                      "use_fill_caps": {
+                        "type": "boolean"
+                      },
+                      "extrude": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 1000
+                      }
+                    },
+                    "required": [
+                      "dimensions",
+                      "fill_mode",
+                      "bevel_resolution",
+                      "use_fill_caps",
+                      "extrude"
+                    ]
+                  },
+                  {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "dimensions": {
+                        "const": "3D"
+                      },
+                      "fill_mode": {
+                        "enum": [
+                          "FULL",
+                          "BACK",
+                          "FRONT",
+                          "HALF"
+                        ]
+                      },
+                      "bevel_resolution": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 8
+                      },
+                      "use_fill_caps": {
+                        "type": "boolean"
+                      },
+                      "extrude": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 1000
+                      }
+                    },
+                    "required": [
+                      "dimensions",
+                      "fill_mode",
+                      "bevel_resolution",
+                      "use_fill_caps",
+                      "extrude"
+                    ]
+                  }
+                ]
               }
             },
             "required": [
@@ -2520,48 +2859,264 @@
             ]
           },
           {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "op": {
-                "const": "text.create"
+            "oneOf": [
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "op": {
+                    "const": "text.create"
+                  },
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 63,
+                    "pattern": "^[^\\x00-\\x1f\\x7f]+$"
+                  },
+                  "collection": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 63,
+                    "pattern": "^[^\\x00-\\x1f\\x7f]+$"
+                  },
+                  "body": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 1000,
+                    "pattern": "^[\\x20-\\x7e\\n\\t]+$"
+                  },
+                  "size": {
+                    "type": "number",
+                    "minimum": 0.0001,
+                    "maximum": 1000
+                  },
+                  "extrude": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1000
+                  },
+                  "layout": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "align_x": {
+                        "enum": [
+                          "LEFT",
+                          "CENTER",
+                          "RIGHT"
+                        ]
+                      },
+                      "align_y": {
+                        "enum": [
+                          "TOP",
+                          "TOP_BASELINE",
+                          "CENTER",
+                          "BOTTOM_BASELINE",
+                          "BOTTOM"
+                        ]
+                      },
+                      "space_character": {
+                        "type": "number",
+                        "minimum": 0.1,
+                        "maximum": 10
+                      },
+                      "space_word": {
+                        "type": "number",
+                        "minimum": 0.1,
+                        "maximum": 10
+                      },
+                      "space_line": {
+                        "type": "number",
+                        "minimum": 0.1,
+                        "maximum": 10
+                      },
+                      "offset": {
+                        "type": "number",
+                        "minimum": -10,
+                        "maximum": 10
+                      },
+                      "shear": {
+                        "type": "number",
+                        "minimum": -1,
+                        "maximum": 1
+                      },
+                      "resolution": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 32
+                      },
+                      "bevel_depth": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 10
+                      },
+                      "bevel_resolution": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 8
+                      }
+                    },
+                    "required": [
+                      "align_x",
+                      "align_y",
+                      "space_character",
+                      "space_word",
+                      "space_line",
+                      "offset",
+                      "shear",
+                      "resolution",
+                      "bevel_depth",
+                      "bevel_resolution"
+                    ]
+                  }
+                },
+                "required": [
+                  "op",
+                  "name",
+                  "collection",
+                  "body",
+                  "size",
+                  "extrude"
+                ]
               },
-              "name": {
-                "type": "string",
-                "minLength": 1,
-                "maxLength": 63,
-                "pattern": "^[^\\x00-\\x1f\\x7f]+$"
-              },
-              "collection": {
-                "type": "string",
-                "minLength": 1,
-                "maxLength": 63,
-                "pattern": "^[^\\x00-\\x1f\\x7f]+$"
-              },
-              "body": {
-                "type": "string",
-                "minLength": 1,
-                "maxLength": 1000,
-                "pattern": "^[\\x20-\\x7e\\n\\t]+$"
-              },
-              "size": {
-                "type": "number",
-                "minimum": 0.0001,
-                "maximum": 1000
-              },
-              "extrude": {
-                "type": "number",
-                "minimum": 0,
-                "maximum": 1000
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "op": {
+                    "const": "text.create"
+                  },
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 63,
+                    "pattern": "^[^\\x00-\\x1f\\x7f]+$"
+                  },
+                  "collection": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 63,
+                    "pattern": "^[^\\x00-\\x1f\\x7f]+$"
+                  },
+                  "body": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 1000,
+                    "pattern": "^[^\\x00-\\x08\\x0b-\\x1f\\x7f\\ud800-\\udfff]+$"
+                  },
+                  "size": {
+                    "type": "number",
+                    "minimum": 0.0001,
+                    "maximum": 1000
+                  },
+                  "extrude": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1000
+                  },
+                  "font": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "file": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "expected_sha256": {
+                        "type": "string",
+                        "pattern": "^[0-9a-f]{64}$"
+                      }
+                    },
+                    "required": [
+                      "file",
+                      "expected_sha256"
+                    ]
+                  },
+                  "layout": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "align_x": {
+                        "enum": [
+                          "LEFT",
+                          "CENTER",
+                          "RIGHT"
+                        ]
+                      },
+                      "align_y": {
+                        "enum": [
+                          "TOP",
+                          "TOP_BASELINE",
+                          "CENTER",
+                          "BOTTOM_BASELINE",
+                          "BOTTOM"
+                        ]
+                      },
+                      "space_character": {
+                        "type": "number",
+                        "minimum": 0.1,
+                        "maximum": 10
+                      },
+                      "space_word": {
+                        "type": "number",
+                        "minimum": 0.1,
+                        "maximum": 10
+                      },
+                      "space_line": {
+                        "type": "number",
+                        "minimum": 0.1,
+                        "maximum": 10
+                      },
+                      "offset": {
+                        "type": "number",
+                        "minimum": -10,
+                        "maximum": 10
+                      },
+                      "shear": {
+                        "type": "number",
+                        "minimum": -1,
+                        "maximum": 1
+                      },
+                      "resolution": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 32
+                      },
+                      "bevel_depth": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 10
+                      },
+                      "bevel_resolution": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 8
+                      }
+                    },
+                    "required": [
+                      "align_x",
+                      "align_y",
+                      "space_character",
+                      "space_word",
+                      "space_line",
+                      "offset",
+                      "shear",
+                      "resolution",
+                      "bevel_depth",
+                      "bevel_resolution"
+                    ]
+                  }
+                },
+                "required": [
+                  "op",
+                  "name",
+                  "collection",
+                  "body",
+                  "size",
+                  "extrude",
+                  "font"
+                ]
               }
-            },
-            "required": [
-              "op",
-              "name",
-              "collection",
-              "body",
-              "size",
-              "extrude"
             ]
           },
           {
@@ -2582,6 +3137,48 @@
                   "reject_shared",
                   "single_user",
                   "shared"
+                ]
+              },
+              "verify": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "adapter": {
+                    "const": "CURVE_FONT_V1"
+                  },
+                  "fonts": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "properties": {
+                        "file": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "expected_sha256": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{64}$"
+                        }
+                      },
+                      "required": [
+                        "file",
+                        "expected_sha256"
+                      ]
+                    },
+                    "minItems": 0,
+                    "maxItems": 4
+                  },
+                  "max_coordinate_error": {
+                    "type": "number",
+                    "minimum": 1e-09,
+                    "maximum": 0.001
+                  }
+                },
+                "required": [
+                  "adapter",
+                  "fonts",
+                  "max_coordinate_error"
                 ]
               }
             },

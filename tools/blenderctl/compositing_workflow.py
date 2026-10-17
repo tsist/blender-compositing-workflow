@@ -237,9 +237,10 @@ def _graph_render_gate(scene, layer, workflow_version='1.0'):
                     raise Failure('UNSUPPORTED', 'Cross-scene Render Layers requires a dedicated write/dependency contract')
                 if node.layer not in ('', layer.name):
                     raise Failure('UNSUPPORTED', 'Render Layers uses another ViewLayer')
-                record = {'tree': tree.name, 'node': node.name, 'view_layer': node.layer or layer.name}
+                required = [socket.identifier for socket in node.outputs if socket.is_linked]
+                record = {'tree': tree.name, 'node': node.name, 'view_layer': node.layer or layer.name,
+                          'linked_output_identifiers': required}
                 if workflow_version in ('1.1', '1.2', '1.3'):
-                    required = [socket.identifier for socket in node.outputs if socket.is_linked]
                     record['required_passes'] = render_pass_snapshot(scene, layer, required)
                 render_layers.append(record)
             child = getattr(node, 'node_tree', None)
@@ -299,6 +300,19 @@ def _preview_spec(params, scene, layer, inspection, gate):
     if engine != 'CYCLES' and any(requirement['output'] == 'Noisy Image' or requirement['output'].startswith('Denoising ')
             for record in gate['render_layers'] for requirement in record.get('required_passes', {}).get('requirements', [])):
         raise Failure('UNSUPPORTED', 'Required noisy/denoising Pass outputs require the actual Cycles preview engine')
+    noisy_consumers = [record for record in gate['render_layers']
+                       if 'Noisy Image' in record['linked_output_identifiers']]
+    if noisy_consumers:
+        # _temporary_scene disables native denoising. Cycles only generates
+        # Noisy Image while both Scene and ViewLayer native denoising are on;
+        # source RNA/socket registration cannot certify a temporary render.
+        error = Failure('UNSUPPORTED', 'Preview disables native Cycles denoising and does not generate Noisy Image; Image is the non-denoised beauty output in this preview route')
+        error.details = {'preview_native_denoising': False,
+                         'required_output': 'Noisy Image',
+                         'consumers': [{'tree': item['tree'], 'node': item['node'],
+                                        'view_layer': item['view_layer']} for item in noisy_consumers],
+                         'scope': 'Actual preview policy, not all Blender rendering or source socket availability'}
+        raise error
     source = inspection.get('source') or {}
     if source.get('kind') == 'image':
         image_info = source.get('image') or {}

@@ -114,6 +114,12 @@
           "type": "number",
           "minimum": 0.25,
           "maximum": 4
+        },
+        "look": {
+          "enum": [
+            "None",
+            "AgX - Medium High Contrast"
+          ]
         }
       },
       "required": [
@@ -153,6 +159,15 @@
       "minimum": 1,
       "maximum": 512000000,
       "default": 32000000
+    },
+    "denoiser": {
+      "enum": [
+        "OPENIMAGEDENOISE",
+        "OPTIX"
+      ]
+    },
+    "denoising_use_gpu": {
+      "type": "boolean"
     }
   },
   "required": [

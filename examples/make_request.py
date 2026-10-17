@@ -8,6 +8,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--fixture', required=True)
 parser.add_argument('--output', required=True)
 args = parser.parse_args()
+publication = json.loads((Path(__file__).resolve().parents[1] / 'PUBLICATION.json').read_text(encoding='utf-8-sig'))
 fixture = json.loads(Path(args.fixture).read_text(encoding='utf-8-sig'))
 output = Path(args.output).resolve()
 if output.exists():
@@ -24,7 +25,7 @@ request = {'schema_version': '1.0', 'command': 'compositing.run', 'params': {
                  'components': [{'id': 'lift', 'kind': 'exposure', 'params': {'ev': 0.5}}]},
     'preview': {'width': 128, 'height': 128, 'samples': 1, 'engine': 'CYCLES', 'device': {'backend': 'CPU'},
                 'compositor_device': 'CPU', 'allow_cpu_fallback': False, 'precision': 'FULL', 'baseline': True},
-    'implementation_sha256': '9566cec1c2a9bf6db34c3085d964806b8ce7bafed1e0ae145bbb5259d655e629'}}
+    'implementation_sha256': publication['runtime_identity']}}
 output.parent.mkdir(parents=True, exist_ok=True)
 output.write_text(json.dumps(request, indent=2)+'\n', encoding='utf-8')
 print(json.dumps({'request': str(output), 'command': request['command']}))

@@ -14,6 +14,9 @@ MEDIA=obj({'scene':NAME,'fps':integer(1,60),'width':integer(16,1920),'height':in
 RENDER_PIXEL_FRAME_DEFAULT=32_000_000
 RENDER_PIXEL_FRAME_MAX=512_000_000
 RUN['properties']['pixel_frame_budget']={**integer(1,RENDER_PIXEL_FRAME_MAX),'default':RENDER_PIXEL_FRAME_DEFAULT}
+RUN['properties']['denoiser']=enum('OPENIMAGEDENOISE','OPTIX')
+RUN['properties']['denoising_use_gpu']=BOOL
+COLOR['properties']['look']=enum('None','AgX - Medium High Contrast')
 MEDIA_PIXEL_FRAME_DEFAULT=32_000_000
 MEDIA_PIXEL_FRAME_MAX=512_000_000
 MEDIA['properties']['pixel_frame_budget']={**integer(1,MEDIA_PIXEL_FRAME_MAX),'default':MEDIA_PIXEL_FRAME_DEFAULT}
@@ -30,6 +33,11 @@ def normalize_run(v):
     v.setdefault('pixel_frame_budget',RENDER_PIXEL_FRAME_DEFAULT)
     if v['width']*v['height']*len(v['frames'])>v['pixel_frame_budget']:raise Failure('UNSUPPORTED','Render exceeds declared output pixel-frame budget: '+str(v['pixel_frame_budget']))
     d=v['device'];backend=d['backend']
+    if v['color'].get('look','None')!='None' and v['color']['view']!='AgX':raise Failure('INVALID_REQUEST','AgX look requires the AgX view')
+    if 'denoiser' in v or 'denoising_use_gpu' in v:
+        if v['engine']!='CYCLES' or not v['denoise']:raise Failure('INVALID_REQUEST','Explicit denoising settings require Cycles denoise=true')
+        if v.get('denoising_use_gpu') and backend not in ('CUDA','OPTIX'):raise Failure('INVALID_REQUEST','GPU denoising requires an explicit GPU backend')
+        if v.get('denoiser')=='OPTIX' and (backend!='OPTIX' or v.get('denoising_use_gpu') is not True):raise Failure('INVALID_REQUEST','OptiX denoising requires the exact OptiX GPU backend and denoising_use_gpu=true')
     if v['engine']=='BLENDER_WORKBENCH' and v['samples']!=8:raise Failure('UNSUPPORTED','Workbench currently requires eight-sample antialiasing')
     if v['engine']=='CYCLES':
         if backend=='GRAPHICS' or (backend in ('CUDA','OPTIX'))!=('id' in d):raise Failure('INVALID_REQUEST','Cycles GPU requires exact device id; CPU has no device id')

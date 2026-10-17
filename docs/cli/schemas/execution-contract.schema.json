@@ -184,6 +184,73 @@
             "properties": {
               "command": {
                 "enum": [
+                  "compositing.encode"
+                ]
+              },
+              "classification": {
+                "const": "host_media_work_unit"
+              },
+              "reason": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "command",
+              "classification",
+              "reason"
+            ]
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "command": {
+                "enum": [
+                  "compositing.depth-prepare",
+                  "compositing.depth-inspect"
+                ]
+              },
+              "classification": {
+                "const": "host_depth_work_unit"
+              },
+              "reason": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "command",
+              "classification",
+              "reason"
+            ]
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "command": {
+                "enum": [
+                  "compositing.depth-estimate"
+                ]
+              },
+              "classification": {
+                "const": "host_depth_estimation"
+              },
+              "reason": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "command",
+              "classification",
+              "reason"
+            ]
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "command": {
+                "enum": [
                   "resource.init",
                   "resource.status",
                   "cache.inspect",
@@ -193,6 +260,46 @@
               },
               "classification": {
                 "const": "host_resource_management"
+              },
+              "reason": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "command",
+              "classification",
+              "reason"
+            ]
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "command": {
+                "enum": [
+                  "modeling.run",
+                  "material.run",
+                  "material.template-save",
+                  "material.batch",
+                  "material.study",
+                  "geometry.run",
+                  "geometry.inspect",
+                  "geometry.session",
+                  "lighting.run",
+                  "lighting.inspect",
+                  "lighting.template-save",
+                  "lighting.template-edit",
+                  "lighting.batch",
+                  "compositing.run",
+                  "compositing.inspect",
+                  "compositing.template-save",
+                  "compositing.template-run",
+                  "compositing.batch",
+                  "compositing.study"
+                ]
+              },
+              "classification": {
+                "const": "standalone_workflow"
               },
               "reason": {
                 "type": "string"
@@ -249,72 +356,11 @@
               "classification",
               "reason"
             ]
-          },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "command": {
-                "enum": [
-                  "compositing.encode"
-                ]
-              },
-              "classification": {
-                "const": "host_media_work_unit"
-              },
-              "reason": {
-                "type": "string"
-              }
-            },
-            "required": [
-              "command",
-              "classification",
-              "reason"
-            ]
-          },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "command": {
-                "enum": [
-                  "material.run",
-                  "material.template-save",
-                  "material.batch",
-                  "material.study",
-                  "geometry.run",
-                  "geometry.inspect",
-                  "geometry.session",
-                  "lighting.run",
-                  "lighting.inspect",
-                  "lighting.template-save",
-                  "lighting.template-edit",
-                  "lighting.batch",
-                  "compositing.run",
-                  "compositing.inspect",
-                  "compositing.template-save",
-                  "compositing.template-run",
-                  "compositing.batch",
-                  "compositing.study"
-                ]
-              },
-              "classification": {
-                "const": "standalone_workflow"
-              },
-              "reason": {
-                "type": "string"
-              }
-            },
-            "required": [
-              "command",
-              "classification",
-              "reason"
-            ]
           }
         ]
       },
-      "minItems": 49,
-      "maxItems": 49,
+      "minItems": 53,
+      "maxItems": 53,
       "allOf": [
         {
           "contains": {
@@ -628,6 +674,48 @@
           "contains": {
             "properties": {
               "command": {
+                "const": "compositing.depth-prepare"
+              }
+            },
+            "required": [
+              "command"
+            ]
+          },
+          "minContains": 1,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "properties": {
+              "command": {
+                "const": "compositing.depth-inspect"
+              }
+            },
+            "required": [
+              "command"
+            ]
+          },
+          "minContains": 1,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "properties": {
+              "command": {
+                "const": "compositing.depth-estimate"
+              }
+            },
+            "required": [
+              "command"
+            ]
+          },
+          "minContains": 1,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "properties": {
+              "command": {
                 "const": "resource.init"
               }
             },
@@ -685,6 +773,20 @@
             "properties": {
               "command": {
                 "const": "project.package"
+              }
+            },
+            "required": [
+              "command"
+            ]
+          },
+          "minContains": 1,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "properties": {
+              "command": {
+                "const": "modeling.run"
               }
             },
             "required": [

@@ -2,6 +2,7 @@
 import hashlib
 import json
 import math
+from array import array
 from contextlib import contextmanager
 from pathlib import Path
 from copy import deepcopy
@@ -547,10 +548,64 @@ def _boundaries(scene,state=None):
         names.add(state['original']['root']+('|'+state['original']['root_library'] if state['original'].get('root_library') else ''))
     return names
 
+def _mesh_read_bulk(collection,field,code,width=1):
+    """Read current RNA on every call; retain no mesh or protection values."""
+    count=len(collection)
+    if not count:return []
+    values=array(code,[0])*(count*width)
+    collection.foreach_get(field,values)
+    return list(values)
+
+
+def _mesh_attribute_rows(attribute):
+    """Mirror _rna for homogeneous numeric values; other RNA keeps its old path."""
+    data=attribute.data
+    if not len(data):return []
+    sample=data[0]
+    actual=sample.bl_rna.identifier
+    fields=[]
+    if attribute.bl_rna.properties['data'].fixed_type.identifier!=actual:
+        return [_rna(value) for value in data]
+    for prop in sample.bl_rna.properties:
+        key=prop.identifier
+        if key=='rna_type':continue
+        if prop.is_readonly and prop.type not in ('POINTER','COLLECTION'):continue
+        if prop.is_readonly or prop.type not in ('BOOLEAN','INT','FLOAT'):
+            return [_rna(value) for value in data]
+        is_array=bool(getattr(prop,'is_array',False))
+        dimensions=tuple(getattr(prop,'array_dimensions',()))
+        length=int(getattr(prop,'array_length',0))
+        if is_array and (length<1 or len([n for n in dimensions if n])!=1):
+            return [_rna(value) for value in data]
+        # Double buffers avoid narrowing Python floats, including converted colors.
+        code={'BOOLEAN':'b','INT':'i','FLOAT':'d'}[prop.type]
+        fields.append((key,prop.type,code,length if is_array else 1,is_array))
+    try:
+        rows=[{'rna':actual} for _ in range(len(data))]
+        for key,kind,code,width,is_array in fields:
+            values=_mesh_read_bulk(data,key,code,width)
+            cast=bool if kind=='BOOLEAN' else int if kind=='INT' else float
+            for index,row in enumerate(rows):
+                value=[cast(v) for v in values[index*width:(index+1)*width]] if is_array else cast(values[index])
+                row[key]=_plain(value)
+        return rows
+    except (AttributeError,TypeError,ValueError,RuntimeError,OverflowError):
+        return [_rna(value) for value in data]
+
+
 def _mesh(mesh):
-    return {'vertices':[list(v.co) for v in mesh.vertices],'edges':[list(e.vertices) for e in mesh.edges],
-      'polygons':[{'vertices':list(p.vertices),'material':p.material_index,'smooth':p.use_smooth} for p in mesh.polygons],
-      'attributes':{a.name:{'domain':a.domain,'type':a.data_type,'data':[_rna(v) for v in a.data]} for a in mesh.attributes},
+    coords=_mesh_read_bulk(mesh.vertices,'co','f',3)
+    edge_verts=_mesh_read_bulk(mesh.edges,'vertices','i',2)
+    loop_vertices=_mesh_read_bulk(mesh.loops,'vertex_index','i')
+    starts=_mesh_read_bulk(mesh.polygons,'loop_start','i')
+    totals=_mesh_read_bulk(mesh.polygons,'loop_total','i')
+    materials=_mesh_read_bulk(mesh.polygons,'material_index','i')
+    smooth=_mesh_read_bulk(mesh.polygons,'use_smooth','b')
+    return {'vertices':[coords[i:i+3] for i in range(0,len(coords),3)],
+      'edges':[edge_verts[i:i+2] for i in range(0,len(edge_verts),2)],
+      'polygons':[{'vertices':loop_vertices[starts[i]:starts[i]+totals[i]],
+        'material':int(materials[i]),'smooth':bool(smooth[i])} for i in range(len(mesh.polygons))],
+      'attributes':{a.name:{'domain':a.domain,'type':a.data_type,'data':_mesh_attribute_rows(a)} for a in mesh.attributes},
       'vertex_weights':[[{'group':g.group,'weight':g.weight} for g in v.groups] for v in mesh.vertices],
       'materials':[_plain(m) for m in mesh.materials],
       'shape_keys':({'id':_plain(mesh.shape_keys),'use_relative':mesh.shape_keys.use_relative,

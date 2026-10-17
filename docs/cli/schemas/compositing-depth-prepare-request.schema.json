@@ -1,0 +1,2034 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "compositing-depth-prepare-request.schema.json",
+  "title": "Experimental compositing.depth-prepare request",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "command": {
+      "const": "compositing.depth-prepare"
+    },
+    "params": {
+      "type": "object",
+      "properties": {
+        "depth_prepare_version": {
+          "enum": [
+            "1.0",
+            "1.1"
+          ]
+        },
+        "rgb": {
+          "type": "object",
+          "properties": {
+            "file": {
+              "type": "string",
+              "pattern": "^(?:[A-Za-z]:[\\\\/]|\\\\\\\\[^\\\\/]+[\\\\/][^\\\\/]+(?:[\\\\/]|$))"
+            },
+            "expected_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          },
+          "required": [
+            "file",
+            "expected_sha256"
+          ],
+          "additionalProperties": false
+        },
+        "rgb_encoding": {
+          "const": "display_sRGB_PNG8"
+        },
+        "depth": {
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {
+                "file": {
+                  "type": "string",
+                  "pattern": "^(?:[A-Za-z]:[\\\\/]|\\\\\\\\[^\\\\/]+[\\\\/][^\\\\/]+(?:[\\\\/]|$))"
+                },
+                "expected_sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                "format": {
+                  "const": "NPY"
+                },
+                "channel": {
+                  "const": null
+                }
+              },
+              "required": [
+                "file",
+                "expected_sha256",
+                "format",
+                "channel"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "file": {
+                  "type": "string",
+                  "pattern": "^(?:[A-Za-z]:[\\\\/]|\\\\\\\\[^\\\\/]+[\\\\/][^\\\\/]+(?:[\\\\/]|$))"
+                },
+                "expected_sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                "format": {
+                  "const": "EXR"
+                },
+                "channel": {
+                  "anyOf": [
+                    {
+                      "type": "null"
+                    },
+                    {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "file",
+                "expected_sha256",
+                "format",
+                "channel"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "domain": {
+          "type": "object",
+          "properties": {
+            "width": {
+              "type": "integer",
+              "minimum": 4,
+              "maximum": 2048
+            },
+            "height": {
+              "type": "integer",
+              "minimum": 4,
+              "maximum": 2048
+            },
+            "pixel_aspect": {
+              "const": [
+                1,
+                1
+              ]
+            },
+            "origin": {
+              "const": "top-left"
+            },
+            "pixel_center": {
+              "const": [
+                0.5,
+                0.5
+              ]
+            },
+            "row_direction": {
+              "const": "down"
+            },
+            "column_direction": {
+              "const": "right"
+            }
+          },
+          "required": [
+            "width",
+            "height",
+            "pixel_aspect",
+            "origin",
+            "pixel_center",
+            "row_direction",
+            "column_direction"
+          ],
+          "additionalProperties": false
+        },
+        "semantics": {
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {
+                "measure": {
+                  "const": "axial_z"
+                },
+                "near_order": {
+                  "const": "smaller_nearer"
+                },
+                "units": {
+                  "const": "scene_unit"
+                }
+              },
+              "required": [
+                "measure",
+                "near_order",
+                "units"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "measure": {
+                  "const": "relative_score"
+                },
+                "near_order": {
+                  "enum": [
+                    "smaller_nearer",
+                    "larger_nearer"
+                  ]
+                },
+                "units": {
+                  "const": "unitless"
+                }
+              },
+              "required": [
+                "measure",
+                "near_order",
+                "units"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "provenance": {
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "const": "declared_external"
+                },
+                "statement": {
+                  "type": "string",
+                  "minLength": 1,
+                  "pattern": "\\S"
+                }
+              },
+              "required": [
+                "kind",
+                "statement"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "const": "verified_dav2_single_CG"
+                },
+                "completion": {
+                  "type": "object",
+                  "properties": {
+                    "file": {
+                      "type": "string",
+                      "pattern": "^(?:[A-Za-z]:[\\\\/]|\\\\\\\\[^\\\\/]+[\\\\/][^\\\\/]+(?:[\\\\/]|$))"
+                    },
+                    "expected_sha256": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    }
+                  },
+                  "required": [
+                    "file",
+                    "expected_sha256"
+                  ],
+                  "additionalProperties": false
+                },
+                "quality": {
+                  "type": "object",
+                  "properties": {
+                    "file": {
+                      "type": "string",
+                      "pattern": "^(?:[A-Za-z]:[\\\\/]|\\\\\\\\[^\\\\/]+[\\\\/][^\\\\/]+(?:[\\\\/]|$))"
+                    },
+                    "expected_sha256": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    }
+                  },
+                  "required": [
+                    "file",
+                    "expected_sha256"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "kind",
+                "completion",
+                "quality"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "const": "verified_public_dav2"
+                },
+                "producer": {
+                  "type": "object",
+                  "properties": {
+                    "file": {
+                      "type": "string",
+                      "pattern": "^(?:[A-Za-z]:[\\\\/]|\\\\\\\\[^\\\\/]+[\\\\/][^\\\\/]+(?:[\\\\/]|$))"
+                    },
+                    "expected_sha256": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    }
+                  },
+                  "required": [
+                    "file",
+                    "expected_sha256"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "kind",
+                "producer"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "validity": {
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "const": "explicit_mask"
+                },
+                "mask": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "file": {
+                          "type": "string",
+                          "pattern": "^(?:[A-Za-z]:[\\\\/]|\\\\\\\\[^\\\\/]+[\\\\/][^\\\\/]+(?:[\\\\/]|$))"
+                        },
+                        "expected_sha256": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{64}$"
+                        },
+                        "format": {
+                          "const": "NPY"
+                        },
+                        "channel": {
+                          "const": null
+                        }
+                      },
+                      "required": [
+                        "file",
+                        "expected_sha256",
+                        "format",
+                        "channel"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "file": {
+                          "type": "string",
+                          "pattern": "^(?:[A-Za-z]:[\\\\/]|\\\\\\\\[^\\\\/]+[\\\\/][^\\\\/]+(?:[\\\\/]|$))"
+                        },
+                        "expected_sha256": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{64}$"
+                        },
+                        "format": {
+                          "const": "EXR"
+                        },
+                        "channel": {
+                          "anyOf": [
+                            {
+                              "type": "null"
+                            },
+                            {
+                              "type": "string",
+                              "minLength": 1
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "file",
+                        "expected_sha256",
+                        "format",
+                        "channel"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "kind",
+                "mask"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "const": "all_frame_artistic_declared"
+                },
+                "statement": {
+                  "type": "string",
+                  "minLength": 1,
+                  "pattern": "\\S"
+                }
+              },
+              "required": [
+                "kind",
+                "statement"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "normalization": {
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {
+                "method": {
+                  "const": "none"
+                }
+              },
+              "required": [
+                "method"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "method": {
+                  "const": "percentile_near_one"
+                },
+                "low": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 100
+                },
+                "high": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 100
+                }
+              },
+              "required": [
+                "method",
+                "low",
+                "high"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "edits": {
+          "type": "array",
+          "maxItems": 8,
+          "items": {
+            "type": "object",
+            "properties": {
+              "mask": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "file": {
+                        "type": "string",
+                        "pattern": "^(?:[A-Za-z]:[\\\\/]|\\\\\\\\[^\\\\/]+[\\\\/][^\\\\/]+(?:[\\\\/]|$))"
+                      },
+                      "expected_sha256": {
+                        "type": "string",
+                        "pattern": "^[0-9a-f]{64}$"
+                      },
+                      "format": {
+                        "const": "NPY"
+                      },
+                      "channel": {
+                        "const": null
+                      }
+                    },
+                    "required": [
+                      "file",
+                      "expected_sha256",
+                      "format",
+                      "channel"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "file": {
+                        "type": "string",
+                        "pattern": "^(?:[A-Za-z]:[\\\\/]|\\\\\\\\[^\\\\/]+[\\\\/][^\\\\/]+(?:[\\\\/]|$))"
+                      },
+                      "expected_sha256": {
+                        "type": "string",
+                        "pattern": "^[0-9a-f]{64}$"
+                      },
+                      "format": {
+                        "const": "EXR"
+                      },
+                      "channel": {
+                        "anyOf": [
+                          {
+                            "type": "null"
+                          },
+                          {
+                            "type": "string",
+                            "minLength": 1
+                          }
+                        ]
+                      }
+                    },
+                    "required": [
+                      "file",
+                      "expected_sha256",
+                      "format",
+                      "channel"
+                    ],
+                    "additionalProperties": false
+                  }
+                ]
+              },
+              "scale": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              },
+              "offset": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "mask",
+              "scale",
+              "offset"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "normal": {
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {
+                "method": {
+                  "const": "none"
+                }
+              },
+              "required": [
+                "method"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "method": {
+                  "const": "central_perspective"
+                },
+                "fx": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                },
+                "fy": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                },
+                "cx": {
+                  "type": "number"
+                },
+                "cy": {
+                  "type": "number"
+                },
+                "max_relative_jump": {
+                  "type": "number",
+                  "exclusiveMinimum": 0,
+                  "maximum": 1
+                },
+                "boundary_exclusion": {
+                  "anyOf": [
+                    {
+                      "type": "null"
+                    },
+                    {
+                      "oneOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "file": {
+                              "type": "string",
+                              "pattern": "^(?:[A-Za-z]:[\\\\/]|\\\\\\\\[^\\\\/]+[\\\\/][^\\\\/]+(?:[\\\\/]|$))"
+                            },
+                            "expected_sha256": {
+                              "type": "string",
+                              "pattern": "^[0-9a-f]{64}$"
+                            },
+                            "format": {
+                              "const": "NPY"
+                            },
+                            "channel": {
+                              "const": null
+                            }
+                          },
+                          "required": [
+                            "file",
+                            "expected_sha256",
+                            "format",
+                            "channel"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "file": {
+                              "type": "string",
+                              "pattern": "^(?:[A-Za-z]:[\\\\/]|\\\\\\\\[^\\\\/]+[\\\\/][^\\\\/]+(?:[\\\\/]|$))"
+                            },
+                            "expected_sha256": {
+                              "type": "string",
+                              "pattern": "^[0-9a-f]{64}$"
+                            },
+                            "format": {
+                              "const": "EXR"
+                            },
+                            "channel": {
+                              "anyOf": [
+                                {
+                                  "type": "null"
+                                },
+                                {
+                                  "type": "string",
+                                  "minLength": 1
+                                }
+                              ]
+                            }
+                          },
+                          "required": [
+                            "file",
+                            "expected_sha256",
+                            "format",
+                            "channel"
+                          ],
+                          "additionalProperties": false
+                        }
+                      ]
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "method",
+                "fx",
+                "fy",
+                "cx",
+                "cy",
+                "max_relative_jump",
+                "boundary_exclusion"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "method": {
+                  "const": "central_heightfield"
+                },
+                "height_scale": {
+                  "type": "number",
+                  "exclusiveMinimum": 0,
+                  "maximum": 10
+                },
+                "max_height_jump": {
+                  "type": "number",
+                  "exclusiveMinimum": 0,
+                  "maximum": 1
+                },
+                "boundary_exclusion": {
+                  "anyOf": [
+                    {
+                      "type": "null"
+                    },
+                    {
+                      "oneOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "file": {
+                              "type": "string",
+                              "pattern": "^(?:[A-Za-z]:[\\\\/]|\\\\\\\\[^\\\\/]+[\\\\/][^\\\\/]+(?:[\\\\/]|$))"
+                            },
+                            "expected_sha256": {
+                              "type": "string",
+                              "pattern": "^[0-9a-f]{64}$"
+                            },
+                            "format": {
+                              "const": "NPY"
+                            },
+                            "channel": {
+                              "const": null
+                            }
+                          },
+                          "required": [
+                            "file",
+                            "expected_sha256",
+                            "format",
+                            "channel"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "file": {
+                              "type": "string",
+                              "pattern": "^(?:[A-Za-z]:[\\\\/]|\\\\\\\\[^\\\\/]+[\\\\/][^\\\\/]+(?:[\\\\/]|$))"
+                            },
+                            "expected_sha256": {
+                              "type": "string",
+                              "pattern": "^[0-9a-f]{64}$"
+                            },
+                            "format": {
+                              "const": "EXR"
+                            },
+                            "channel": {
+                              "anyOf": [
+                                {
+                                  "type": "null"
+                                },
+                                {
+                                  "type": "string",
+                                  "minLength": 1
+                                }
+                              ]
+                            }
+                          },
+                          "required": [
+                            "file",
+                            "expected_sha256",
+                            "format",
+                            "channel"
+                          ],
+                          "additionalProperties": false
+                        }
+                      ]
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "method",
+                "height_scale",
+                "max_height_jump",
+                "boundary_exclusion"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "method": {
+                  "const": "import_geometry"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "file": {
+                      "type": "string",
+                      "pattern": "^(?:[A-Za-z]:[\\\\/]|\\\\\\\\[^\\\\/]+[\\\\/][^\\\\/]+(?:[\\\\/]|$))"
+                    },
+                    "expected_sha256": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    },
+                    "format": {
+                      "const": "NPY"
+                    },
+                    "channel": {
+                      "const": null
+                    }
+                  },
+                  "required": [
+                    "file",
+                    "expected_sha256",
+                    "format",
+                    "channel"
+                  ],
+                  "additionalProperties": false
+                },
+                "normal_validity": {
+                  "type": "object",
+                  "properties": {
+                    "file": {
+                      "type": "string",
+                      "pattern": "^(?:[A-Za-z]:[\\\\/]|\\\\\\\\[^\\\\/]+[\\\\/][^\\\\/]+(?:[\\\\/]|$))"
+                    },
+                    "expected_sha256": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    },
+                    "format": {
+                      "const": "NPY"
+                    },
+                    "channel": {
+                      "const": null
+                    }
+                  },
+                  "required": [
+                    "file",
+                    "expected_sha256",
+                    "format",
+                    "channel"
+                  ],
+                  "additionalProperties": false
+                },
+                "encoding": {
+                  "const": "signed-float32-XYZ"
+                },
+                "space": {
+                  "enum": [
+                    "world_Xright_Yforward_Zup",
+                    "camera_Xright_Yup_Zbackward"
+                  ]
+                },
+                "world_to_camera": {
+                  "type": "array",
+                  "minItems": 3,
+                  "maxItems": 3,
+                  "items": {
+                    "type": "array",
+                    "minItems": 3,
+                    "maxItems": 3,
+                    "items": {
+                      "type": "number"
+                    }
+                  }
+                },
+                "surface_relation": {
+                  "enum": [
+                    "geometry_surface",
+                    "shader_surface"
+                  ]
+                },
+                "source": {
+                  "type": "object",
+                  "properties": {
+                    "kind": {
+                      "const": "declared_external_normal"
+                    },
+                    "statement": {
+                      "type": "string",
+                      "minLength": 1,
+                      "pattern": "\\S"
+                    }
+                  },
+                  "required": [
+                    "kind",
+                    "statement"
+                  ],
+                  "additionalProperties": false
+                },
+                "fx": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                },
+                "fy": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                },
+                "cx": {
+                  "type": "number"
+                },
+                "cy": {
+                  "type": "number"
+                },
+                "max_relative_jump": {
+                  "type": "number",
+                  "exclusiveMinimum": 0,
+                  "maximum": 1
+                },
+                "depth_edit_policy": {
+                  "const": "rederive_affected_from_axial_z"
+                }
+              },
+              "required": [
+                "method",
+                "data",
+                "normal_validity",
+                "encoding",
+                "space",
+                "world_to_camera",
+                "surface_relation",
+                "source",
+                "fx",
+                "fy",
+                "cx",
+                "cy",
+                "max_relative_jump",
+                "depth_edit_policy"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "budget": {
+          "type": "object",
+          "properties": {
+            "max_pixels": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 4194304
+            },
+            "timeout_seconds": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1200
+            }
+          },
+          "required": [
+            "max_pixels",
+            "timeout_seconds"
+          ],
+          "additionalProperties": false
+        },
+        "resources": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "file": {
+                "type": "string",
+                "pattern": "^(?:[A-Za-z]:[\\\\/]|\\\\\\\\[^\\\\/]+[\\\\/][^\\\\/]+(?:[\\\\/]|$))"
+              },
+              "expected_sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            },
+            "required": [
+              "file",
+              "expected_sha256"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "depth_prepare_version",
+        "rgb",
+        "rgb_encoding",
+        "depth",
+        "domain",
+        "semantics",
+        "provenance",
+        "validity",
+        "normalization",
+        "edits",
+        "normal",
+        "budget",
+        "resources"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "compositing.depth-prepare params v1.0 / additive import_geometry v1.1",
+      "allOf": [
+        {
+          "oneOf": [
+            {
+              "properties": {
+                "semantics": {
+                  "type": "object",
+                  "properties": {
+                    "measure": {
+                      "const": "axial_z"
+                    },
+                    "near_order": {
+                      "const": "smaller_nearer"
+                    },
+                    "units": {
+                      "const": "scene_unit"
+                    }
+                  },
+                  "required": [
+                    "measure",
+                    "near_order",
+                    "units"
+                  ],
+                  "additionalProperties": false
+                },
+                "normalization": {
+                  "type": "object",
+                  "properties": {
+                    "method": {
+                      "const": "none"
+                    }
+                  },
+                  "required": [
+                    "method"
+                  ],
+                  "additionalProperties": false
+                },
+                "normal": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "method": {
+                          "const": "none"
+                        }
+                      },
+                      "required": [
+                        "method"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "method": {
+                          "const": "central_perspective"
+                        },
+                        "fx": {
+                          "type": "number",
+                          "exclusiveMinimum": 0
+                        },
+                        "fy": {
+                          "type": "number",
+                          "exclusiveMinimum": 0
+                        },
+                        "cx": {
+                          "type": "number"
+                        },
+                        "cy": {
+                          "type": "number"
+                        },
+                        "max_relative_jump": {
+                          "type": "number",
+                          "exclusiveMinimum": 0,
+                          "maximum": 1
+                        },
+                        "boundary_exclusion": {
+                          "anyOf": [
+                            {
+                              "type": "null"
+                            },
+                            {
+                              "oneOf": [
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "file": {
+                                      "type": "string",
+                                      "pattern": "^(?:[A-Za-z]:[\\\\/]|\\\\\\\\[^\\\\/]+[\\\\/][^\\\\/]+(?:[\\\\/]|$))"
+                                    },
+                                    "expected_sha256": {
+                                      "type": "string",
+                                      "pattern": "^[0-9a-f]{64}$"
+                                    },
+                                    "format": {
+                                      "const": "NPY"
+                                    },
+                                    "channel": {
+                                      "const": null
+                                    }
+                                  },
+                                  "required": [
+                                    "file",
+                                    "expected_sha256",
+                                    "format",
+                                    "channel"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "file": {
+                                      "type": "string",
+                                      "pattern": "^(?:[A-Za-z]:[\\\\/]|\\\\\\\\[^\\\\/]+[\\\\/][^\\\\/]+(?:[\\\\/]|$))"
+                                    },
+                                    "expected_sha256": {
+                                      "type": "string",
+                                      "pattern": "^[0-9a-f]{64}$"
+                                    },
+                                    "format": {
+                                      "const": "EXR"
+                                    },
+                                    "channel": {
+                                      "anyOf": [
+                                        {
+                                          "type": "null"
+                                        },
+                                        {
+                                          "type": "string",
+                                          "minLength": 1
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  "required": [
+                                    "file",
+                                    "expected_sha256",
+                                    "format",
+                                    "channel"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "method",
+                        "fx",
+                        "fy",
+                        "cx",
+                        "cy",
+                        "max_relative_jump",
+                        "boundary_exclusion"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "method": {
+                          "const": "import_geometry"
+                        },
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "file": {
+                              "type": "string",
+                              "pattern": "^(?:[A-Za-z]:[\\\\/]|\\\\\\\\[^\\\\/]+[\\\\/][^\\\\/]+(?:[\\\\/]|$))"
+                            },
+                            "expected_sha256": {
+                              "type": "string",
+                              "pattern": "^[0-9a-f]{64}$"
+                            },
+                            "format": {
+                              "const": "NPY"
+                            },
+                            "channel": {
+                              "const": null
+                            }
+                          },
+                          "required": [
+                            "file",
+                            "expected_sha256",
+                            "format",
+                            "channel"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "normal_validity": {
+                          "type": "object",
+                          "properties": {
+                            "file": {
+                              "type": "string",
+                              "pattern": "^(?:[A-Za-z]:[\\\\/]|\\\\\\\\[^\\\\/]+[\\\\/][^\\\\/]+(?:[\\\\/]|$))"
+                            },
+                            "expected_sha256": {
+                              "type": "string",
+                              "pattern": "^[0-9a-f]{64}$"
+                            },
+                            "format": {
+                              "const": "NPY"
+                            },
+                            "channel": {
+                              "const": null
+                            }
+                          },
+                          "required": [
+                            "file",
+                            "expected_sha256",
+                            "format",
+                            "channel"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "encoding": {
+                          "const": "signed-float32-XYZ"
+                        },
+                        "space": {
+                          "enum": [
+                            "world_Xright_Yforward_Zup",
+                            "camera_Xright_Yup_Zbackward"
+                          ]
+                        },
+                        "world_to_camera": {
+                          "type": "array",
+                          "minItems": 3,
+                          "maxItems": 3,
+                          "items": {
+                            "type": "array",
+                            "minItems": 3,
+                            "maxItems": 3,
+                            "items": {
+                              "type": "number"
+                            }
+                          }
+                        },
+                        "surface_relation": {
+                          "enum": [
+                            "geometry_surface",
+                            "shader_surface"
+                          ]
+                        },
+                        "source": {
+                          "type": "object",
+                          "properties": {
+                            "kind": {
+                              "const": "declared_external_normal"
+                            },
+                            "statement": {
+                              "type": "string",
+                              "minLength": 1,
+                              "pattern": "\\S"
+                            }
+                          },
+                          "required": [
+                            "kind",
+                            "statement"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "fx": {
+                          "type": "number",
+                          "exclusiveMinimum": 0
+                        },
+                        "fy": {
+                          "type": "number",
+                          "exclusiveMinimum": 0
+                        },
+                        "cx": {
+                          "type": "number"
+                        },
+                        "cy": {
+                          "type": "number"
+                        },
+                        "max_relative_jump": {
+                          "type": "number",
+                          "exclusiveMinimum": 0,
+                          "maximum": 1
+                        },
+                        "depth_edit_policy": {
+                          "const": "rederive_affected_from_axial_z"
+                        }
+                      },
+                      "required": [
+                        "method",
+                        "data",
+                        "normal_validity",
+                        "encoding",
+                        "space",
+                        "world_to_camera",
+                        "surface_relation",
+                        "source",
+                        "fx",
+                        "fy",
+                        "cx",
+                        "cy",
+                        "max_relative_jump",
+                        "depth_edit_policy"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ]
+                },
+                "validity": {
+                  "type": "object",
+                  "properties": {
+                    "kind": {
+                      "const": "explicit_mask"
+                    },
+                    "mask": {
+                      "oneOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "file": {
+                              "type": "string",
+                              "pattern": "^(?:[A-Za-z]:[\\\\/]|\\\\\\\\[^\\\\/]+[\\\\/][^\\\\/]+(?:[\\\\/]|$))"
+                            },
+                            "expected_sha256": {
+                              "type": "string",
+                              "pattern": "^[0-9a-f]{64}$"
+                            },
+                            "format": {
+                              "const": "NPY"
+                            },
+                            "channel": {
+                              "const": null
+                            }
+                          },
+                          "required": [
+                            "file",
+                            "expected_sha256",
+                            "format",
+                            "channel"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "file": {
+                              "type": "string",
+                              "pattern": "^(?:[A-Za-z]:[\\\\/]|\\\\\\\\[^\\\\/]+[\\\\/][^\\\\/]+(?:[\\\\/]|$))"
+                            },
+                            "expected_sha256": {
+                              "type": "string",
+                              "pattern": "^[0-9a-f]{64}$"
+                            },
+                            "format": {
+                              "const": "EXR"
+                            },
+                            "channel": {
+                              "anyOf": [
+                                {
+                                  "type": "null"
+                                },
+                                {
+                                  "type": "string",
+                                  "minLength": 1
+                                }
+                              ]
+                            }
+                          },
+                          "required": [
+                            "file",
+                            "expected_sha256",
+                            "format",
+                            "channel"
+                          ],
+                          "additionalProperties": false
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "kind",
+                    "mask"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            {
+              "properties": {
+                "semantics": {
+                  "type": "object",
+                  "properties": {
+                    "measure": {
+                      "const": "relative_score"
+                    },
+                    "near_order": {
+                      "enum": [
+                        "smaller_nearer",
+                        "larger_nearer"
+                      ]
+                    },
+                    "units": {
+                      "const": "unitless"
+                    }
+                  },
+                  "required": [
+                    "measure",
+                    "near_order",
+                    "units"
+                  ],
+                  "additionalProperties": false
+                },
+                "normalization": {
+                  "type": "object",
+                  "properties": {
+                    "method": {
+                      "const": "percentile_near_one"
+                    },
+                    "low": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 100
+                    },
+                    "high": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 100
+                    }
+                  },
+                  "required": [
+                    "method",
+                    "low",
+                    "high"
+                  ],
+                  "additionalProperties": false
+                },
+                "normal": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "method": {
+                          "const": "none"
+                        }
+                      },
+                      "required": [
+                        "method"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "method": {
+                          "const": "central_heightfield"
+                        },
+                        "height_scale": {
+                          "type": "number",
+                          "exclusiveMinimum": 0,
+                          "maximum": 10
+                        },
+                        "max_height_jump": {
+                          "type": "number",
+                          "exclusiveMinimum": 0,
+                          "maximum": 1
+                        },
+                        "boundary_exclusion": {
+                          "anyOf": [
+                            {
+                              "type": "null"
+                            },
+                            {
+                              "oneOf": [
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "file": {
+                                      "type": "string",
+                                      "pattern": "^(?:[A-Za-z]:[\\\\/]|\\\\\\\\[^\\\\/]+[\\\\/][^\\\\/]+(?:[\\\\/]|$))"
+                                    },
+                                    "expected_sha256": {
+                                      "type": "string",
+                                      "pattern": "^[0-9a-f]{64}$"
+                                    },
+                                    "format": {
+                                      "const": "NPY"
+                                    },
+                                    "channel": {
+                                      "const": null
+                                    }
+                                  },
+                                  "required": [
+                                    "file",
+                                    "expected_sha256",
+                                    "format",
+                                    "channel"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "file": {
+                                      "type": "string",
+                                      "pattern": "^(?:[A-Za-z]:[\\\\/]|\\\\\\\\[^\\\\/]+[\\\\/][^\\\\/]+(?:[\\\\/]|$))"
+                                    },
+                                    "expected_sha256": {
+                                      "type": "string",
+                                      "pattern": "^[0-9a-f]{64}$"
+                                    },
+                                    "format": {
+                                      "const": "EXR"
+                                    },
+                                    "channel": {
+                                      "anyOf": [
+                                        {
+                                          "type": "null"
+                                        },
+                                        {
+                                          "type": "string",
+                                          "minLength": 1
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  "required": [
+                                    "file",
+                                    "expected_sha256",
+                                    "format",
+                                    "channel"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "method",
+                        "height_scale",
+                        "max_height_jump",
+                        "boundary_exclusion"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "if": {
+            "properties": {
+              "validity": {
+                "properties": {
+                  "kind": {
+                    "const": "all_frame_artistic_declared"
+                  }
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "semantics": {
+                "type": "object",
+                "properties": {
+                  "measure": {
+                    "const": "relative_score"
+                  },
+                  "near_order": {
+                    "enum": [
+                      "smaller_nearer",
+                      "larger_nearer"
+                    ]
+                  },
+                  "units": {
+                    "const": "unitless"
+                  }
+                },
+                "required": [
+                  "measure",
+                  "near_order",
+                  "units"
+                ],
+                "additionalProperties": false
+              },
+              "normal": {
+                "type": "object",
+                "properties": {
+                  "method": {
+                    "const": "central_heightfield"
+                  },
+                  "height_scale": {
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                    "maximum": 10
+                  },
+                  "max_height_jump": {
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                    "maximum": 1
+                  },
+                  "boundary_exclusion": {
+                    "anyOf": [
+                      {
+                        "type": "null"
+                      },
+                      {
+                        "oneOf": [
+                          {
+                            "type": "object",
+                            "properties": {
+                              "file": {
+                                "type": "string",
+                                "pattern": "^(?:[A-Za-z]:[\\\\/]|\\\\\\\\[^\\\\/]+[\\\\/][^\\\\/]+(?:[\\\\/]|$))"
+                              },
+                              "expected_sha256": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{64}$"
+                              },
+                              "format": {
+                                "const": "NPY"
+                              },
+                              "channel": {
+                                "const": null
+                              }
+                            },
+                            "required": [
+                              "file",
+                              "expected_sha256",
+                              "format",
+                              "channel"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "file": {
+                                "type": "string",
+                                "pattern": "^(?:[A-Za-z]:[\\\\/]|\\\\\\\\[^\\\\/]+[\\\\/][^\\\\/]+(?:[\\\\/]|$))"
+                              },
+                              "expected_sha256": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{64}$"
+                              },
+                              "format": {
+                                "const": "EXR"
+                              },
+                              "channel": {
+                                "anyOf": [
+                                  {
+                                    "type": "null"
+                                  },
+                                  {
+                                    "type": "string",
+                                    "minLength": 1
+                                  }
+                                ]
+                              }
+                            },
+                            "required": [
+                              "file",
+                              "expected_sha256",
+                              "format",
+                              "channel"
+                            ],
+                            "additionalProperties": false
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "method",
+                  "height_scale",
+                  "max_height_jump",
+                  "boundary_exclusion"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        {
+          "oneOf": [
+            {
+              "properties": {
+                "depth_prepare_version": {
+                  "const": "1.0"
+                },
+                "normal": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "method": {
+                          "const": "none"
+                        }
+                      },
+                      "required": [
+                        "method"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "method": {
+                          "const": "central_perspective"
+                        },
+                        "fx": {
+                          "type": "number",
+                          "exclusiveMinimum": 0
+                        },
+                        "fy": {
+                          "type": "number",
+                          "exclusiveMinimum": 0
+                        },
+                        "cx": {
+                          "type": "number"
+                        },
+                        "cy": {
+                          "type": "number"
+                        },
+                        "max_relative_jump": {
+                          "type": "number",
+                          "exclusiveMinimum": 0,
+                          "maximum": 1
+                        },
+                        "boundary_exclusion": {
+                          "anyOf": [
+                            {
+                              "type": "null"
+                            },
+                            {
+                              "oneOf": [
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "file": {
+                                      "type": "string",
+                                      "pattern": "^(?:[A-Za-z]:[\\\\/]|\\\\\\\\[^\\\\/]+[\\\\/][^\\\\/]+(?:[\\\\/]|$))"
+                                    },
+                                    "expected_sha256": {
+                                      "type": "string",
+                                      "pattern": "^[0-9a-f]{64}$"
+                                    },
+                                    "format": {
+                                      "const": "NPY"
+                                    },
+                                    "channel": {
+                                      "const": null
+                                    }
+                                  },
+                                  "required": [
+                                    "file",
+                                    "expected_sha256",
+                                    "format",
+                                    "channel"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "file": {
+                                      "type": "string",
+                                      "pattern": "^(?:[A-Za-z]:[\\\\/]|\\\\\\\\[^\\\\/]+[\\\\/][^\\\\/]+(?:[\\\\/]|$))"
+                                    },
+                                    "expected_sha256": {
+                                      "type": "string",
+                                      "pattern": "^[0-9a-f]{64}$"
+                                    },
+                                    "format": {
+                                      "const": "EXR"
+                                    },
+                                    "channel": {
+                                      "anyOf": [
+                                        {
+                                          "type": "null"
+                                        },
+                                        {
+                                          "type": "string",
+                                          "minLength": 1
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  "required": [
+                                    "file",
+                                    "expected_sha256",
+                                    "format",
+                                    "channel"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "method",
+                        "fx",
+                        "fy",
+                        "cx",
+                        "cy",
+                        "max_relative_jump",
+                        "boundary_exclusion"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "method": {
+                          "const": "central_heightfield"
+                        },
+                        "height_scale": {
+                          "type": "number",
+                          "exclusiveMinimum": 0,
+                          "maximum": 10
+                        },
+                        "max_height_jump": {
+                          "type": "number",
+                          "exclusiveMinimum": 0,
+                          "maximum": 1
+                        },
+                        "boundary_exclusion": {
+                          "anyOf": [
+                            {
+                              "type": "null"
+                            },
+                            {
+                              "oneOf": [
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "file": {
+                                      "type": "string",
+                                      "pattern": "^(?:[A-Za-z]:[\\\\/]|\\\\\\\\[^\\\\/]+[\\\\/][^\\\\/]+(?:[\\\\/]|$))"
+                                    },
+                                    "expected_sha256": {
+                                      "type": "string",
+                                      "pattern": "^[0-9a-f]{64}$"
+                                    },
+                                    "format": {
+                                      "const": "NPY"
+                                    },
+                                    "channel": {
+                                      "const": null
+                                    }
+                                  },
+                                  "required": [
+                                    "file",
+                                    "expected_sha256",
+                                    "format",
+                                    "channel"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "file": {
+                                      "type": "string",
+                                      "pattern": "^(?:[A-Za-z]:[\\\\/]|\\\\\\\\[^\\\\/]+[\\\\/][^\\\\/]+(?:[\\\\/]|$))"
+                                    },
+                                    "expected_sha256": {
+                                      "type": "string",
+                                      "pattern": "^[0-9a-f]{64}$"
+                                    },
+                                    "format": {
+                                      "const": "EXR"
+                                    },
+                                    "channel": {
+                                      "anyOf": [
+                                        {
+                                          "type": "null"
+                                        },
+                                        {
+                                          "type": "string",
+                                          "minLength": 1
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  "required": [
+                                    "file",
+                                    "expected_sha256",
+                                    "format",
+                                    "channel"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "method",
+                        "height_scale",
+                        "max_height_jump",
+                        "boundary_exclusion"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "properties": {
+                "depth_prepare_version": {
+                  "const": "1.1"
+                },
+                "normal": {
+                  "type": "object",
+                  "properties": {
+                    "method": {
+                      "const": "import_geometry"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "file": {
+                          "type": "string",
+                          "pattern": "^(?:[A-Za-z]:[\\\\/]|\\\\\\\\[^\\\\/]+[\\\\/][^\\\\/]+(?:[\\\\/]|$))"
+                        },
+                        "expected_sha256": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{64}$"
+                        },
+                        "format": {
+                          "const": "NPY"
+                        },
+                        "channel": {
+                          "const": null
+                        }
+                      },
+                      "required": [
+                        "file",
+                        "expected_sha256",
+                        "format",
+                        "channel"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "normal_validity": {
+                      "type": "object",
+                      "properties": {
+                        "file": {
+                          "type": "string",
+                          "pattern": "^(?:[A-Za-z]:[\\\\/]|\\\\\\\\[^\\\\/]+[\\\\/][^\\\\/]+(?:[\\\\/]|$))"
+                        },
+                        "expected_sha256": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{64}$"
+                        },
+                        "format": {
+                          "const": "NPY"
+                        },
+                        "channel": {
+                          "const": null
+                        }
+                      },
+                      "required": [
+                        "file",
+                        "expected_sha256",
+                        "format",
+                        "channel"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "encoding": {
+                      "const": "signed-float32-XYZ"
+                    },
+                    "space": {
+                      "enum": [
+                        "world_Xright_Yforward_Zup",
+                        "camera_Xright_Yup_Zbackward"
+                      ]
+                    },
+                    "world_to_camera": {
+                      "type": "array",
+                      "minItems": 3,
+                      "maxItems": 3,
+                      "items": {
+                        "type": "array",
+                        "minItems": 3,
+                        "maxItems": 3,
+                        "items": {
+                          "type": "number"
+                        }
+                      }
+                    },
+                    "surface_relation": {
+                      "enum": [
+                        "geometry_surface",
+                        "shader_surface"
+                      ]
+                    },
+                    "source": {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "const": "declared_external_normal"
+                        },
+                        "statement": {
+                          "type": "string",
+                          "minLength": 1,
+                          "pattern": "\\S"
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "statement"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "fx": {
+                      "type": "number",
+                      "exclusiveMinimum": 0
+                    },
+                    "fy": {
+                      "type": "number",
+                      "exclusiveMinimum": 0
+                    },
+                    "cx": {
+                      "type": "number"
+                    },
+                    "cy": {
+                      "type": "number"
+                    },
+                    "max_relative_jump": {
+                      "type": "number",
+                      "exclusiveMinimum": 0,
+                      "maximum": 1
+                    },
+                    "depth_edit_policy": {
+                      "const": "rederive_affected_from_axial_z"
+                    }
+                  },
+                  "required": [
+                    "method",
+                    "data",
+                    "normal_validity",
+                    "encoding",
+                    "space",
+                    "world_to_camera",
+                    "surface_relation",
+                    "source",
+                    "fx",
+                    "fy",
+                    "cx",
+                    "cy",
+                    "max_relative_jump",
+                    "depth_edit_policy"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "$comment": "Reader rejects duplicate/nonfinite JSON and bool-as-number. Integers are exact Python int; normalizer additionally checks low<high and direct-input resource path/SHA coverage. Extra resources require actual Host authority use; not certified by this pure schema."
+    }
+  },
+  "required": [
+    "schema_version",
+    "command",
+    "params"
+  ],
+  "additionalProperties": false
+}

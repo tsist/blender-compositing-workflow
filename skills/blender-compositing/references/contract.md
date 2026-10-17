@@ -1,6 +1,6 @@
 # Compositing contract and boundaries
 
-Compatible baseline: addon **0.4.0**, CLI **0.63.0**, Windows Blender **5.2.1 LTS / 9e2066aef7ef**. Runtime aggregate: `9566cec1c2a9bf6db34c3085d964806b8ce7bafed1e0ae145bbb5259d655e629`. Host and encoder component identities are recorded by the release inventory. Required Geometry Nodes Workflow source support for the saved-candidate persistence import is separately inventoried; it is outside that aggregate. Live `compositing describe` and selected operation `--schema` expose current contracts; static Schema files are under the checkout's `docs/cli/schemas`.
+Compatible baseline: addon **0.8.0**, CLI **0.75.0**, Windows Blender **5.2.1 LTS / 9e2066aef7ef**. Runtime aggregate: `ae89b1e85145c2d2385bc7db312557aee9e44499108299dc18dac7b48cd34370`. Host and encoder component identities are recorded by the release inventory. Required Geometry Nodes Workflow source support for the saved-candidate persistence import is separately inventoried; it is outside that aggregate. Live `compositing describe` and selected operation `--schema` expose current contracts; static Schema files are under the checkout's `docs/cli/schemas`.
 
 The addon creates managed native compositor groups connected to an existing root. External nodes and unrelated scene data are protected. Explicit update changes its managed part, adopt accepts an explicitly chosen safe new baseline, and detach removes the managed bridge according to contract. Manual edits are preserved and conflicts reported rather than overwritten. Unknown/missing modes and passes require investigation or an explicit extension; they are not silently approximated.
 
@@ -35,3 +35,9 @@ Independent OIIO inventory and Movie caches are live-guarded, process/attempt-lo
 ## Limits
 
 GPU selection and CPU fallback are explicit; kernel utilization, strict OIDN backend behavior and fair performance across devices require separate evidence. Technical HDR encode, physical mastering, target-device viewing and user visual acceptance are separate. Current representative support remains experimental; all-node/all-mode/all-input/cross-platform or complete normative HDR certification is not implied.
+
+## Depth contracts
+
+The six depth operations use their versioned, exact public contracts and independent Host jobs. Depth FILE descriptors bind absolute paths and SHA, valid masks are distinct from confidence, and caller geometry declarations remain declarations. Relative model depth is not metric, RGB is not albedo, and baked shadows are retained. Read [data](depth-data.md), [estimate](rgb-estimate.md), [relight](depth-relight.md), [session](relight-session.md), [Normal](imported-normal.md) and [sequence](depth-sequence.md) for the selected route.
+
+Source-root selection does not relax fixed profile admission. A ready file, revision passed or worker checkpoint cannot replace public parent authority. Final consumers require the successful complete parent, full member namespace, hashes and matching implementation profile. Sequence producer identity is a scoped subset, distinct from this complete compositing runtime aggregate. Never rewrite old source hashes for compatibility.

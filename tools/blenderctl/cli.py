@@ -116,9 +116,10 @@ def parser():
     compositing=sub.add_parser('compositing',help='protected native compositing graphs and observed saved-file outputs')
     ca=compositing.add_subparsers(dest='action',required=True,parser_class=Parser)
     cd=ca.add_parser('describe',help='cheap compositing contract discovery; no Blender or job')
-    cd.add_argument('--operation',choices=['run','inspect','manifest','preview','encode','template-save','template-run','template-document','batch','study']);cd.add_argument('--schema',action='store_true');cd.add_argument('--section')
+    cd.add_argument('--operation',choices=['run','inspect','manifest','preview','encode','template-save','template-run','template-document','batch','study','depth-prepare','depth-inspect','depth-estimate','depth-relight','depth-session','depth-sequence']);cd.add_argument('--schema',action='store_true');cd.add_argument('--section',help='legacy manifest section (encode uses its profile fields); preview is --operation preview --schema')
+    cd.add_argument('--param',help='exact top-level field of --operation schema; mutually exclusive with --schema/--section; not a request validator')
     ce=ca.add_parser('encode',help='Host-only named-reference HDR10 codec work unit; no viewing/certification claim');ce.add_argument('--manifest',type=Path,required=True)
-    for action in ('template-save','template-run','batch','study'):
+    for action in ('template-save','template-run','batch','study','depth-prepare','depth-inspect','depth-estimate','depth-relight','depth-session','depth-sequence'):
         action_parser=ca.add_parser(action)
         action_parser.add_argument('--params',type=Path,required=True,help='complete UTF-8 params object')
     cr=ca.add_parser('run');cr.add_argument('file');cr.add_argument('--expected-sha256',required=True)
@@ -126,6 +127,13 @@ def parser():
     cr.add_argument('--resume',type=Path);cr.add_argument('--resume-sha256')
     ci=ca.add_parser('inspect');ci.add_argument('file');ci.add_argument('--expected-sha256',required=True)
     ci.add_argument('--resources',type=Path,required=True);ci.add_argument('--scene',required=True);ci.add_argument('--workflow-id',required=True)
+    modeling=sub.add_parser('modeling',help='approved Tripo China tasks and protected local GLB candidates')
+    modeling_actions=modeling.add_subparsers(dest='action',required=True,parser_class=Parser)
+    md=modeling_actions.add_parser('describe',help='cheap modeling contract discovery; no Blender or job')
+    md.add_argument('--operation',choices=['run','manifest','import_local','submit','submit_batch','query','query_batch','download','download_batch','resume_download','authorization','bind_unknown','binding_statement','provider_query','approval_append_prepare','approval_append_apply','resume_pre_submit','pre_submit_recovery_statement','outstanding_increment_prepare','outstanding_increment_apply'])
+    md.add_argument('--schema',action='store_true');md.add_argument('--section')
+    md.add_argument('--provider',choices=['tripo-cn','meshy']);md.add_argument('--provider-operation')
+    modeling_actions.add_parser('run').add_argument('--params',type=Path,required=True)
     lighting=sub.add_parser('lighting',help='protected saved-file lighting plans, previews and restore')
     la=lighting.add_subparsers(dest='action',required=True,parser_class=Parser)
     ld=la.add_parser('describe',help='cheap lighting domain contract discovery')
@@ -282,7 +290,12 @@ def main(argv=None):
         if args.command == 'compositing' and args.action == 'describe':
             if args.background or args.compact:raise Failure('INVALID_REQUEST','--async/--compact does not apply to compositing describe')
             from compositing_interface import describe
-            print(json.dumps(describe(args.operation,args.schema,args.section),ensure_ascii=False,allow_nan=False))
+            print(json.dumps(describe(args.operation,args.schema,args.section,args.param),ensure_ascii=False,allow_nan=False))
+            return 0
+        if args.command == 'modeling' and args.action == 'describe':
+            if args.background or args.compact:raise Failure('INVALID_REQUEST','--async/--compact does not apply to modeling describe')
+            from modeling_interface import describe
+            print(json.dumps(describe(args.operation,args.schema,args.section,args.provider,args.provider_operation),ensure_ascii=False,allow_nan=False))
             return 0
         if args.command == 'lighting' and args.action == 'describe':
             if args.background or args.compact:raise Failure('INVALID_REQUEST','--async/--compact does not apply to lighting describe')
@@ -312,7 +325,7 @@ def main(argv=None):
             print(json.dumps(describe(args.operation, args.schema, args.section), ensure_ascii=False, allow_nan=False))
             return 0
         if args.compact:
-            if args.command in ('material', 'geometry', 'workflow', 'lighting', 'compositing'):
+            if args.command in ('material', 'geometry', 'workflow', 'lighting', 'compositing', 'modeling'):
                 compact_command = args.command + '.' + args.action
             elif args.command == 'request':
                 compact_request = read_json(args.file)
@@ -414,6 +427,18 @@ def main(argv=None):
                 if getattr(args,'hair_frames',None):params['hair_frames']=args.hair_frames
                 if getattr(args,'simulation_receipt',None):params['simulation_receipt']=read_json(args.simulation_receipt)
                 request={'schema_version':SCHEMA,'command':args.command+'.'+args.action,'params':params}
+            elif args.command=='compositing' and args.action=='depth-estimate':
+                from compositing_depth_estimate_contract import DepthError
+                from compositing_depth_contract import loads_strict,DepthError as ReaderError
+                try:params=loads_strict(args.params.read_bytes())
+                except (DepthError,ReaderError) as exc:raise Failure(exc.code if exc.code in CODES else 'INVALID_REQUEST',str(exc)) from exc
+                request={'schema_version':SCHEMA,'command':'compositing.depth-estimate','params':params}
+            elif args.command=='compositing' and args.action in ('depth-prepare','depth-inspect','depth-relight','depth-session','depth-sequence'):
+                from compositing_depth_contract import DepthError,loads_strict
+                # New depth only: strict finite reader, without changing legacy protocol JSON behavior.
+                try:params=loads_strict(args.params.read_bytes())
+                except DepthError as exc:raise Failure(exc.code if exc.code in CODES else 'INVALID_REQUEST',str(exc)) from exc
+                request={'schema_version':SCHEMA,'command':'compositing.'+args.action,'params':params}
             elif args.command=='compositing' and args.action in ('template-save','template-run','batch','study'):
                 request={'schema_version':SCHEMA,'command':'compositing.'+args.action,'params':read_json(args.params)}
             elif args.command=='compositing':
@@ -430,6 +455,8 @@ def main(argv=None):
                         elif args.resume_sha256:raise Failure('INVALID_REQUEST','Resume SHA needs report')
                     else:params.update(scene=args.scene,workflow_id=args.workflow_id)
                 request={'schema_version':SCHEMA,'command':'compositing.'+args.action,'params':params}
+            elif args.command=='modeling':
+                request={'schema_version':SCHEMA,'command':'modeling.run','params':read_json(args.params)}
             elif args.command=='lighting':
                 if args.action=='batch':
                     params=read_json(args.manifest)
@@ -553,6 +580,8 @@ def main(argv=None):
         try:
             if compact_command and compact_command.startswith('compositing.'):
                 from compositing_interface import compact
+            elif compact_command and compact_command.startswith('modeling.'):
+                from modeling_interface import compact
             elif compact_command and compact_command.startswith('lighting.'):
                 from lighting_interface import compact
             elif compact_command and compact_command.startswith('geometry.'):

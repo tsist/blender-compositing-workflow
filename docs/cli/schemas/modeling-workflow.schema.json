@@ -1,0 +1,2942 @@
+{
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "operation",
+        "input"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1.0"
+        },
+        "operation": {
+          "const": "import_local"
+        },
+        "input": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "file",
+            "expected_sha256"
+          ],
+          "properties": {
+            "file": {
+              "type": "string",
+              "description": "Absolute file path"
+            },
+            "expected_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          }
+        },
+        "provenance": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "provider"
+          ],
+          "properties": {
+            "provider": {
+              "enum": [
+                "tripo-cn",
+                "local"
+              ]
+            },
+            "task_id": {
+              "type": "string"
+            },
+            "model": {
+              "type": "string"
+            }
+          }
+        },
+        "preview": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "front_axis": {
+              "enum": [
+                "+X",
+                "-X",
+                "+Y",
+                "-Y"
+              ]
+            },
+            "engine": {
+              "enum": [
+                "CYCLES",
+                "BLENDER_WORKBENCH"
+              ]
+            },
+            "width": {
+              "type": "integer",
+              "minimum": 64,
+              "maximum": 2048
+            },
+            "height": {
+              "type": "integer",
+              "minimum": 64,
+              "maximum": 2048
+            },
+            "samples": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 128
+            },
+            "views": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 4,
+              "uniqueItems": true,
+              "items": {
+                "enum": [
+                  "front",
+                  "back",
+                  "threequarter",
+                  "side"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "operation",
+        "credential_ref",
+        "ledger_file",
+        "request",
+        "authorization_descriptor"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1.0"
+        },
+        "operation": {
+          "const": "submit"
+        },
+        "credential_ref": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "name"
+              ],
+              "properties": {
+                "kind": {
+                  "const": "environment"
+                },
+                "name": {
+                  "type": "string",
+                  "pattern": "^[A-Z][A-Z0-9_]{0,127}$"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "path"
+              ],
+              "properties": {
+                "kind": {
+                  "enum": [
+                    "dpapi",
+                    "dpapi_clixml"
+                  ]
+                },
+                "path": {
+                  "type": "string",
+                  "description": "Absolute DPAPI encrypted-file or SecureString CLIXML path"
+                }
+              }
+            }
+          ]
+        },
+        "ledger_file": {
+          "type": "string",
+          "description": "Absolute canonical financial ledger path, matching authorization.ledger_file for submit; external recovery does not create it"
+        },
+        "request": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "operation_id",
+            "operation"
+          ],
+          "properties": {
+            "operation_id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9_.-]{1,256}$"
+            },
+            "operation": {
+              "enum": [
+                "complete_all_v1",
+                "h31_image",
+                "h31_multiview",
+                "p2_multiview",
+                "segment_v2",
+                "texture_v35"
+              ]
+            },
+            "source_task_id": {
+              "type": "string"
+            },
+            "inputs": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 2,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "view",
+                  "file",
+                  "expected_sha256"
+                ],
+                "properties": {
+                  "view": {
+                    "enum": [
+                      "front",
+                      "back"
+                    ]
+                  },
+                  "file": {
+                    "type": "string",
+                    "description": "Absolute file path"
+                  },
+                  "expected_sha256": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  }
+                }
+              }
+            }
+          },
+          "description": "Generation requires ordered front or front/back inputs; segment/texture require successful original generation, complete_all_v1 requires successful segment_v2; every source_task_id must be in the same ledger"
+        },
+        "authorization_descriptor": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "file",
+            "expected_sha256"
+          ],
+          "properties": {
+            "file": {
+              "type": "string",
+              "description": "Absolute file path"
+            },
+            "expected_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "operation",
+        "credential_ref",
+        "ledger_file",
+        "requests",
+        "authorization_descriptor",
+        "query_limit",
+        "poll_interval_seconds"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1.0"
+        },
+        "operation": {
+          "const": "submit_batch"
+        },
+        "credential_ref": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "name"
+              ],
+              "properties": {
+                "kind": {
+                  "const": "environment"
+                },
+                "name": {
+                  "type": "string",
+                  "pattern": "^[A-Z][A-Z0-9_]{0,127}$"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "path"
+              ],
+              "properties": {
+                "kind": {
+                  "enum": [
+                    "dpapi",
+                    "dpapi_clixml"
+                  ]
+                },
+                "path": {
+                  "type": "string",
+                  "description": "Absolute DPAPI encrypted-file or SecureString CLIXML path"
+                }
+              }
+            }
+          ]
+        },
+        "ledger_file": {
+          "type": "string",
+          "description": "Absolute canonical financial ledger path, matching authorization.ledger_file for submit; external recovery does not create it"
+        },
+        "requests": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 8,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "operation_id",
+              "operation"
+            ],
+            "properties": {
+              "operation_id": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9_.-]{1,256}$"
+              },
+              "operation": {
+                "enum": [
+                  "complete_all_v1",
+                  "h31_image",
+                  "h31_multiview",
+                  "p2_multiview",
+                  "segment_v2",
+                  "texture_v35"
+                ]
+              },
+              "source_task_id": {
+                "type": "string"
+              },
+              "inputs": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 2,
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "view",
+                    "file",
+                    "expected_sha256"
+                  ],
+                  "properties": {
+                    "view": {
+                      "enum": [
+                        "front",
+                        "back"
+                      ]
+                    },
+                    "file": {
+                      "type": "string",
+                      "description": "Absolute file path"
+                    },
+                    "expected_sha256": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Generation requires ordered front or front/back inputs; segment/texture require successful original generation, complete_all_v1 requires successful segment_v2; every source_task_id must be in the same ledger"
+          }
+        },
+        "authorization_descriptor": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "file",
+            "expected_sha256"
+          ],
+          "properties": {
+            "file": {
+              "type": "string",
+              "description": "Absolute file path"
+            },
+            "expected_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          }
+        },
+        "query_limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 120,
+          "description": "Total task GET attempts across this explicit job; balance GET is separate"
+        },
+        "poll_interval_seconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 30
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "operation",
+        "credential_ref",
+        "ledger_file",
+        "task_id"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1.0"
+        },
+        "operation": {
+          "const": "query"
+        },
+        "credential_ref": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "name"
+              ],
+              "properties": {
+                "kind": {
+                  "const": "environment"
+                },
+                "name": {
+                  "type": "string",
+                  "pattern": "^[A-Z][A-Z0-9_]{0,127}$"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "path"
+              ],
+              "properties": {
+                "kind": {
+                  "enum": [
+                    "dpapi",
+                    "dpapi_clixml"
+                  ]
+                },
+                "path": {
+                  "type": "string",
+                  "description": "Absolute DPAPI encrypted-file or SecureString CLIXML path"
+                }
+              }
+            }
+          ]
+        },
+        "ledger_file": {
+          "type": "string",
+          "description": "Absolute canonical financial ledger path, matching authorization.ledger_file for submit; external recovery does not create it"
+        },
+        "task_id": {
+          "type": "string"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "operation",
+        "credential_ref",
+        "ledger_file",
+        "task_ids"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1.0"
+        },
+        "operation": {
+          "const": "query_batch"
+        },
+        "credential_ref": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "name"
+              ],
+              "properties": {
+                "kind": {
+                  "const": "environment"
+                },
+                "name": {
+                  "type": "string",
+                  "pattern": "^[A-Z][A-Z0-9_]{0,127}$"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "path"
+              ],
+              "properties": {
+                "kind": {
+                  "enum": [
+                    "dpapi",
+                    "dpapi_clixml"
+                  ]
+                },
+                "path": {
+                  "type": "string",
+                  "description": "Absolute DPAPI encrypted-file or SecureString CLIXML path"
+                }
+              }
+            }
+          ]
+        },
+        "ledger_file": {
+          "type": "string",
+          "description": "Absolute canonical financial ledger path, matching authorization.ledger_file for submit; external recovery does not create it"
+        },
+        "task_ids": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_.-]{1,256}$"
+          },
+          "description": "One sequential GET per known task; no polling or automatic retry; first query error stops the batch"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "operation",
+        "credential_ref",
+        "ledger_file",
+        "task_id"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1.0"
+        },
+        "operation": {
+          "const": "download"
+        },
+        "credential_ref": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "name"
+              ],
+              "properties": {
+                "kind": {
+                  "const": "environment"
+                },
+                "name": {
+                  "type": "string",
+                  "pattern": "^[A-Z][A-Z0-9_]{0,127}$"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "path"
+              ],
+              "properties": {
+                "kind": {
+                  "enum": [
+                    "dpapi",
+                    "dpapi_clixml"
+                  ]
+                },
+                "path": {
+                  "type": "string",
+                  "description": "Absolute DPAPI encrypted-file or SecureString CLIXML path"
+                }
+              }
+            }
+          ]
+        },
+        "ledger_file": {
+          "type": "string",
+          "description": "Absolute canonical financial ledger path, matching authorization.ledger_file for submit; external recovery does not create it"
+        },
+        "task_id": {
+          "type": "string"
+        },
+        "max_bytes": {
+          "type": "integer",
+          "minimum": 12,
+          "maximum": 2147483648
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "operation",
+        "credential_ref",
+        "ledger_file",
+        "items",
+        "max_total_bytes"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1.0"
+        },
+        "operation": {
+          "const": "download_batch"
+        },
+        "credential_ref": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "name"
+              ],
+              "properties": {
+                "kind": {
+                  "const": "environment"
+                },
+                "name": {
+                  "type": "string",
+                  "pattern": "^[A-Z][A-Z0-9_]{0,127}$"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "path"
+              ],
+              "properties": {
+                "kind": {
+                  "enum": [
+                    "dpapi",
+                    "dpapi_clixml"
+                  ]
+                },
+                "path": {
+                  "type": "string",
+                  "description": "Absolute DPAPI encrypted-file or SecureString CLIXML path"
+                }
+              }
+            }
+          ]
+        },
+        "ledger_file": {
+          "type": "string",
+          "description": "Absolute canonical financial ledger path, matching authorization.ledger_file for submit; external recovery does not create it"
+        },
+        "items": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "items": {
+            "oneOf": [
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "operation",
+                  "task_id",
+                  "max_bytes"
+                ],
+                "properties": {
+                  "operation": {
+                    "const": "download"
+                  },
+                  "task_id": {
+                    "type": "string"
+                  },
+                  "max_bytes": {
+                    "type": "integer",
+                    "minimum": 12,
+                    "maximum": 2147483648
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "operation",
+                  "task_id",
+                  "max_bytes",
+                  "recovery_descriptor",
+                  "partial_descriptor"
+                ],
+                "properties": {
+                  "operation": {
+                    "const": "resume_download"
+                  },
+                  "task_id": {
+                    "type": "string"
+                  },
+                  "max_bytes": {
+                    "type": "integer",
+                    "minimum": 12,
+                    "maximum": 2147483648
+                  },
+                  "recovery_descriptor": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "file",
+                      "expected_sha256"
+                    ],
+                    "properties": {
+                      "file": {
+                        "type": "string",
+                        "description": "Absolute file path"
+                      },
+                      "expected_sha256": {
+                        "type": "string",
+                        "pattern": "^[0-9a-f]{64}$"
+                      }
+                    }
+                  },
+                  "partial_descriptor": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "file",
+                      "expected_sha256"
+                    ],
+                    "properties": {
+                      "file": {
+                        "type": "string",
+                        "description": "Absolute file path"
+                      },
+                      "expected_sha256": {
+                        "type": "string",
+                        "pattern": "^[0-9a-f]{64}$"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "max_total_bytes": {
+          "type": "integer",
+          "minimum": 12,
+          "maximum": 34359738368,
+          "description": "Must cover the sum of all item max_bytes; no automatic full redownload"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "operation",
+        "credential_ref",
+        "ledger_file",
+        "task_id",
+        "recovery_descriptor",
+        "partial_descriptor"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1.0"
+        },
+        "operation": {
+          "const": "resume_download"
+        },
+        "credential_ref": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "name"
+              ],
+              "properties": {
+                "kind": {
+                  "const": "environment"
+                },
+                "name": {
+                  "type": "string",
+                  "pattern": "^[A-Z][A-Z0-9_]{0,127}$"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "path"
+              ],
+              "properties": {
+                "kind": {
+                  "enum": [
+                    "dpapi",
+                    "dpapi_clixml"
+                  ]
+                },
+                "path": {
+                  "type": "string",
+                  "description": "Absolute DPAPI encrypted-file or SecureString CLIXML path"
+                }
+              }
+            }
+          ]
+        },
+        "ledger_file": {
+          "type": "string",
+          "description": "Absolute canonical financial ledger path, matching authorization.ledger_file for submit; external recovery does not create it"
+        },
+        "task_id": {
+          "type": "string"
+        },
+        "max_bytes": {
+          "type": "integer",
+          "minimum": 12,
+          "maximum": 2147483648
+        },
+        "recovery_descriptor": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "file",
+            "expected_sha256"
+          ],
+          "properties": {
+            "file": {
+              "type": "string",
+              "description": "Absolute file path"
+            },
+            "expected_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          }
+        },
+        "partial_descriptor": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "file",
+            "expected_sha256"
+          ],
+          "properties": {
+            "file": {
+              "type": "string",
+              "description": "Absolute file path"
+            },
+            "expected_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "operation",
+        "credential_ref",
+        "ledger_file",
+        "request",
+        "binding_descriptor"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1.0"
+        },
+        "operation": {
+          "const": "bind_unknown"
+        },
+        "credential_ref": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "name"
+              ],
+              "properties": {
+                "kind": {
+                  "const": "environment"
+                },
+                "name": {
+                  "type": "string",
+                  "pattern": "^[A-Z][A-Z0-9_]{0,127}$"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "path"
+              ],
+              "properties": {
+                "kind": {
+                  "enum": [
+                    "dpapi",
+                    "dpapi_clixml"
+                  ]
+                },
+                "path": {
+                  "type": "string",
+                  "description": "Absolute DPAPI encrypted-file or SecureString CLIXML path"
+                }
+              }
+            }
+          ]
+        },
+        "ledger_file": {
+          "type": "string",
+          "description": "Absolute canonical financial ledger path, matching authorization.ledger_file for submit; external recovery does not create it"
+        },
+        "request": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "operation_id",
+            "operation"
+          ],
+          "properties": {
+            "operation_id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9_.-]{1,256}$"
+            },
+            "operation": {
+              "enum": [
+                "complete_all_v1",
+                "h31_image",
+                "h31_multiview",
+                "p2_multiview",
+                "segment_v2",
+                "texture_v35"
+              ]
+            },
+            "source_task_id": {
+              "type": "string"
+            },
+            "inputs": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 2,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "view",
+                  "file",
+                  "expected_sha256"
+                ],
+                "properties": {
+                  "view": {
+                    "enum": [
+                      "front",
+                      "back"
+                    ]
+                  },
+                  "file": {
+                    "type": "string",
+                    "description": "Absolute file path"
+                  },
+                  "expected_sha256": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  }
+                }
+              }
+            }
+          },
+          "description": "Generation requires ordered front or front/back inputs; segment/texture require successful original generation, complete_all_v1 requires successful segment_v2; every source_task_id must be in the same ledger"
+        },
+        "binding_descriptor": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "file",
+            "expected_sha256"
+          ],
+          "properties": {
+            "file": {
+              "type": "string",
+              "description": "Absolute file path"
+            },
+            "expected_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "operation",
+        "input",
+        "provider"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1.1"
+        },
+        "operation": {
+          "const": "import_local"
+        },
+        "input": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "file",
+            "expected_sha256"
+          ],
+          "properties": {
+            "file": {
+              "type": "string",
+              "description": "Absolute file path"
+            },
+            "expected_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          }
+        },
+        "provenance": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "provider"
+          ],
+          "properties": {
+            "provider": {
+              "enum": [
+                "local",
+                "tripo-cn",
+                "meshy"
+              ]
+            },
+            "task_id": {
+              "type": "string"
+            },
+            "model": {
+              "type": "string"
+            },
+            "remote_operation": {
+              "type": "string"
+            },
+            "adapter_version": {
+              "type": "string"
+            }
+          }
+        },
+        "preview": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "front_axis": {
+              "enum": [
+                "+X",
+                "-X",
+                "+Y",
+                "-Y"
+              ]
+            },
+            "engine": {
+              "enum": [
+                "CYCLES",
+                "BLENDER_WORKBENCH"
+              ]
+            },
+            "width": {
+              "type": "integer",
+              "minimum": 64,
+              "maximum": 2048
+            },
+            "height": {
+              "type": "integer",
+              "minimum": 64,
+              "maximum": 2048
+            },
+            "samples": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 128
+            },
+            "views": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 4,
+              "uniqueItems": true,
+              "items": {
+                "enum": [
+                  "front",
+                  "back",
+                  "threequarter",
+                  "side"
+                ]
+              }
+            }
+          }
+        },
+        "provider": {
+          "enum": [
+            "local",
+            "tripo-cn",
+            "meshy"
+          ]
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "operation",
+        "credential_ref",
+        "ledger_file",
+        "request",
+        "authorization_descriptor",
+        "provider"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1.1"
+        },
+        "operation": {
+          "const": "submit"
+        },
+        "credential_ref": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "name"
+              ],
+              "properties": {
+                "kind": {
+                  "const": "environment"
+                },
+                "name": {
+                  "type": "string",
+                  "pattern": "^[A-Z][A-Z0-9_]{0,127}$"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "path"
+              ],
+              "properties": {
+                "kind": {
+                  "enum": [
+                    "dpapi",
+                    "dpapi_clixml"
+                  ]
+                },
+                "path": {
+                  "type": "string",
+                  "description": "Absolute DPAPI encrypted-file or SecureString CLIXML path"
+                }
+              }
+            }
+          ]
+        },
+        "ledger_file": {
+          "type": "string",
+          "description": "Absolute canonical financial ledger path, matching authorization.ledger_file for submit; external recovery does not create it"
+        },
+        "request": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "operation_id",
+                "operation"
+              ],
+              "properties": {
+                "operation_id": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9_.-]{1,256}$"
+                },
+                "operation": {
+                  "enum": [
+                    "complete_all_v1",
+                    "h31_image",
+                    "h31_multiview",
+                    "p2_multiview",
+                    "segment_v2",
+                    "texture_v35"
+                  ]
+                },
+                "source_task_id": {
+                  "type": "string"
+                },
+                "inputs": {
+                  "type": "array",
+                  "minItems": 1,
+                  "maxItems": 2,
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "view",
+                      "file",
+                      "expected_sha256"
+                    ],
+                    "properties": {
+                      "view": {
+                        "enum": [
+                          "front",
+                          "back"
+                        ]
+                      },
+                      "file": {
+                        "type": "string",
+                        "description": "Absolute file path"
+                      },
+                      "expected_sha256": {
+                        "type": "string",
+                        "pattern": "^[0-9a-f]{64}$"
+                      }
+                    }
+                  }
+                }
+              },
+              "description": "Generation requires ordered front or front/back inputs; segment/texture require successful original generation, complete_all_v1 requires successful segment_v2; every source_task_id must be in the same ledger"
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "operation_id",
+                "operation",
+                "inputs"
+              ],
+              "properties": {
+                "operation_id": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9_.-]{1,256}$"
+                },
+                "operation": {
+                  "const": "h31_parts_multiview"
+                },
+                "inputs": {
+                  "type": "array",
+                  "minItems": 2,
+                  "maxItems": 2,
+                  "prefixItems": [
+                    {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "view",
+                        "file",
+                        "expected_sha256"
+                      ],
+                      "properties": {
+                        "view": {
+                          "const": "front"
+                        },
+                        "file": {
+                          "type": "string",
+                          "pattern": "[.][pP][nN][gG]$",
+                          "description": "Absolute PNG input path; provider verifies bytes and SHA"
+                        },
+                        "expected_sha256": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{64}$"
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "view",
+                        "file",
+                        "expected_sha256"
+                      ],
+                      "properties": {
+                        "view": {
+                          "const": "back"
+                        },
+                        "file": {
+                          "type": "string",
+                          "pattern": "[.][pP][nN][gG]$",
+                          "description": "Absolute PNG input path; provider verifies bytes and SHA"
+                        },
+                        "expected_sha256": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{64}$"
+                        }
+                      }
+                    }
+                  ],
+                  "items": false
+                }
+              },
+              "description": "Manifest 1.1 Tripo China only. Fixed v3.1-20260211, texture=false, pbr=false, generate_parts=true; default standard geometry. H2 public submit/query/download/import and fresh reopen verified once on 2026-10-14 at 40 observed credits; semantic quality partial_fail and HD texture preservation not_run. One case does not guarantee arbitrary parts names, hierarchy or complete character quality."
+            }
+          ]
+        },
+        "authorization_descriptor": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "file",
+            "expected_sha256"
+          ],
+          "properties": {
+            "file": {
+              "type": "string",
+              "description": "Absolute file path"
+            },
+            "expected_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          }
+        },
+        "provider": {
+          "const": "tripo-cn"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "operation",
+        "credential_ref",
+        "ledger_file",
+        "requests",
+        "authorization_descriptor",
+        "query_limit",
+        "poll_interval_seconds",
+        "provider"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1.1"
+        },
+        "operation": {
+          "const": "submit_batch"
+        },
+        "credential_ref": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "name"
+              ],
+              "properties": {
+                "kind": {
+                  "const": "environment"
+                },
+                "name": {
+                  "type": "string",
+                  "pattern": "^[A-Z][A-Z0-9_]{0,127}$"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "path"
+              ],
+              "properties": {
+                "kind": {
+                  "enum": [
+                    "dpapi",
+                    "dpapi_clixml"
+                  ]
+                },
+                "path": {
+                  "type": "string",
+                  "description": "Absolute DPAPI encrypted-file or SecureString CLIXML path"
+                }
+              }
+            }
+          ]
+        },
+        "ledger_file": {
+          "type": "string",
+          "description": "Absolute canonical financial ledger path, matching authorization.ledger_file for submit; external recovery does not create it"
+        },
+        "requests": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 8,
+          "items": {
+            "oneOf": [
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "operation_id",
+                  "operation"
+                ],
+                "properties": {
+                  "operation_id": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9_.-]{1,256}$"
+                  },
+                  "operation": {
+                    "enum": [
+                      "complete_all_v1",
+                      "h31_image",
+                      "h31_multiview",
+                      "p2_multiview",
+                      "segment_v2",
+                      "texture_v35"
+                    ]
+                  },
+                  "source_task_id": {
+                    "type": "string"
+                  },
+                  "inputs": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 2,
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "view",
+                        "file",
+                        "expected_sha256"
+                      ],
+                      "properties": {
+                        "view": {
+                          "enum": [
+                            "front",
+                            "back"
+                          ]
+                        },
+                        "file": {
+                          "type": "string",
+                          "description": "Absolute file path"
+                        },
+                        "expected_sha256": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{64}$"
+                        }
+                      }
+                    }
+                  }
+                },
+                "description": "Generation requires ordered front or front/back inputs; segment/texture require successful original generation, complete_all_v1 requires successful segment_v2; every source_task_id must be in the same ledger"
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "operation_id",
+                  "operation",
+                  "inputs"
+                ],
+                "properties": {
+                  "operation_id": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9_.-]{1,256}$"
+                  },
+                  "operation": {
+                    "const": "h31_parts_multiview"
+                  },
+                  "inputs": {
+                    "type": "array",
+                    "minItems": 2,
+                    "maxItems": 2,
+                    "prefixItems": [
+                      {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                          "view",
+                          "file",
+                          "expected_sha256"
+                        ],
+                        "properties": {
+                          "view": {
+                            "const": "front"
+                          },
+                          "file": {
+                            "type": "string",
+                            "pattern": "[.][pP][nN][gG]$",
+                            "description": "Absolute PNG input path; provider verifies bytes and SHA"
+                          },
+                          "expected_sha256": {
+                            "type": "string",
+                            "pattern": "^[0-9a-f]{64}$"
+                          }
+                        }
+                      },
+                      {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                          "view",
+                          "file",
+                          "expected_sha256"
+                        ],
+                        "properties": {
+                          "view": {
+                            "const": "back"
+                          },
+                          "file": {
+                            "type": "string",
+                            "pattern": "[.][pP][nN][gG]$",
+                            "description": "Absolute PNG input path; provider verifies bytes and SHA"
+                          },
+                          "expected_sha256": {
+                            "type": "string",
+                            "pattern": "^[0-9a-f]{64}$"
+                          }
+                        }
+                      }
+                    ],
+                    "items": false
+                  }
+                },
+                "description": "Manifest 1.1 Tripo China only. Fixed v3.1-20260211, texture=false, pbr=false, generate_parts=true; default standard geometry. H2 public submit/query/download/import and fresh reopen verified once on 2026-10-14 at 40 observed credits; semantic quality partial_fail and HD texture preservation not_run. One case does not guarantee arbitrary parts names, hierarchy or complete character quality."
+              }
+            ]
+          }
+        },
+        "authorization_descriptor": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "file",
+            "expected_sha256"
+          ],
+          "properties": {
+            "file": {
+              "type": "string",
+              "description": "Absolute file path"
+            },
+            "expected_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          }
+        },
+        "query_limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 120,
+          "description": "Total task GET attempts across this explicit job; balance GET is separate"
+        },
+        "poll_interval_seconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 30
+        },
+        "provider": {
+          "const": "tripo-cn"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "operation",
+        "credential_ref",
+        "ledger_file",
+        "task_id",
+        "provider"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1.1"
+        },
+        "operation": {
+          "const": "query"
+        },
+        "credential_ref": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "name"
+              ],
+              "properties": {
+                "kind": {
+                  "const": "environment"
+                },
+                "name": {
+                  "type": "string",
+                  "pattern": "^[A-Z][A-Z0-9_]{0,127}$"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "path"
+              ],
+              "properties": {
+                "kind": {
+                  "enum": [
+                    "dpapi",
+                    "dpapi_clixml"
+                  ]
+                },
+                "path": {
+                  "type": "string",
+                  "description": "Absolute DPAPI encrypted-file or SecureString CLIXML path"
+                }
+              }
+            }
+          ]
+        },
+        "ledger_file": {
+          "type": "string",
+          "description": "Absolute canonical financial ledger path, matching authorization.ledger_file for submit; external recovery does not create it"
+        },
+        "task_id": {
+          "type": "string"
+        },
+        "provider": {
+          "const": "tripo-cn"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "operation",
+        "credential_ref",
+        "ledger_file",
+        "task_ids",
+        "provider"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1.1"
+        },
+        "operation": {
+          "const": "query_batch"
+        },
+        "credential_ref": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "name"
+              ],
+              "properties": {
+                "kind": {
+                  "const": "environment"
+                },
+                "name": {
+                  "type": "string",
+                  "pattern": "^[A-Z][A-Z0-9_]{0,127}$"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "path"
+              ],
+              "properties": {
+                "kind": {
+                  "enum": [
+                    "dpapi",
+                    "dpapi_clixml"
+                  ]
+                },
+                "path": {
+                  "type": "string",
+                  "description": "Absolute DPAPI encrypted-file or SecureString CLIXML path"
+                }
+              }
+            }
+          ]
+        },
+        "ledger_file": {
+          "type": "string",
+          "description": "Absolute canonical financial ledger path, matching authorization.ledger_file for submit; external recovery does not create it"
+        },
+        "task_ids": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_.-]{1,256}$"
+          },
+          "description": "One sequential GET per known task; no polling or automatic retry; first query error stops the batch"
+        },
+        "provider": {
+          "const": "tripo-cn"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "operation",
+        "credential_ref",
+        "ledger_file",
+        "task_id",
+        "provider"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1.1"
+        },
+        "operation": {
+          "const": "download"
+        },
+        "credential_ref": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "name"
+              ],
+              "properties": {
+                "kind": {
+                  "const": "environment"
+                },
+                "name": {
+                  "type": "string",
+                  "pattern": "^[A-Z][A-Z0-9_]{0,127}$"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "path"
+              ],
+              "properties": {
+                "kind": {
+                  "enum": [
+                    "dpapi",
+                    "dpapi_clixml"
+                  ]
+                },
+                "path": {
+                  "type": "string",
+                  "description": "Absolute DPAPI encrypted-file or SecureString CLIXML path"
+                }
+              }
+            }
+          ]
+        },
+        "ledger_file": {
+          "type": "string",
+          "description": "Absolute canonical financial ledger path, matching authorization.ledger_file for submit; external recovery does not create it"
+        },
+        "task_id": {
+          "type": "string"
+        },
+        "max_bytes": {
+          "type": "integer",
+          "minimum": 12,
+          "maximum": 2147483648
+        },
+        "provider": {
+          "const": "tripo-cn"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "operation",
+        "credential_ref",
+        "ledger_file",
+        "items",
+        "max_total_bytes",
+        "provider"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1.1"
+        },
+        "operation": {
+          "const": "download_batch"
+        },
+        "credential_ref": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "name"
+              ],
+              "properties": {
+                "kind": {
+                  "const": "environment"
+                },
+                "name": {
+                  "type": "string",
+                  "pattern": "^[A-Z][A-Z0-9_]{0,127}$"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "path"
+              ],
+              "properties": {
+                "kind": {
+                  "enum": [
+                    "dpapi",
+                    "dpapi_clixml"
+                  ]
+                },
+                "path": {
+                  "type": "string",
+                  "description": "Absolute DPAPI encrypted-file or SecureString CLIXML path"
+                }
+              }
+            }
+          ]
+        },
+        "ledger_file": {
+          "type": "string",
+          "description": "Absolute canonical financial ledger path, matching authorization.ledger_file for submit; external recovery does not create it"
+        },
+        "items": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "items": {
+            "oneOf": [
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "operation",
+                  "task_id",
+                  "max_bytes"
+                ],
+                "properties": {
+                  "operation": {
+                    "const": "download"
+                  },
+                  "task_id": {
+                    "type": "string"
+                  },
+                  "max_bytes": {
+                    "type": "integer",
+                    "minimum": 12,
+                    "maximum": 2147483648
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "operation",
+                  "task_id",
+                  "max_bytes",
+                  "recovery_descriptor",
+                  "partial_descriptor"
+                ],
+                "properties": {
+                  "operation": {
+                    "const": "resume_download"
+                  },
+                  "task_id": {
+                    "type": "string"
+                  },
+                  "max_bytes": {
+                    "type": "integer",
+                    "minimum": 12,
+                    "maximum": 2147483648
+                  },
+                  "recovery_descriptor": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "file",
+                      "expected_sha256"
+                    ],
+                    "properties": {
+                      "file": {
+                        "type": "string",
+                        "description": "Absolute file path"
+                      },
+                      "expected_sha256": {
+                        "type": "string",
+                        "pattern": "^[0-9a-f]{64}$"
+                      }
+                    }
+                  },
+                  "partial_descriptor": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "file",
+                      "expected_sha256"
+                    ],
+                    "properties": {
+                      "file": {
+                        "type": "string",
+                        "description": "Absolute file path"
+                      },
+                      "expected_sha256": {
+                        "type": "string",
+                        "pattern": "^[0-9a-f]{64}$"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "max_total_bytes": {
+          "type": "integer",
+          "minimum": 12,
+          "maximum": 34359738368,
+          "description": "Must cover the sum of all item max_bytes; no automatic full redownload"
+        },
+        "provider": {
+          "const": "tripo-cn"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "operation",
+        "credential_ref",
+        "ledger_file",
+        "task_id",
+        "recovery_descriptor",
+        "partial_descriptor",
+        "provider"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1.1"
+        },
+        "operation": {
+          "const": "resume_download"
+        },
+        "credential_ref": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "name"
+              ],
+              "properties": {
+                "kind": {
+                  "const": "environment"
+                },
+                "name": {
+                  "type": "string",
+                  "pattern": "^[A-Z][A-Z0-9_]{0,127}$"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "path"
+              ],
+              "properties": {
+                "kind": {
+                  "enum": [
+                    "dpapi",
+                    "dpapi_clixml"
+                  ]
+                },
+                "path": {
+                  "type": "string",
+                  "description": "Absolute DPAPI encrypted-file or SecureString CLIXML path"
+                }
+              }
+            }
+          ]
+        },
+        "ledger_file": {
+          "type": "string",
+          "description": "Absolute canonical financial ledger path, matching authorization.ledger_file for submit; external recovery does not create it"
+        },
+        "task_id": {
+          "type": "string"
+        },
+        "max_bytes": {
+          "type": "integer",
+          "minimum": 12,
+          "maximum": 2147483648
+        },
+        "recovery_descriptor": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "file",
+            "expected_sha256"
+          ],
+          "properties": {
+            "file": {
+              "type": "string",
+              "description": "Absolute file path"
+            },
+            "expected_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          }
+        },
+        "partial_descriptor": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "file",
+            "expected_sha256"
+          ],
+          "properties": {
+            "file": {
+              "type": "string",
+              "description": "Absolute file path"
+            },
+            "expected_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          }
+        },
+        "provider": {
+          "const": "tripo-cn"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "operation",
+        "credential_ref",
+        "ledger_file",
+        "request",
+        "binding_descriptor",
+        "provider"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1.1"
+        },
+        "operation": {
+          "const": "bind_unknown"
+        },
+        "credential_ref": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "name"
+              ],
+              "properties": {
+                "kind": {
+                  "const": "environment"
+                },
+                "name": {
+                  "type": "string",
+                  "pattern": "^[A-Z][A-Z0-9_]{0,127}$"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "path"
+              ],
+              "properties": {
+                "kind": {
+                  "enum": [
+                    "dpapi",
+                    "dpapi_clixml"
+                  ]
+                },
+                "path": {
+                  "type": "string",
+                  "description": "Absolute DPAPI encrypted-file or SecureString CLIXML path"
+                }
+              }
+            }
+          ]
+        },
+        "ledger_file": {
+          "type": "string",
+          "description": "Absolute canonical financial ledger path, matching authorization.ledger_file for submit; external recovery does not create it"
+        },
+        "request": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "operation_id",
+                "operation"
+              ],
+              "properties": {
+                "operation_id": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9_.-]{1,256}$"
+                },
+                "operation": {
+                  "enum": [
+                    "complete_all_v1",
+                    "h31_image",
+                    "h31_multiview",
+                    "p2_multiview",
+                    "segment_v2",
+                    "texture_v35"
+                  ]
+                },
+                "source_task_id": {
+                  "type": "string"
+                },
+                "inputs": {
+                  "type": "array",
+                  "minItems": 1,
+                  "maxItems": 2,
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "view",
+                      "file",
+                      "expected_sha256"
+                    ],
+                    "properties": {
+                      "view": {
+                        "enum": [
+                          "front",
+                          "back"
+                        ]
+                      },
+                      "file": {
+                        "type": "string",
+                        "description": "Absolute file path"
+                      },
+                      "expected_sha256": {
+                        "type": "string",
+                        "pattern": "^[0-9a-f]{64}$"
+                      }
+                    }
+                  }
+                }
+              },
+              "description": "Generation requires ordered front or front/back inputs; segment/texture require successful original generation, complete_all_v1 requires successful segment_v2; every source_task_id must be in the same ledger"
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "operation_id",
+                "operation",
+                "inputs"
+              ],
+              "properties": {
+                "operation_id": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9_.-]{1,256}$"
+                },
+                "operation": {
+                  "const": "h31_parts_multiview"
+                },
+                "inputs": {
+                  "type": "array",
+                  "minItems": 2,
+                  "maxItems": 2,
+                  "prefixItems": [
+                    {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "view",
+                        "file",
+                        "expected_sha256"
+                      ],
+                      "properties": {
+                        "view": {
+                          "const": "front"
+                        },
+                        "file": {
+                          "type": "string",
+                          "pattern": "[.][pP][nN][gG]$",
+                          "description": "Absolute PNG input path; provider verifies bytes and SHA"
+                        },
+                        "expected_sha256": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{64}$"
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "view",
+                        "file",
+                        "expected_sha256"
+                      ],
+                      "properties": {
+                        "view": {
+                          "const": "back"
+                        },
+                        "file": {
+                          "type": "string",
+                          "pattern": "[.][pP][nN][gG]$",
+                          "description": "Absolute PNG input path; provider verifies bytes and SHA"
+                        },
+                        "expected_sha256": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{64}$"
+                        }
+                      }
+                    }
+                  ],
+                  "items": false
+                }
+              },
+              "description": "Manifest 1.1 Tripo China only. Fixed v3.1-20260211, texture=false, pbr=false, generate_parts=true; default standard geometry. H2 public submit/query/download/import and fresh reopen verified once on 2026-10-14 at 40 observed credits; semantic quality partial_fail and HD texture preservation not_run. One case does not guarantee arbitrary parts names, hierarchy or complete character quality."
+            }
+          ]
+        },
+        "binding_descriptor": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "file",
+            "expected_sha256"
+          ],
+          "properties": {
+            "file": {
+              "type": "string",
+              "description": "Absolute file path"
+            },
+            "expected_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          }
+        },
+        "provider": {
+          "const": "tripo-cn"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "operation",
+        "credential_ref",
+        "ledger_file",
+        "request",
+        "authorization_descriptor",
+        "provider",
+        "pre_submit_recovery_descriptor"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1.1"
+        },
+        "operation": {
+          "const": "resume_pre_submit"
+        },
+        "credential_ref": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "name"
+              ],
+              "properties": {
+                "kind": {
+                  "const": "environment"
+                },
+                "name": {
+                  "type": "string",
+                  "pattern": "^[A-Z][A-Z0-9_]{0,127}$"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "path"
+              ],
+              "properties": {
+                "kind": {
+                  "enum": [
+                    "dpapi",
+                    "dpapi_clixml"
+                  ]
+                },
+                "path": {
+                  "type": "string",
+                  "description": "Absolute DPAPI encrypted-file or SecureString CLIXML path"
+                }
+              }
+            }
+          ]
+        },
+        "ledger_file": {
+          "type": "string",
+          "description": "Absolute canonical financial ledger path, matching authorization.ledger_file for submit; external recovery does not create it"
+        },
+        "request": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "operation_id",
+                "operation"
+              ],
+              "properties": {
+                "operation_id": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9_.-]{1,256}$"
+                },
+                "operation": {
+                  "enum": [
+                    "h31_image",
+                    "h31_multiview",
+                    "p2_multiview"
+                  ]
+                },
+                "source_task_id": {
+                  "type": "string"
+                },
+                "inputs": {
+                  "type": "array",
+                  "minItems": 1,
+                  "maxItems": 2,
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "view",
+                      "file",
+                      "expected_sha256"
+                    ],
+                    "properties": {
+                      "view": {
+                        "enum": [
+                          "front",
+                          "back"
+                        ]
+                      },
+                      "file": {
+                        "type": "string",
+                        "description": "Absolute file path"
+                      },
+                      "expected_sha256": {
+                        "type": "string",
+                        "pattern": "^[0-9a-f]{64}$"
+                      }
+                    }
+                  }
+                }
+              },
+              "description": "Generation requires ordered front or front/back inputs; segment/texture require successful original generation, complete_all_v1 requires successful segment_v2; every source_task_id must be in the same ledger"
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "operation_id",
+                "operation",
+                "inputs"
+              ],
+              "properties": {
+                "operation_id": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9_.-]{1,256}$"
+                },
+                "operation": {
+                  "const": "h31_parts_multiview"
+                },
+                "inputs": {
+                  "type": "array",
+                  "minItems": 2,
+                  "maxItems": 2,
+                  "prefixItems": [
+                    {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "view",
+                        "file",
+                        "expected_sha256"
+                      ],
+                      "properties": {
+                        "view": {
+                          "const": "front"
+                        },
+                        "file": {
+                          "type": "string",
+                          "pattern": "[.][pP][nN][gG]$",
+                          "description": "Absolute PNG input path; provider verifies bytes and SHA"
+                        },
+                        "expected_sha256": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{64}$"
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "view",
+                        "file",
+                        "expected_sha256"
+                      ],
+                      "properties": {
+                        "view": {
+                          "const": "back"
+                        },
+                        "file": {
+                          "type": "string",
+                          "pattern": "[.][pP][nN][gG]$",
+                          "description": "Absolute PNG input path; provider verifies bytes and SHA"
+                        },
+                        "expected_sha256": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{64}$"
+                        }
+                      }
+                    }
+                  ],
+                  "items": false
+                }
+              },
+              "description": "Manifest 1.1 Tripo China only. Fixed v3.1-20260211, texture=false, pbr=false, generate_parts=true; default standard geometry. H2 public submit/query/download/import and fresh reopen verified once on 2026-10-14 at 40 observed credits; semantic quality partial_fail and HD texture preservation not_run. One case does not guarantee arbitrary parts names, hierarchy or complete character quality."
+            }
+          ]
+        },
+        "authorization_descriptor": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "file",
+            "expected_sha256"
+          ],
+          "properties": {
+            "file": {
+              "type": "string",
+              "description": "Absolute file path"
+            },
+            "expected_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          }
+        },
+        "provider": {
+          "const": "tripo-cn"
+        },
+        "pre_submit_recovery_descriptor": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "file",
+            "expected_sha256"
+          ],
+          "properties": {
+            "file": {
+              "type": "string",
+              "description": "Absolute file path"
+            },
+            "expected_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          }
+        }
+      },
+      "description": "Explicit new caller-reviewed recovery approval and original authorization; existing reserved attempt only, one claim, no automatic retry. SHA is integrity, not human authentication."
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "provider",
+        "operation",
+        "source_descriptor",
+        "request_descriptor"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1.1"
+        },
+        "provider": {
+          "const": "tripo-cn"
+        },
+        "operation": {
+          "const": "approval_append_prepare"
+        },
+        "source_descriptor": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "file",
+            "expected_sha256"
+          ],
+          "properties": {
+            "file": {
+              "type": "string",
+              "description": "Absolute local file path"
+            },
+            "expected_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          }
+        },
+        "request_descriptor": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "file",
+            "expected_sha256"
+          ],
+          "properties": {
+            "file": {
+              "type": "string",
+              "description": "Absolute local file path"
+            },
+            "expected_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          }
+        }
+      },
+      "description": "Local same-ledger approval append; no credentials or network. Source ledger is mutable and guarded by the operation CAS."
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "provider",
+        "operation",
+        "source_descriptor",
+        "request_descriptor",
+        "authorization_descriptor"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1.1"
+        },
+        "provider": {
+          "const": "tripo-cn"
+        },
+        "operation": {
+          "const": "approval_append_apply"
+        },
+        "source_descriptor": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "file",
+            "expected_sha256"
+          ],
+          "properties": {
+            "file": {
+              "type": "string",
+              "description": "Absolute local file path"
+            },
+            "expected_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          }
+        },
+        "request_descriptor": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "file",
+            "expected_sha256"
+          ],
+          "properties": {
+            "file": {
+              "type": "string",
+              "description": "Absolute local file path"
+            },
+            "expected_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          }
+        },
+        "authorization_descriptor": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "file",
+            "expected_sha256"
+          ],
+          "properties": {
+            "file": {
+              "type": "string",
+              "description": "Absolute local file path"
+            },
+            "expected_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          }
+        }
+      },
+      "description": "Local same-ledger approval append; no credentials or network. Source ledger is mutable and guarded by the operation CAS."
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "provider",
+        "operation",
+        "source_descriptor",
+        "request_descriptor"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1.1"
+        },
+        "provider": {
+          "const": "tripo-cn"
+        },
+        "operation": {
+          "const": "outstanding_increment_prepare"
+        },
+        "source_descriptor": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "file",
+            "expected_sha256"
+          ],
+          "properties": {
+            "file": {
+              "type": "string",
+              "description": "Absolute local file path"
+            },
+            "expected_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          }
+        },
+        "request_descriptor": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "file",
+            "expected_sha256"
+          ],
+          "properties": {
+            "file": {
+              "type": "string",
+              "description": "Absolute local file path"
+            },
+            "expected_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          }
+        }
+      },
+      "description": "Explicit local 20-credit/one-attempt increment from ordinary ledger1.0 to ledger1.2; freeze the original unknown reservation and all history, bind exactly one new generation request. No credentials or network; source ledger is mutable and guarded by CAS."
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "provider",
+        "operation",
+        "source_descriptor",
+        "request_descriptor",
+        "authorization_descriptor"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1.1"
+        },
+        "provider": {
+          "const": "tripo-cn"
+        },
+        "operation": {
+          "const": "outstanding_increment_apply"
+        },
+        "source_descriptor": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "file",
+            "expected_sha256"
+          ],
+          "properties": {
+            "file": {
+              "type": "string",
+              "description": "Absolute local file path"
+            },
+            "expected_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          }
+        },
+        "request_descriptor": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "file",
+            "expected_sha256"
+          ],
+          "properties": {
+            "file": {
+              "type": "string",
+              "description": "Absolute local file path"
+            },
+            "expected_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          }
+        },
+        "authorization_descriptor": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "file",
+            "expected_sha256"
+          ],
+          "properties": {
+            "file": {
+              "type": "string",
+              "description": "Absolute local file path"
+            },
+            "expected_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          }
+        }
+      },
+      "description": "Explicit local 20-credit/one-attempt increment from ordinary ledger1.0 to ledger1.2; freeze the original unknown reservation and all history, bind exactly one new generation request. No credentials or network; source ledger is mutable and guarded by CAS."
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "provider",
+        "operation",
+        "remote_operation",
+        "task_id",
+        "credential_ref"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1.1"
+        },
+        "provider": {
+          "const": "meshy"
+        },
+        "operation": {
+          "const": "query"
+        },
+        "remote_operation": {
+          "enum": [
+            "image_to_3d",
+            "multi_image_to_3d",
+            "text_to_3d",
+            "retexture",
+            "remesh"
+          ]
+        },
+        "task_id": {
+          "type": "string",
+          "pattern": "^(?!\\.{1,2}$)[A-Za-z0-9_.-]{1,256}$"
+        },
+        "credential_ref": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "name"
+              ],
+              "properties": {
+                "kind": {
+                  "const": "environment"
+                },
+                "name": {
+                  "type": "string",
+                  "pattern": "^[A-Z][A-Z0-9_]{0,127}$"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "path"
+              ],
+              "properties": {
+                "kind": {
+                  "enum": [
+                    "dpapi",
+                    "dpapi_clixml"
+                  ]
+                },
+                "path": {
+                  "type": "string",
+                  "description": "Absolute DPAPI encrypted-file or SecureString CLIXML path"
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

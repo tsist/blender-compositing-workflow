@@ -254,6 +254,9 @@ def main():
         elif command=='compositing.study':
             import compositing_study
             data=compositing_study.run(request['params'],job,cancel_parent=job)
+        elif command == 'modeling.run':
+            import modeling_workflow
+            data=modeling_workflow.run(request['params'],job)
         elif command in ('lighting.run','lighting.inspect'):
             import lighting_workflow
             data=getattr(lighting_workflow,command.split('.')[1])(request['params'],job)

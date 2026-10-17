@@ -1,45 +1,20 @@
-# Compositing Workflow 合成工作流
+# Blender 合成工作流
+
+实验性预发布 **0.8.0**：两条具名原生1080p/24fps/full120稳定补光作品及用户连续观看已通过；两条强换光实验美术拒收，仅推荐稳定版。准确范围、保留失败与未验边界见验证矩阵。
+
 
 [English](README.md)
 
-用于可编辑合成节点、受保护磁盘快照、实际图像输出和可恢复 CLI 作业的 Blender 插件及配套代理技能，当前为实验发布。
+实验性 Compositing Workflow 原生扩展 **0.8.0**、兼容 CLI 源码 **0.75.0**、唯一可移植技能 **0.8.0**，GPL-3.0-or-later。已验本机基线为 Windows、Blender5.2.1 LTS/build `9e2066aef7ef`，其它机器、版本与平台需另验。
 
-**插件 0.4.0 · 匹配 blenderctl 快照 0.63.0 · GPL-3.0-or-later。** 本机限定验证使用 Windows、Blender **5.2.1 LTS / build 9e2066aef7ef**。其他 Blender 版本和平台需要另行验证。
+支持可编辑合成图、Image/Render Layers、有限序列与显式SDR Movie、模板/批量/静态候选、受保护工程与技术HDR输出。新增深度准备/冷读、固定环境RGB估深、补光、GPU热会话以及2–120帧镜头序列。全部13操作通过 `compositing describe` 发现，详见[使用说明](docs/usage.md)与[深度序列](docs/depth-sequence.md)。
 
-## 能力
+原生扩展提供 Relight 侧栏和CLI源码根偏好；先在外部CLI建立活会话，再setup/bind真实ready。它不安装环境或启动模型。工程重开后须建立新session并显式rebind。原生包恰好11成员，技能包仅一个 `blender-compositing`，源码包保留同字节技能。[安装与角色](docs/SKILLS.md)、[依赖](docs/dependencies.md)、[热会话](docs/relight-session.md)分别说明。
 
-- 管理原生合成节点组，明确 create/update/adopt/detach，保留外部节点并报告手改冲突。
-- 接入图片/EXR、Render Layers，使用任务组件或可扩展节点图，显式绑定色彩、Alpha、资源与 SHA。
-- 处理有限图像序列、数值参数动画、外部 BoxMask 跟踪结果和严格声明的 SDR Movie。
-- 导出配方/模板、消费新输入、逐项批处理、有限静态候选比较，以及取消/超时后的身份绑定恢复。
-- 输出可编辑 `.blend`、前后 PNG 和线性 EXR、显式 SDR 视频预览与技术 HDR10/PQ 编码。
+命令使用显式 `BLENDERCTL_ROOT`、`BLENDERCTL_PYTHON`（已批准bundled Python）与实际Blender路径；Host、固定GPU环境、GUI是三个角色。GPU profile没有随包发行，不能通过搬目录或伪造精简profile取得新机器准入。不会自动下载、安装或降级guard。
 
-原生插件提供节点图代码与合同，注册时没有专用面板或操作器。完整执行、文件保护、渲染和验收由匹配 CLI 驱动，手工调整使用 Blender 原生节点编辑器。Movie 解码和 HDR 编码需要独立提供运行时，见 [用法](docs/USAGE.md) 和 [依赖](docs/DEPENDENCIES.md)。
+运行时精确集合为213文件，aggregate `ae89b1e85145c2d2385bc7db312557aee9e44499108299dc18dac7b48cd34370`；Geometry持久化支持8源另记，不据其它领域源码存在宣称整个领域可用。完整逐成员SHA/大小、Schema和公开说明记录在PUBLICATION；构建输出三个独立包及各自member index。
 
-## 安装与使用
+[验证矩阵](docs/validation.md)区分历史证据、最终包CPU检查、实际运行、视觉与用户认可。具名真实1080p/120帧稳定整片、最终导出helper运行及GUI live已按矩阵完成有限验收；强实验与额外AI解析失败保留。静态绿色或文件存在不能提升为作品通过。
 
-从匹配版本 Release 获取原生 ZIP，在 Blender **Preferences → Extensions → Install from Disk** 安装。自动化制作使用本仓匹配 CLI 快照。仓库不包含 Blender、Python、编解码器或第三方 Python 包。
-
-```powershell
-$env:BLENDERCTL_ROOT = (Get-Location).Path
-$env:BLENDERCTL_PYTHON = '<实际 Python.exe 的绝对路径>'
-$env:BLENDER_PATH = '<实际 blender.exe 的绝对路径>'
-./blenderctl.ps1 --version
-./blenderctl.ps1 compositing describe
-./blenderctl.ps1 compositing describe --operation run --schema
-./blenderctl.ps1 --blender $env:BLENDER_PATH --jobs-dir (Join-Path $env:BLENDERCTL_ROOT 'runtime/compositing-jobs') --timeout 1800 --async --compact request '<请求 JSON 的绝对路径>'
-```
-
-全局参数放在子命令前；请求绑定实际绝对路径与 SHA-256。提交、status/result/wait/cancel 始终使用同一显式 jobs-dir。检查 supervisor 终态与完整带 SHA 报告，compact 只作摘要。
-
-七个公开操作为 `compositing.run`、`inspect`、`encode`、`template-save`、`template-run`、`batch` 和 `study`。通过实时 `compositing describe` 发现字段。进一步阅读 [技能安装](docs/SKILLS.md)、[领域合同](docs/CONTRACT.md) 和 [验收范围](docs/VALIDATION.md)。
-
-## 验收与分发范围
-
-本仓保持构成合成身份的 **177 个 runtime 文件**原始字节，实现身份为 `9566cec1c2a9bf6db34c3085d964806b8ce7bafed1e0ae145bbb5259d655e629`。另带原字节 Geometry Nodes Workflow 源码支持包（7 个 Python 文件与 manifest）并独立记录身份：合成 run 通过兼容 CLI 导入其保存候选所需的保留数据块辅助函数。此源码导入无需在 GUI 启用第二个插件。支持包及其他领域模块的存在不代表完整几何节点等制作效果获得本插件认证；此次分仓没有引入子模块或重构运行时。
-
-本机代表证据覆盖 2K/4K 静帧、Cycles/Eevee 来源、外部融合、新 sRGB 留出输入、有限时序样例、模板、批量、study、取消/超时恢复。M1–M4 证据继续归属各自原实现身份。当前公开封包和自有示例执行另行记录，见 [验收范围](docs/VALIDATION.md)。
-
-HDR 文件/色彩/元数据技术检查、真实 mastering、HDR 目标设备观看、AI 视觉观察和用户审美认可分别记录。文件存在、插件注册或 Schema 通过不单独证明作品完成或全部 HDR 认证。
-
-仓库排除生产资产、原验收图、私有 `.blend`、完整本机审计作业、私有 Wiki、工作任务记忆、凭据及外部运行时。公开内容提供验收摘要与可独立安装的技能引用，见 [许可范围](docs/LICENSING.md)。
+发行物不含模型、权重、venv、第三方二进制、生产素材、私密profile/回执或个人配置。DAV2外部源码Apache-2.0与Large权重CC-BY-NC-4.0分别适用，项目GPL不授予Large商用权利。见[许可](docs/licensing.md)与[NOTICE](NOTICE.md)。

@@ -1,82 +1,66 @@
-"""Build deterministic source-only release ZIPs from an explicit inventory."""
+"""Build three deterministic source-only archives, refusing changed outputs."""
 from __future__ import annotations
-
-import io
-import json
-import sys
-import zipfile
+import argparse,importlib.util,io,json,sys,zipfile
 from pathlib import Path
-
-sys.dont_write_bytecode = True
-from verify_release import (ADDON, ADDON_FILES, ROOT, load_publication,
-                            release_files, safe_file, sha, verify)
-
-
-def archive(entries: list[tuple[str, bytes]]) -> bytes:
-    buffer = io.BytesIO()
-    # Stored entries avoid zlib-version variation; timestamp and permissions are fixed.
-    with zipfile.ZipFile(buffer, "w", compression=zipfile.ZIP_STORED) as output:
-        for name, data in sorted(entries):
-            info = zipfile.ZipInfo(name, date_time=(1980, 1, 1, 0, 0, 0))
-            info.create_system = 3
-            info.external_attr = 0o100644 << 16
-            info.compress_type = zipfile.ZIP_STORED
-            output.writestr(info, data)
+sys.dont_write_bytecode=True
+from verify_release import ADDON,ADDON_FILES,ROOT,load_publication,release_files,safe_file,sha,verify
+def archive(entries):
+    buffer=io.BytesIO()
+    with zipfile.ZipFile(buffer,'w',compression=zipfile.ZIP_STORED) as output:
+        for name,data in sorted(entries):
+            info=zipfile.ZipInfo(name,date_time=(1980,1,1,0,0,0));info.create_system=3
+            info.external_attr=0o100644<<16;info.compress_type=zipfile.ZIP_STORED;output.writestr(info,data)
     return buffer.getvalue()
-
-
-def build(root: Path = ROOT) -> dict:
-    validation = verify(root)
-    publication = load_publication(root)
-    version = publication["release"]
-    names = release_files(publication)
-    source = [(name, safe_file(root, name).read_bytes()) for name in names]
-    native = [(name, safe_file(root, ADDON + name).read_bytes()) for name in ADDON_FILES]
-    prefix = "skills/"
-    skill = [(name[len(prefix):], data) for name, data in source if name.startswith(prefix)]
-    skill.append(("LICENSE", safe_file(root, "LICENSE").read_bytes()))
-    bundles = {
-        "compositing_workflow_addon-" + version + ".zip": native,
-        "blender-compositing-skill-" + version + ".zip": skill,
-        "blender-compositing-workflow-" + version + "-source.zip": source,
+def native_archive(root,entries):
+    # Preserve the already qualified strict native builder's compression/metadata.
+    spec=importlib.util.spec_from_file_location('strict_native_builder',root/'tools/blender/build_compositing_native.py')
+    module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+    if tuple(module.MEMBERS)!=ADDON_FILES:raise ValueError('Strict native member contract differs')
+    return module.archive_bytes(dict(entries))
+def no_clobber(path,data):
+    if path.is_symlink():raise ValueError('Refusing output symlink: '+path.name)
+    if path.exists():
+        if path.read_bytes()!=data:raise ValueError('Refusing different existing output: '+path.name)
+    else:
+        with path.open('xb') as stream:stream.write(data)
+def build(root=ROOT,dist=None):
+    validation=verify(root);pub=load_publication(root);dist=dist or root/'dist'
+    if dist.is_symlink():raise ValueError('Refusing symlink output directory')
+    dist.mkdir(parents=True,exist_ok=True)
+    names=release_files(pub);source=[(x,safe_file(root,x).read_bytes()) for x in names]
+    native=[(x,safe_file(root,ADDON+x).read_bytes()) for x in ADDON_FILES]
+    skill=[(x[len('skills/'):],data) for x,data in source if x.startswith('skills/')]
+    skill.extend((x,safe_file(root,x).read_bytes()) for x in ('LICENSE','NOTICE.md'))
+    bundles={
+        f'compositing-workflow-{pub["addon"]}-native.zip':(native,native_archive),
+        f'blender-compositing-skill-{pub["skill"]}.zip':(skill,None),
+        f'blender-compositing-workflow-{pub["release"]}-source.zip':(source,None),
     }
-    dist = root / "dist"
-    if dist.is_symlink():
-        raise ValueError("Refusing symlink dist directory")
-    dist.mkdir(exist_ok=True)
-    hashes = []
-    for name, entries in bundles.items():
-        data = archive(entries)
-        if data != archive(entries):
-            raise ValueError("Archive reproducibility failure: " + name)
-        target = dist / name
-        if target.exists() and target.read_bytes() != data:
-            raise ValueError("Refusing to overwrite different existing release artifact: " + name)
-        if not target.exists():
-            target.write_bytes(data)
-        # Verify every archive entry against the exact source bytes after writing.
-        with zipfile.ZipFile(target) as check:
-            if check.namelist() != sorted(n for n, _ in entries):
-                raise ValueError("Archive inventory mismatch: " + name)
-            for entry, expected in entries:
-                if check.read(entry) != expected:
-                    raise ValueError("Archive entry byte mismatch: " + entry)
-        hashes.append((name, sha(data), len(entries), len(data)))
-    sums = "".join(digest + "  " + name + "\n" for name, digest, _, _ in sorted(hashes))
-    checksum = dist / "SHA256SUMS"
-    if checksum.exists() and checksum.read_bytes() != sums.encode():
-        raise ValueError("Refusing to overwrite different SHA256SUMS")
-    if not checksum.exists():
-        checksum.write_bytes(sums.encode())
-    return {"status": "passed_deterministic_release_build", "validation": validation,
-            "artifacts": [{"file": "dist/" + name, "sha256": digest,
-                           "entries": count, "bytes": size} for name, digest, count, size in hashes],
-            "checksums": "dist/SHA256SUMS", "scope": "Source-only archives; external runtimes and production assets excluded"}
-
-
-if __name__ == "__main__":
-    try:
-        print(json.dumps(build(), indent=2))
-    except (ValueError, OSError, KeyError, SyntaxError, TypeError) as exc:
-        print(json.dumps({"status": "failed", "error": str(exc)}), file=sys.stderr)
-        sys.exit(1)
+    artifacts=[];planned=[]
+    for name,(entries,encoder) in bundles.items():
+        payload=encoder(root,entries) if encoder else archive(entries)
+        repeat=encoder(root,entries) if encoder else archive(entries)
+        if payload!=repeat:raise ValueError('Archive repeat bytes differ: '+name)
+        if name.endswith('-native.zip') and sha(payload)!=pub['native_archive_sha256']:raise ValueError('Native compressed identity changed; requires separate archive acceptance')
+        with zipfile.ZipFile(io.BytesIO(payload)) as check:
+            if check.namelist()!=sorted(n for n,_ in entries) or check.testzip() is not None:raise ValueError('Archive inventory/CRC mismatch')
+            for entry,data in entries:
+                if check.read(entry)!=data:raise ValueError('Archive member bytes differ: '+entry)
+        index={'schema':'compositing-release-member-index-v1','archive':name,'sha256':sha(payload),'bytes':len(payload),'members':[{'file':n,'sha256':sha(d),'bytes':len(d)} for n,d in sorted(entries)]}
+        index_name=name.removesuffix('.zip')+'.members.json'
+        planned.extend(((dist/name,payload),(dist/index_name,(json.dumps(index,ensure_ascii=False,indent=2)+'\n').encode())))
+        artifacts.append({'file':name,'sha256':sha(payload),'bytes':len(payload),'entries':len(entries),'member_index':index_name})
+    sums=''.join(x['sha256']+'  '+x['file']+'\n' for x in sorted(artifacts,key=lambda x:x['file']))
+    planned.append((dist/'SHA256SUMS',sums.encode()))
+    result={'status':'passed_deterministic_release_build','validation':validation,'artifacts':artifacts,'scope':'Source-only; runtime and visual acceptance separate'}
+    planned.append((dist/'release-index.json',(json.dumps(result,ensure_ascii=False,indent=2)+'\n').encode()))
+    # Check every collision before writing any new member of a release batch.
+    for path,data in planned:
+        if path.is_symlink() or path.exists() and path.read_bytes()!=data:raise ValueError('Refusing different existing output: '+path.name)
+    for path,data in planned:no_clobber(path,data)
+    return result
+if __name__=='__main__':
+    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--output-dir',type=Path);args=parser.parse_args()
+    try:print(json.dumps(build(dist=args.output_dir),indent=2))
+    except (ValueError,OSError,KeyError,SyntaxError,TypeError) as exc:
+        print(json.dumps({'status':'failed','error':str(exc)}),file=sys.stderr);sys.exit(1)
