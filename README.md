@@ -1,11 +1,11 @@
 # Compositing Workflow
 
-Experimental prerelease **0.8.0**: the two named native1080p/24fps/full120 stable relight shots and user continuous viewing passed. Strong full120 lighting experiments were artistically rejected; use the stable versions. Exact scope, retained failures and unverified limits are recorded below.
+Experimental prerelease **0.9.0** adds Blender 5.3.0 support for managed static composition effects. The CLI preserves the effects stack order, activation and participation when it updates or detaches a managed effect. The previous 0.8.0 release carries the qualified relighting shots.
 
 
 [简体中文](README.zh-CN.md)
 
-Experimental editable compositor workflows and depth-based relighting for Blender. Add-on **0.8.0**, compatible CLI source **0.75.0**, portable skill **0.8.0**; GPL-3.0-or-later. The local baseline is Windows, Blender 5.2.1 LTS / build `9e2066aef7ef`.
+Experimental editable compositor workflows and depth-based relighting for Blender. Add-on **0.9.0**, compatible CLI source **0.75.0**, portable skill **0.9.0**, GPL-3.0-or-later. Static creation, update and detach were tested on Windows using Blender 5.3.0 build `02f0899d78e3` and Blender 5.2.1 LTS build `9e2066aef7ef`. Select the executable with the launcher's global `--blender` option. The Blender 5.3 qualification covers static CPU composition and extension registration.
 
 Use managed native node graphs, explicit image/Render Layers bindings, bounded sequences and SDR Movie inputs, templates, batches, finite candidates, protected saved candidates and technical HDR encoding. Depth tools prepare or inspect data, estimate relative depth in a fixed approved GPU environment, relight a successful bundle, maintain a guarded live session, and process a declared 2–120-frame shot. These remain experimental; see [validation](docs/validation.md).
 

@@ -1,11 +1,11 @@
 # Blender 合成工作流
 
-实验性预发布 **0.8.0**：两条具名原生1080p/24fps/full120稳定补光作品及用户连续观看已通过；两条强换光实验美术拒收，仅推荐稳定版。准确范围、保留失败与未验边界见验证矩阵。
+实验性预发布 **0.9.0** 支持 Blender 5.3.0 的静态合成效果栈。创建、修改和解除管理保留原有栈顺序、活动效果和参与开关。动态补光的具名作品验收归属 0.8.0。
 
 
 [English](README.md)
 
-实验性 Compositing Workflow 原生扩展 **0.8.0**、兼容 CLI 源码 **0.75.0**、唯一可移植技能 **0.8.0**，GPL-3.0-or-later。已验本机基线为 Windows、Blender5.2.1 LTS/build `9e2066aef7ef`，其它机器、版本与平台需另验。
+Compositing Workflow 原生扩展 **0.9.0**、兼容 CLI 源码 **0.75.0**、可移植技能 **0.9.0**，GPL-3.0-or-later。静态 CPU 合成实测环境为 Windows、Blender 5.3.0 构建 `02f0899d78e3` 与 5.2.1 LTS 构建 `9e2066aef7ef`。在 CLI 命令前用 `--blender` 选择可执行文件。
 
 支持可编辑合成图、Image/Render Layers、有限序列与显式SDR Movie、模板/批量/静态候选、受保护工程与技术HDR输出。新增深度准备/冷读、固定环境RGB估深、补光、GPU热会话以及2–120帧镜头序列。全部13操作通过 `compositing describe` 发现，详见[使用说明](docs/usage.md)与[深度序列](docs/depth-sequence.md)。
 

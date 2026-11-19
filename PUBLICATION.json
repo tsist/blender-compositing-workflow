@@ -1,14 +1,14 @@
 {
   "schema": "compositing-publication-v2",
-  "release": "0.8.0",
+  "release": "0.9.0",
   "publication_state": "prepared_experimental_prerelease",
-  "package_revision": "0.8.0-v006",
-  "release_tag": "v0.8.0",
+  "package_revision": "0.9.0",
+  "release_tag": "v0.9.0",
   "publication_boundary": "Prepared source-only artifacts; publisher independently verifies remote commit, release and assets",
   "cli": "0.75.0",
-  "addon": "0.8.0",
-  "skill": "0.8.0",
-  "runtime_identity": "ae89b1e85145c2d2385bc7db312557aee9e44499108299dc18dac7b48cd34370",
+  "addon": "0.9.0",
+  "skill": "0.9.0",
+  "runtime_identity": "0aca3e60b1a31cd8724c8dfe6ec106a3dd1ab48f3c5c51b1bf04a5e8d3bde1eb",
   "runtime_documents": [
     {
       "file": "tools/blenderctl/adaptive_sampling.py",
@@ -257,13 +257,13 @@
     },
     {
       "file": "tools/blenderctl/compositing_verifier.py",
-      "expected_sha256": "c33df6a8eb6e23559969af196f9654b088ce1bd1d09faac75d3afaa9ccb95a7e",
-      "bytes": 39461
+      "expected_sha256": "bccec7329b21038c0f11d1c3dd46a90d2cdbbf7e9033e9965d67041cdeccd2f2",
+      "bytes": 39481
     },
     {
       "file": "tools/blenderctl/compositing_workflow.py",
-      "expected_sha256": "24adec7903471d2fc0f24d64f5b67465247aec99ba4ad2e1962a489b678492be",
-      "bytes": 71244
+      "expected_sha256": "4cae17f53341515ec0776a1deb3ebe9f9260d1980fc49428b616b9d415bfafb7",
+      "bytes": 71334
     },
     {
       "file": "tools/blenderctl/compositing_workflow_contract.py",
@@ -1032,12 +1032,12 @@
     },
     {
       "file": "tools/compositing_workflow_addon/__init__.py",
-      "expected_sha256": "206523731566adee7743a49c2678cb2f446e69f43d3e591f9b4ac98077677f97",
+      "expected_sha256": "0553853aaa2519676b960f40816c2570c0d1667e804f78f8721b1aec1212d427",
       "bytes": 491
     },
     {
       "file": "tools/compositing_workflow_addon/blender_manifest.toml",
-      "expected_sha256": "f9a5c3d9b9514e6d8000f7092cc984dba53aef312910a13f447541d179e1dc65",
+      "expected_sha256": "44c85f7ea332f84363cd73f49092845333b8bb3d21a3536cdbb5dd7653bb4c4c",
       "bytes": 287
     },
     {
@@ -1047,8 +1047,8 @@
     },
     {
       "file": "tools/compositing_workflow_addon/core.py",
-      "expected_sha256": "53a804868181dc2ed66ec4f0e29e28e6c929cacee04d05e64a066aca797e33ac",
-      "bytes": 90350
+      "expected_sha256": "ed550f564a765759cb7d3fe979bbc736f7bfca5ae431615b334b62e676fa19fc",
+      "bytes": 95608
     },
     {
       "file": "tools/compositing_workflow_addon/depth_contract.py",
@@ -1074,6 +1074,11 @@
       "file": "tools/compositing_workflow_addon/relight_preview_ui.py",
       "expected_sha256": "1f72848d363aeca455883ac5fcdbc1439aee0f44808443ee1ceff615aa45d2dd",
       "bytes": 60790
+    },
+    {
+      "file": "tools/compositing_workflow_addon/runtime.py",
+      "expected_sha256": "7adc8f71c4b65df99f9310a78c6df2e762b93a676f2e3217f0ee378fe7328791",
+      "bytes": 265
     }
   ],
   "schema_documents": [
@@ -1851,8 +1856,8 @@
   "support_documents": [
     {
       "file": "tools/blender/build_compositing_native.py",
-      "expected_sha256": "f542a144b84bef551c334a5374fe996b25567899633885776830e538555a0ceb",
-      "bytes": 8356
+      "expected_sha256": "b3e2182033accee6101a08b75c53ffb9a826db6c9b364c9e4e676df5d9c540cb",
+      "bytes": 8370
     },
     {
       "file": "tools/blender/relight_preview_launch.py",
@@ -1917,9 +1922,34 @@
       "bytes": 98
     },
     {
+      "file": "LICENSE",
+      "expected_sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986",
+      "bytes": 35149
+    },
+    {
+      "file": "NOTICE.md",
+      "expected_sha256": "e7c4c998ffbdd4a4d7b45dbd2d165468f45b505d8033c058b061a90190fa2c4c",
+      "bytes": 1478
+    },
+    {
+      "file": "README.md",
+      "expected_sha256": "49999a163322ee832593cd381b749a7fe2869618f4444619351dab1e07a553c0",
+      "bytes": 4617
+    },
+    {
+      "file": "README.zh-CN.md",
+      "expected_sha256": "8a3c210195572bd358b259be79f8a938318ec9e2edb9613329ed9682cd5815c1",
+      "bytes": 2608
+    },
+    {
       "file": "blenderctl.ps1",
       "expected_sha256": "4f8a4f915df164310ae4c89586535db76bdc194d5230c5e848e2a31d8de86d6a",
       "bytes": 865
+    },
+    {
+      "file": "docs/SKILLS.md",
+      "expected_sha256": "6ddb535f543ab3726898a2dd8848d8723ad23e21cb0a0547c4cbab7243ddda55",
+      "bytes": 1242
     },
     {
       "file": "docs/cli/通用化开发清单.json",
@@ -1982,11 +2012,6 @@
       "bytes": 1380
     },
     {
-      "file": "docs/SKILLS.md",
-      "expected_sha256": "6ddb535f543ab3726898a2dd8848d8723ad23e21cb0a0547c4cbab7243ddda55",
-      "bytes": 1242
-    },
-    {
       "file": "docs/usage.md",
       "expected_sha256": "cb50b1cad80fec3f87eac5628f31049002bd64005d0f5f8c8fb4ce11dca4cdf4",
       "bytes": 7208
@@ -2012,26 +2037,6 @@
       "bytes": 1860
     },
     {
-      "file": "LICENSE",
-      "expected_sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986",
-      "bytes": 35149
-    },
-    {
-      "file": "NOTICE.md",
-      "expected_sha256": "e7c4c998ffbdd4a4d7b45dbd2d165468f45b505d8033c058b061a90190fa2c4c",
-      "bytes": 1478
-    },
-    {
-      "file": "README.md",
-      "expected_sha256": "0f915f1299b69c61720092157aab7c7d813c9f62f19170eb42359fb4ebbe9fdc",
-      "bytes": 4398
-    },
-    {
-      "file": "README.zh-CN.md",
-      "expected_sha256": "6c2086b0034bfb976eecb330c6b373307b3cb0437052f674abd974cb80859865",
-      "bytes": 2591
-    },
-    {
       "file": "scripts/build_release.py",
       "expected_sha256": "95049b6c0b406d9016ce17a099c39284dc73d6dfaab96b95a014a1ba22d3a705",
       "bytes": 4780
@@ -2048,8 +2053,13 @@
     },
     {
       "file": "scripts/verify_release.py",
-      "expected_sha256": "6e1c3accdc570e030f6a995bb8e56b60fae098ac47ae319126b05618ee38119f",
-      "bytes": 10696
+      "expected_sha256": "386f7299b93456c793c6267d7e96a76c2322e1da9a213447e1a1a33b9316064f",
+      "bytes": 10702
+    },
+    {
+      "file": "skills/blender-compositing/SKILL.md",
+      "expected_sha256": "727aa618b5c14ce1d6862a2e0a8c6f9ed6f2dd313c0b3ab28477f53127596a63",
+      "bytes": 5255
     },
     {
       "file": "skills/blender-compositing/references/color-hdr.md",
@@ -2127,14 +2137,9 @@
       "bytes": 30783
     },
     {
-      "file": "skills/blender-compositing/SKILL.md",
-      "expected_sha256": "f7118766aa84cf974ce094a3ee18b99692ff865e048095a9a4f03fca2e436443",
-      "bytes": 5255
-    },
-    {
       "file": "skills/blender-compositing/source-index.json",
-      "expected_sha256": "099cd083a3b51662d80fd2a4eacee0594c8087f269e0481a1ca1fc7918e99e0c",
-      "bytes": 32191
+      "expected_sha256": "b2e5ec08937fd53593acc7e360ede1b1f428616bc652a71ff7fb7dbeea198bb0",
+      "bytes": 32348
     },
     {
       "file": "tools/compositing_workflow_addon/LICENSE",
@@ -2151,15 +2156,15 @@
   "support_scope": "Original 7 Python + manifest geometry persistence imports and two public Blender support scripts; separately inventoried, no other-domain certification",
   "sequence_producer_identity": "49801a5c64273a1d1d6c2b8661965448cc5da1efad6440ad36cee8ca6a5bd017",
   "sequence_identity_scope": "Sequence declared producer subset, distinct from complete runtime identity; historical a968 evidence is not relabelled",
-  "native_archive_sha256": "958b66f80606f1e8a31d99414ae0daa5fcae2e3393fd96adde055a0d0e8bea6e",
+  "native_archive_sha256": "a7f8282459ebf3ab3d6d09539ca62e20202a99db9f972a47e9f30d27990a191d",
   "verified_code_mapping": {
-    "runtime": "ae89b1e85145c2d2385bc7db312557aee9e44499108299dc18dac7b48cd34370",
+    "runtime": "0aca3e60b1a31cd8724c8dfe6ec106a3dd1ab48f3c5c51b1bf04a5e8d3bde1eb",
     "sequence": "49801a5c64273a1d1d6c2b8661965448cc5da1efad6440ad36cee8ca6a5bd017",
     "finite_helper_sha256": "f2a0e546a9a5193b24ea94e671df83995aad79d62284f895fcdee1ee8c9a925e",
-    "scope": "Named full120 stable/cold and finite helper qualifications carry through exact matching code; see docs/validation.md for failures and limits"
+    "scope": "Static 5.3 compositor stack migration; earlier motion evidence remains with 0.8.0."
   },
   "package_contracts": {
-    "native": "Exact 8 Python + manifest + complete GPL LICENSE + README = 11; strict builder compression retained",
+    "native": "Exact 9 Python files, manifest, complete GPL LICENSE and README.",
     "skill": "One blender-compositing directory with SKILL/references/helpers/source-index; separate LICENSE and NOTICE; no runtime",
     "source": "Exact union of inventoried sources plus PUBLICATION.json; three archives have separate member SHA/bytes indexes"
   },

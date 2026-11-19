@@ -5,7 +5,7 @@ description: 使用Compositing Workflow与匹配CLI制作、修改和检查可�
 
 # Blender合成与深度补光
 
-以实际图像及可继续编辑工程为交付。匹配addon0.8.0、CLI0.75.0、skill0.8.0，本机基线Windows/Blender5.2.1LTS build9e2066aef7ef；runtime aggregate `ae89b1e85145c2d2385bc7db312557aee9e44499108299dc18dac7b48cd34370`。历史/当前范围与未验项先按任务读取[validation](references/validation.md)，不把CI/Schema/注册成功当成运行或作品通过。
+以实际图像及可继续编辑工程为交付。匹配addon0.9.0、CLI0.75.0、skill0.9.0，本机基线Windows/Blender5.2.1LTS build9e2066aef7ef；runtime aggregate `0aca3e60b1a31cd8724c8dfe6ec106a3dd1ab48f3c5c51b1bf04a5e8d3bde1eb`。历史/当前范围与未验项先按任务读取[validation](references/validation.md)，不把CI/Schema/注册成功当成运行或作品通过。
 
 设置实际绝对BLENDERCTL_ROOT指向匹配源码包；BLENDERCTL_PYTHON为已批准Host bundled Python，Blender GUI与固定GPU环境另有角色。先读[usage](references/usage.md)、[dependencies](references/dependencies.md)及[contract](references/contract.md)。本技能不依赖作者Wiki/记忆插件/另一个技能。移植技能不构成GPU profile移机资格；不伪造profile、安装依赖或放宽guard。
 

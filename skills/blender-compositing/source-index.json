@@ -199,11 +199,11 @@
     },
     {
       "path": "tools/blenderctl/compositing_verifier.py",
-      "sha256": "c33df6a8eb6e23559969af196f9654b088ce1bd1d09faac75d3afaa9ccb95a7e"
+      "sha256": "bccec7329b21038c0f11d1c3dd46a90d2cdbbf7e9033e9965d67041cdeccd2f2"
     },
     {
       "path": "tools/blenderctl/compositing_workflow.py",
-      "sha256": "24adec7903471d2fc0f24d64f5b67465247aec99ba4ad2e1962a489b678492be"
+      "sha256": "4cae17f53341515ec0776a1deb3ebe9f9260d1980fc49428b616b9d415bfafb7"
     },
     {
       "path": "tools/blenderctl/compositing_workflow_contract.py",
@@ -819,7 +819,7 @@
     },
     {
       "path": "tools/compositing_workflow_addon/__init__.py",
-      "sha256": "206523731566adee7743a49c2678cb2f446e69f43d3e591f9b4ac98077677f97"
+      "sha256": "0553853aaa2519676b960f40816c2570c0d1667e804f78f8721b1aec1212d427"
     },
     {
       "path": "tools/compositing_workflow_addon/contract.py",
@@ -827,7 +827,7 @@
     },
     {
       "path": "tools/compositing_workflow_addon/core.py",
-      "sha256": "53a804868181dc2ed66ec4f0e29e28e6c929cacee04d05e64a066aca797e33ac"
+      "sha256": "ed550f564a765759cb7d3fe979bbc736f7bfca5ae431615b334b62e676fa19fc"
     },
     {
       "path": "tools/compositing_workflow_addon/depth_contract.py",
@@ -848,6 +848,10 @@
     {
       "path": "tools/compositing_workflow_addon/relight_preview_ui.py",
       "sha256": "1f72848d363aeca455883ac5fcdbc1439aee0f44808443ee1ceff615aa45d2dd"
+    },
+    {
+      "path": "tools/compositing_workflow_addon/runtime.py",
+      "sha256": "7adc8f71c4b65df99f9310a78c6df2e762b93a676f2e3217f0ee378fe7328791"
     }
   ]
 }

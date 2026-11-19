@@ -1,6 +1,6 @@
 schema_version = "1.0.0"
 id = "compositing_workflow_addon"
-version = "0.8.0"
+version = "0.9.0"
 name = "Compositing Workflow"
 tagline = "Editable compositor groups and interactive depth relighting"
 maintainer = "Blender AI"

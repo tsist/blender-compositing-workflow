@@ -6,7 +6,7 @@ from urllib.parse import unquote,urlsplit
 sys.dont_write_bytecode=True
 ROOT=Path(__file__).resolve().parents[1]
 ADDON='tools/compositing_workflow_addon/'
-ADDON_FILES=tuple(sorted(('__init__.py','contract.py','core.py','movie_contract.py','depth_contract.py','depth_estimate_contract.py','depth_math.py','relight_preview_ui.py','blender_manifest.toml','LICENSE','README.md')))
+ADDON_FILES=tuple(sorted(('__init__.py','contract.py','core.py','movie_contract.py','depth_contract.py','depth_estimate_contract.py','depth_math.py','relight_preview_ui.py','runtime.py','blender_manifest.toml','LICENSE','README.md')))
 REFERENCE_PAIRS={x:x for x in ('usage','contract','validation','dependencies','color-hdr','licensing','depth-data','rgb-estimate','depth-relight','relight-session','imported-normal','depth-sequence','finite-relight-study')}
 BLOCKED_PARTS={'.git','runtime','audit','__pycache__','.venv','venv','site-packages','dist-info'}
 TEXT_SUFFIXES={'.py','.json','.md','.txt','.toml','.ps1','.yml','.yaml'}
@@ -98,7 +98,7 @@ def verify(root=ROOT):
     support|={p.relative_to(root).as_posix() for p in (root/'tools/blender').glob('*') if p.is_file()}
     if support!={r['file'] for r in pub['support_documents']}:raise ValueError('Support exact namespace differs')
     native={p.name for p in (root/ADDON).iterdir() if p.is_file()}
-    if native!=set(ADDON_FILES):raise ValueError('Native exact eleven-member namespace differs')
+    if native!=set(ADDON_FILES):raise ValueError('Native exact member namespace differs')
     if sha((root/'LICENSE').read_bytes())!='3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986' or (root/'LICENSE').read_bytes()!=(root/ADDON/'LICENSE').read_bytes():raise ValueError('Complete reviewed GPL text required')
     cli=literal_assignment(root/'tools/blenderctl/protocol.py','VERSION')
     manifest=tomllib.loads((root/ADDON/'blender_manifest.toml').read_text(encoding='utf-8'))
