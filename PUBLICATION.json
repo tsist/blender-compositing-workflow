@@ -1922,34 +1922,9 @@
       "bytes": 98
     },
     {
-      "file": "LICENSE",
-      "expected_sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986",
-      "bytes": 35149
-    },
-    {
-      "file": "NOTICE.md",
-      "expected_sha256": "e7c4c998ffbdd4a4d7b45dbd2d165468f45b505d8033c058b061a90190fa2c4c",
-      "bytes": 1478
-    },
-    {
-      "file": "README.md",
-      "expected_sha256": "49999a163322ee832593cd381b749a7fe2869618f4444619351dab1e07a553c0",
-      "bytes": 4617
-    },
-    {
-      "file": "README.zh-CN.md",
-      "expected_sha256": "8a3c210195572bd358b259be79f8a938318ec9e2edb9613329ed9682cd5815c1",
-      "bytes": 2608
-    },
-    {
       "file": "blenderctl.ps1",
       "expected_sha256": "4f8a4f915df164310ae4c89586535db76bdc194d5230c5e848e2a31d8de86d6a",
       "bytes": 865
-    },
-    {
-      "file": "docs/SKILLS.md",
-      "expected_sha256": "6ddb535f543ab3726898a2dd8848d8723ad23e21cb0a0547c4cbab7243ddda55",
-      "bytes": 1242
     },
     {
       "file": "docs/cli/通用化开发清单.json",
@@ -2012,6 +1987,11 @@
       "bytes": 1380
     },
     {
+      "file": "docs/SKILLS.md",
+      "expected_sha256": "6ddb535f543ab3726898a2dd8848d8723ad23e21cb0a0547c4cbab7243ddda55",
+      "bytes": 1242
+    },
+    {
       "file": "docs/usage.md",
       "expected_sha256": "cb50b1cad80fec3f87eac5628f31049002bd64005d0f5f8c8fb4ce11dca4cdf4",
       "bytes": 7208
@@ -2037,6 +2017,26 @@
       "bytes": 1860
     },
     {
+      "file": "LICENSE",
+      "expected_sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986",
+      "bytes": 35149
+    },
+    {
+      "file": "NOTICE.md",
+      "expected_sha256": "e7c4c998ffbdd4a4d7b45dbd2d165468f45b505d8033c058b061a90190fa2c4c",
+      "bytes": 1478
+    },
+    {
+      "file": "README.md",
+      "expected_sha256": "49999a163322ee832593cd381b749a7fe2869618f4444619351dab1e07a553c0",
+      "bytes": 4617
+    },
+    {
+      "file": "README.zh-CN.md",
+      "expected_sha256": "8a3c210195572bd358b259be79f8a938318ec9e2edb9613329ed9682cd5815c1",
+      "bytes": 2608
+    },
+    {
       "file": "scripts/build_release.py",
       "expected_sha256": "95049b6c0b406d9016ce17a099c39284dc73d6dfaab96b95a014a1ba22d3a705",
       "bytes": 4780
@@ -2057,9 +2057,14 @@
       "bytes": 10702
     },
     {
-      "file": "skills/blender-compositing/SKILL.md",
-      "expected_sha256": "727aa618b5c14ce1d6862a2e0a8c6f9ed6f2dd313c0b3ab28477f53127596a63",
-      "bytes": 5255
+      "file": "skills/blender-compositing/agents/openai.yaml",
+      "expected_sha256": "412f18e4702c8f3db471804c6a09835785501b6ff615f077fa387de65c7e58b4",
+      "bytes": 417
+    },
+    {
+      "file": "skills/blender-compositing/references/color-and-templates.md",
+      "expected_sha256": "e43c58213309170e131806cf1389f6a6def5b0ff83d028e5b0d55279ffa85f73",
+      "bytes": 5605
     },
     {
       "file": "skills/blender-compositing/references/color-hdr.md",
@@ -2080,6 +2085,11 @@
       "file": "skills/blender-compositing/references/depth-data.md",
       "expected_sha256": "e721e933fcf72a4d214bfe9da5600b07476ebcf968f6dcbbbac03990f11e556f",
       "bytes": 1377
+    },
+    {
+      "file": "skills/blender-compositing/references/depth-relight-live.md",
+      "expected_sha256": "d836f9a97fa0f13e93ae9f6e49f7092647716b35ddeace607268b2a5478caf7f",
+      "bytes": 6853
     },
     {
       "file": "skills/blender-compositing/references/depth-relight.md",
@@ -2117,6 +2127,11 @@
       "bytes": 1380
     },
     {
+      "file": "skills/blender-compositing/references/sources.md",
+      "expected_sha256": "78427154430e42455ab0ad903885d5994ee2308ff4d14ba1c3b6d707b5322ffc",
+      "bytes": 2765
+    },
+    {
       "file": "skills/blender-compositing/references/usage.md",
       "expected_sha256": "cb50b1cad80fec3f87eac5628f31049002bd64005d0f5f8c8fb4ce11dca4cdf4",
       "bytes": 7208
@@ -2135,6 +2150,11 @@
       "file": "skills/blender-compositing/scripts/session_study.py",
       "expected_sha256": "f2a0e546a9a5193b24ea94e671df83995aad79d62284f895fcdee1ee8c9a925e",
       "bytes": 30783
+    },
+    {
+      "file": "skills/blender-compositing/SKILL.md",
+      "expected_sha256": "29e39c433a6265dfc3884ad3219d56ef7cd1db6215293825a72620d4dd1c0b3a",
+      "bytes": 10622
     },
     {
       "file": "skills/blender-compositing/source-index.json",

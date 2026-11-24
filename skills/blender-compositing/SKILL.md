@@ -1,32 +1,126 @@
 ---
 name: blender-compositing
-description: 使用Compositing Workflow与匹配CLI制作、修改和检查可编辑合成图、静帧/有限序列、显式SDR Movie、技术HDR、模板/批量/候选及实验性深度补光；不替代跟踪求解或视频剪辑。
+description: 使用 Compositing Workflow 插件与公共 blenderctl 制作、修改和验收合成画面，处理静帧、连续序列、线色叠合、模板复用、参数对比与现场深度补光接回。接到成片调色、辉光景深、三渲二线色合成或深度补光任务时使用。
+metadata:
+  version: "0.9.0"
 ---
 
-# Blender合成与深度补光
+# Blender 合成
 
-以实际图像及可继续编辑工程为交付。匹配addon0.9.0、CLI0.75.0、skill0.9.0，本机基线Windows/Blender5.2.1LTS build9e2066aef7ef；runtime aggregate `0aca3e60b1a31cd8724c8dfe6ec106a3dd1ab48f3c5c51b1bf04a5e8d3bde1eb`。历史/当前范围与未验项先按任务读取[validation](references/validation.md)，不把CI/Schema/注册成功当成运行或作品通过。
+本技能负责利用渲染出来的多层通道做色调统一、辉光景深、线稿叠合、局部深度补光与成片输出，属于 [合成部门](https://github.com/tsist/blender-ai-workflow/blob/main/skills/blender-work-methodology/references/departments/compositing.md)。公共 CLI 的批次目录、SHA 校验与长作业等待规则见 [blender-cli](https://github.com/tsist/blenderctl/blob/main/skills/blender-cli/SKILL.md)。
 
-设置实际绝对BLENDERCTL_ROOT指向匹配源码包；BLENDERCTL_PYTHON为已批准Host bundled Python，Blender GUI与固定GPU环境另有角色。先读[usage](references/usage.md)、[dependencies](references/dependencies.md)及[contract](references/contract.md)。本技能不依赖作者Wiki/记忆插件/另一个技能。移植技能不构成GPU profile移机资格；不伪造profile、安装依赖或放宽guard。
+## 第一步：先划清合成边界，再查真实入口
+
+动手前先看问题适合留在合成还是退回三维场景。靠现有通道就能在连续帧里干净解决的光色微调、辉光、暗角、深度雾和三渲二线色叠合，在合成里做完最快。遇到真实几何遮挡错误、缺投射阴影、材质高光质地不对或大幅改机位，直接退回三维场景重渲，硬修只会越补越花。
+
+查清当前可用命令与参数字段，省去猜字段名和版本差异的麻烦。
 
 ```powershell
-& (Join-Path $env:BLENDERCTL_ROOT 'blenderctl.ps1') --version
-& (Join-Path $env:BLENDERCTL_ROOT 'blenderctl.ps1') compositing describe
-& (Join-Path $env:BLENDERCTL_ROOT 'blenderctl.ps1') compositing describe --operation run --param preview
+$ctl = './blenderctl.ps1'
+
+# 查看合成产品入口与宿主环境
+& $ctl discover --product compositing
+
+# 不启动 Blender 直接查看契约与分节字段
+& $ctl compositing describe
+& $ctl compositing describe --operation run --param preview
+& $ctl compositing describe --operation study --param cases
 ```
 
-13操作：`compositing.run`, `compositing.inspect`, `compositing.encode`, `compositing.template-save`, `compositing.template-run`, `compositing.batch`, `compositing.study`, `compositing.depth-prepare`, `compositing.depth-inspect`, `compositing.depth-estimate`, `compositing.depth-relight`, `compositing.depth-session`, `compositing.depth-sequence`。create/update/adopt/detach是run中manifest.operation。按所选操作查字段/Schema；全局参数在子命令前。读compact的状态/错误/完整报告引用，再有目的读取报告，不一次展开所有深层对象。保持同一jobs-dir和job ID，有界wait返回running不重提。
+需要跑哪项子命令，先跑一次 `--help` 或 `describe --operation <op> --schema` 拿到精确字段。
 
-从源快照/Scene/ViewLayer、资源/色彩/Alpha/时间与用途获取信息；不覆盖未保存GUI。独立可恢复工作副本、小样看图、最终约定质量、独立重开/解码/源与非目标保护。实际baseline只旁路主bridge，输出尺寸不会自动fit；原图与baseline/result同时看，100%检查边缘/高光/噪声/主体与接触。sRGBPNG放AgX可能二次映射，保持外观须明确独立Standard/sRGB源；EXR解释与HDR观看分别核，见[color/HDR](references/color-hdr.md)。
+## 第二步：核对输入色彩、视图变换与 Alpha 预乘
 
-模板消费者/外层resume、partial batch与有限study按合同执行，不自动排名艺术最佳。cancel/timeout以supervisor终态为准；完整同身份成功闭包才复用，不改旧SHA、不承诺任意中点恢复。PNG/EXR核Alpha，JPEG/contact只供RGB看图。
+开干前先摸清源工程和素材的色彩身份。把色彩空间和 Alpha 搞混，后面怎么调色都会偏色或出黑边。
 
-选择深度路线时按需读：[prepare/cold inspect](references/depth-data.md)、[RGB estimate](references/rgb-estimate.md)、[single relight](references/depth-relight.md)、[hot session与Relight面板](references/relight-session.md)、[普通Normal](references/imported-normal.md)、[shot sequence](references/depth-sequence.md)。relative深度非metric，finite/Alpha非confidence，RGB非albedo，原影保留；深度数据通过不自动升级展示质量。
+1. **分清线性 EXR 与显示编码素材**：多层线性 EXR 保留场景线性光数据，遍历全部 subimage 核对所需层和通道，主图默认对应 `Combined`。已经显示编码的 sRGB PNG 或 SDR 视频已烘焙视图映射，目标若为保留原图外观，在独立工作副本上切到 `Standard` / `sRGB`、`None` look、曝光 `0` 与伽马 `1` 后再合成；目标若为重做场景调色，再沿用 `AgX` 这类场景视图变换。
+2. **明确每张输入的色彩空间与 Alpha 模式**：在请求里逐项写出主源和额外图像的 `file`、SHA256、`colorspace` 与 `alpha_mode`。PNG 经过 `OIIO` 读取时按直通（Unassociated / Straight）口径检查，合成边缘出现黑边或发灰时优先核对预乘方式。
+3. **核对渲染层与去噪通道**：使用 `Render Layers` 时核对目标 `Scene` 和 `ViewLayer`。后台预览阶段关闭原生去噪时，节点去噪直接接 `Image` 以及已启用的 `Denoising Albedo` 与 `Denoising Normal`。
+4. **先读后改，保留原件**：在 `work/audit/<batch>//jobs` 下工作，用 `compositing inspect` 摸清已有节点图与保护对象，所有改动落在独立工作副本里，源文件留着对照。
 
-调灯复用成功bundle与热session，不反复估深/校验模型。先建立外部公共live session，再setup/bind；重开工程新建session显式rebind。局部轮廓修改须Apply后final，原始raw保留，选明确immutable final revision；closed ready不能绑定为live。先预制有限动作再启动，执行stop后离线看图，不让GPU等代理选图。
+```powershell
+& $ctl --jobs-dir $jobs compositing inspect $src `
+  --expected-sha256 $sha `
+  --resources $resourcesJson `
+  --scene Scene `
+  --workflow-id main-comp
+```
 
-辅助：[alpha_layout.py](scripts/alpha_layout.py)只测量SHA守护、方形RGBA/opaque-core cutout并给几何定位，独立技能安装传`--project-root`；[session_study.py](scripts/session_study.py)为有限编排，先读[finite study](references/finite-relight-study.md)，冻结source-index/request/actions/解释器SHA，preflight与正式运行使用各自新短jobs/out。越过submit barrier不自动重提；必须核父终态/实际worker退出/全部成员，仍需看图与fresh工程。
+## 第三步：按静帧或连续序列搭节点图
 
-序列改灯可用成功同源RGB/CUDA bundle的`reuse_raw`，全raw复用时model_load0；与partial同配方`resume`互斥，须完整公共父/成员/来源资格。序列须完整帧映射、全镜统计及真实运动源，不把小人工fixture当1080p120视觉完成。完整decode/遮挡/新露出/闪烁/拖影与用户认可分别记录。交付工程、实际图像、必要EXR/视频、完整回执/恢复引用及未验边界。Large外部权重CC-BY-NC-4.0与项目GPL分别适用，见[licensing](references/licensing.md)。
+整理好 UTF-8 请求文件、`resources` 清单和单一 `manifest` 后，用 `compositing run` 在工作副本上执行 `create`、`update`、`adopt` 或 `detach`。
 
-本版本具名两条原生1080p/24fps/120帧stable补光、全成员/cold/视频PTS与用户连续观看通过；两条更强换光full120技术通过但美术拒收，只推荐stable。v005独立导出helper f2a0e546…两动作preview/final/stop与29成员/实际worker退出通过；v004原CRT状态读取失败保留，使用同源审核的protocol/filesystem共享reader修复。额外Gemini JSON超时不算AI验收；不从字节/机器时间推算agent token省幅。范围与当前精确代码映射见validation。
+- **静帧先对画布再调色**：在 `preview` 里写明输出画布尺寸，输入尺寸不一致时先加 `Scale` 或 `Transform` 适配，避免默认居中裁切把边缘切掉。单个直立透明底产品需要精准贴地摆位时，用 `scripts/alpha_layout.py` 测量 Alpha 边界框并统一地面高度。
+- **连续序列对齐帧号与帧率**：固定 `reference_frame` 作为基准帧，逐帧列出 `file`、SHA256、`source_frame` 与 `ONE_TO_ONE` 映射，保持 `Scene`、`mapping` 和 `timeline` 的有理帧率一致。需要推进多帧预览时在 `frames` 与 `timeline` 中按需选其一，输出视频时给完整连续 `timeline`。
+- **线色叠合与辉光景深**：三渲二镜头分别接入 `Beauty`、`Line` 与 `BeautyLineInteraction` 通道，按 `Combined = Line + Beauty - BeautyLineInteraction` 做不透明相关线色重建，并独立控制线色、线浓度、柔和辉光与景深。调完单帧后抽查连续帧，确认线稿边缘、亮部辉光和背景雾效在运动中保持稳定。
+- **接手人工手调**：用户在 Blender 窗口里改完节点后，先显式存成新快照并重算 SHA，再运行 `compositing inspect` 或点名 `update`，让手调结果稳妥接续下去。
+
+```powershell
+& $ctl --jobs-dir $jobs --compact compositing run $src `
+  --expected-sha256 $sha `
+  --manifest $manifestJson `
+  --resources $resourcesJson `
+  --preview $previewJson
+```
+
+长作业提交后用 `job wait <job_id>` 等待终态。色彩编码、Movie 输入、HDR10 `encode` 与 `alpha_layout.py` 细节见 [色彩、序列、模板与批量](references/color-and-templates.md)。
+
+## 第四步：复用模板与做多方案对比
+
+同一套调色或线色配方要跑多个镜头，先沉淀成模板再批量套用，比每个镜头手工重搭省力且画风统一。
+
+- **保存与套用模板**：从验收通过的正常产出里运行 `compositing template-save --params <json>` 导出模板和显式插槽。换新镜头时运行 `compositing template-run --params <json>` 绑定新工程、新素材、参考帧和 `resources`，先出小样看图再跑全序列。
+- **多组参数做 `study`**：拿不准辉光强度、色温或暗角风格时，用 `compositing study --params <json>` 一次跑出有限几组静态候选，连同基线并排对比，把最终选择权留给看图环节。
+- **多镜头走 `batch`**：同一批镜头统一跑合成时用 `compositing batch --params <json>`。成员各自独立记账，单个失败项单独排查，已通过成员保持完整闭包供续跑复用。
+
+## 第五步：现场深度补光与工作副本接回
+
+素材本身光照扎实、只需补氛围或局部轮廓光时，优先以全画面环境光色与柔和补光为主，保留原本可信的明暗骨架。
+
+1. **准备或复用深度包**：已有深度与法线数据时用 `compositing depth-prepare` 整理，新 RGB 图片估深用 `compositing depth-estimate`，随后用 `compositing depth-inspect` 冷验。调灯阶段直接复用已通过的深度包，省去重复估深。
+2. **现场窗口交互调灯**：打开附接的预览窗口后，用 `compositing session-live` 执行 `preflight`、`bind`、`display`、`anime`、`aim-distance`、`final` 与 `save-copy`，把展示状态、灯距和最终修订收进工作副本。
+3. **按修订号读图与离线另存**：用 `compositing depth-control` 的 `inspect`、`submit`、`read` 和 `stop` 按确切修订号读取补光预览、诊断图和线性 EXR。拿到用户已保存的补光 `.blend` 快照后，用 `compositing preview-copy --params <json> --output <blend>` 按场景和 `expected_owner` 另存可冷开的控制工程副本。
+4. **有限候选自动对比**：需要在已有深度包上一次跑完几组预设补光候选并自动停机，使用 [有限深度补光 study 辅助脚本](references/finite-relight-study.md)。
+
+完整的深度补光与现场接回命令见 [深度补光与现场会话](references/depth-relight-live.md)。
+
+## 第六步：无参数标签对照验收并交下游
+
+数据报告和像素均值用来排错，画面好不好必须亲眼看图拍板。
+
+1. **盲看全图与中景**：先隐藏参数标签看成图，判断曝光、色温、立体感与氛围。
+2. **同视图前后对照**：把原图、`baseline` 与 `result` 同视图并排对比，再放大到 100% 裁切查边缘、Alpha 轮廓、接触阴影、高光和噪点。序列镜头额外播放连续帧排查闪烁。
+3. **核对回执与冷重开**：核对 `$LASTEXITCODE`、返回 `ok`、源工程保护与独立解码，再对最终 `.blend` 候选跑一次 `compositing inspect` 冷重开确认外链完好。
+
+## 交给下游
+
+向用户审看或剪辑部门交付时给齐四样东西，并分别写明技术验收、画面观察与用户确认状态：
+
+- 保存好的可编辑合成工程副本（路径与 SHA256）。
+- 按镜头编号命名的成片序列、EXR 或视频，标明编码、色彩空间、帧率与起止帧。
+- 隐藏参数标签的前后同机位对照图（含整体与 100% 局部裁切）。
+- 完整报告路径与模板或恢复引用。
+
+单镜头和静帧在这里完成**审看②（最终帧）**；多镜成片交剪辑部门随**精剪**一起看。
+
+## 例子：给三渲二镜头叠合线稿、调辉光并套模板
+
+接到任务：「给 `work/shot04/shot04_render.blend` 的 24 帧三渲二序列叠合独立线稿、压暗背景并加柔和辉光，定稿后存成模板给 `shot05` 复用。」
+
+1. **摸底**：建 `work/audit/<batch>/`，算出源工程与 `Beauty`、`Line` EXR 的 SHA256。跑 `compositing describe` 核对字段，再用 `compositing inspect` 查目标 `Scene` 与已有节点。
+2. **核对通道**：确认输入为线性 EXR、帧率 `24/1`、起止帧 `1..24`，遍历 subimage 核对 `Combined`、`Line` 与 Straight Alpha。
+3. **先跑 3 帧小样**：写好 `manifest.json`（线色叠合 + 柔和 `glare` + 背景微压暗）与 3 帧 `preview.json`，跑 `compositing run`。盲看同视图 A/B 对比，并放 100% 裁切查眼部与线稿边缘。
+4. **出全序列并冷重开**：确认边缘干净后，换完整 24 帧 `timeline` 跑正式合成与审片视频，播放核对帧间稳定，再对候选 `.blend` 跑 `compositing inspect` 确认外链完好。
+5. **存模板与交付**：用 `compositing template-save` 导出模板供 `shot05` 用 `template-run` 套用，把合成工程、24 帧成片序列、前后对照图与报告交剪辑部门并提交审看。
+
+## 参考
+
+- [色彩、序列、模板与批量](references/color-and-templates.md)
+- [深度补光与现场会话](references/depth-relight-live.md)
+- [有限深度补光 study 辅助脚本](references/finite-relight-study.md)
+- [契约文档、Wiki 与历史实证索引](references/sources.md)
+- 本技能附带脚本：`scripts/alpha_layout.py` · `scripts/session_study.py`
+
+## Runtime Identity
+
+Verified static runtime identity: `0aca3e60b1a31cd8724c8dfe6ec106a3dd1ab48f3c5c51b1bf04a5e8d3bde1eb`.

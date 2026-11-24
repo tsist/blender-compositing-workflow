@@ -1,0 +1,5 @@
+interface:
+  display_name: "Blender 合成"
+  short_description: "用 Compositing Workflow 与 blenderctl 做节点合成、模板复用、参数对比和深度补光接回"
+  default_prompt: "先核对输入通道、色彩空间与 Alpha 预乘，在独立工作副本上用 blenderctl compositing 完成合成、对照验收与交付。"
+  default_prompt: "Use $blender-compositing for this Blender workflow task."
