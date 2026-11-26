@@ -2,7 +2,7 @@
 name: blender-compositing
 description: 使用 Compositing Workflow 插件与公共 blenderctl 制作、修改和验收合成画面，处理静帧、连续序列、线色叠合、模板复用、参数对比与现场深度补光接回。接到成片调色、辉光景深、三渲二线色合成或深度补光任务时使用。
 metadata:
-  version: "0.9.0"
+  version: "0.10.0"
 ---
 
 # Blender 合成
@@ -28,6 +28,10 @@ $ctl = './blenderctl.ps1'
 ```
 
 需要跑哪项子命令，先跑一次 `--help` 或 `describe --operation <op> --schema` 拿到精确字段。
+
+## Blender 5.3 场景效果栈
+
+使用 [blenderctl v0.64.0](https://github.com/tsist/blenderctl/releases/tag/v0.64.0) 的 `production.run`，设置 `release: "1.0.0"` 与 `domain: "compositing"`。按实例名检查、插入、换序、调参、旁路或移除效果，用原生组合节点组暴露可复用控件。读取保存和重开回执，并分别检查 Viewer 与 Render Result。涉及驱动或动画引用的移除先经依赖检查。[可移植请求示例](references/production-effects.md)
 
 ## 第二步：核对输入色彩、视图变换与 Alpha 预乘
 
@@ -123,4 +127,4 @@ $ctl = './blenderctl.ps1'
 
 ## Runtime Identity
 
-Verified static runtime identity: `0aca3e60b1a31cd8724c8dfe6ec106a3dd1ab48f3c5c51b1bf04a5e8d3bde1eb`.
+Verified static runtime identity: `42d6baf5ebf37dbde179cb3ee61919a7bbf4098e8274ad2642b711e7955827fa`.

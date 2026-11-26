@@ -32,6 +32,27 @@ TARGET_LABELS = {"light": "漫反射", "highlight": "高光", "line": "线稿", 
                  "roughness": "粗糙度", "receiver": "阴影接收", "caster": "阴影投射"}
 OPERATION_LABELS = {"restrict": "限制范围", "attenuate": "减弱", "add": "增加区域",
                     "affine": "倍率与偏移", "set": "设置粗糙度"}
+ANIME_VERSION = "relight-kernel-draft-0.4"
+ANIME_VIEWS = ("RESULT", "PARA", "FORM", "DARK_SIDE", "RIM", "LINE", "DELTA", "DEPTH", "NORMAL", "VALIDITY")
+ANIME_VIEW_LABELS = {"RESULT": "结果", "PARA": "二维光形", "FORM": "深度形体", "DARK_SIDE": "未受光影色",
+                     "RIM": "内轮廓", "LINE": "线稿恢复", "DELTA": "总差分", "DEPTH": "深度",
+                     "NORMAL": "法线", "VALIDITY": "有效域"}
+ANIME_NUMBER_LIMITS = {
+    "form": (0., 1.), "wrap": (0., 4.), "para_spread": (.05, 8.), "back_dark": (0., 1.),
+    "back_span": (.001, 10.), "dark_side_reach": (0., 8.), "shadow_lo": (0., 1.), "shadow_hi": (0., 1.),
+    "shadow_tint": (0., 1.), "cel": (0., 1.), "cel_steps": (2, 8), "cel_soft": (0., 1.),
+    "rim_width": (0., 128.), "rim_edge0": (0., 1.), "rim_edge1": (0., 1.), "rim_gain": (0., 8.),
+    "rim_white_mix": (0., 1.), "line_core_lo": (0., 1.), "line_core_hi": (0., 1.), "delta_gain": (.01, 100.),
+}
+ANIME_FIELD_LABELS = {
+    "form": "深度形体混合", "wrap": "法线包裹", "para_spread": "二维光形范围", "back_dark": "逆光压暗",
+    "back_span": "前后深度范围", "dark_side_reach": "影色形体范围", "shadow_lo": "影色阈值低",
+    "shadow_hi": "影色阈值高", "shadow_tint": "独立影色强度", "cel": "Cel 光形量化",
+    "cel_steps": "Cel 阶数", "cel_soft": "Cel 软边", "rim_width": "轮廓宽度（源像素）",
+    "rim_edge0": "轮廓深度阈值低", "rim_edge1": "轮廓深度阈值高", "rim_gain": "轮廓强度",
+    "rim_white_mix": "暗色轮廓白混合", "line_core_lo": "线芯阈值低", "line_core_hi": "线芯阈值高",
+    "delta_gain": "差分诊断倍数",
+}
 
 
 def _native_continuous(value):
@@ -79,6 +100,9 @@ def _upgrade_config(config):
                                 "normal": [0., 1., 0.] if metric else [0., 0., 1.],
                                 "strength": 1., "transmission": [0., 0., 0.],
                                 "light_ids": [light["id"] for light in config["lights"]]}
+    if config["version"] == "relight-kernel-draft-0.2":
+        config["version"] = "relight-kernel-draft-0.3"
+        config["base"] = {"exposure": 0., "contrast": 1., "saturation": 1., "mask": "ALL"}
     return config
 
 
@@ -96,6 +120,31 @@ def _projection_properties(scene, config):
     for obj in scene.objects:
         if obj.get(OWNER) == scene.get(OWNER) and obj.get("relight_id"):
             obj["rp_projection_selected"] = obj["relight_id"] in projection["light_ids"]
+
+
+def _anime_properties(scene, config):
+    if config["version"] != ANIME_VERSION:
+        return
+    anime = config["anime"]
+    for field, (lo, hi) in ANIME_NUMBER_LIMITS.items():
+        key = "rp_anime_" + field
+        scene[key] = int(anime[field]) if field == "cel_steps" else _native_continuous(anime[field])
+        scene.id_properties_ui(key).update(min=lo, max=hi)
+    scene["rp_anime_shadow_color"] = _native_continuous(anime["shadow_color"])
+    scene.id_properties_ui("rp_anime_shadow_color").update(subtype="COLOR", min=0., max=1.)
+    for field in ("solo_light_id", "subject_source", "view"):
+        scene["rp_anime_" + field] = anime[field]
+    for obj in scene.objects:
+        if obj.get(OWNER) == scene.get(OWNER) and obj.get("relight_id"):
+            obj["rp_anime_rim_selected"] = obj["relight_id"] in anime["rim_light_ids"]
+    environment = config.setdefault("environment", {
+        "subject_tint": [1., 1., 1.], "subject_exposure": 0.,
+        "background_tint": [1., 1., 1.], "background_exposure": 0.})
+    for region in ("subject", "background"):
+        scene["rp_environment_" + region + "_tint"] = _native_continuous(environment[region + "_tint"])
+        scene.id_properties_ui("rp_environment_" + region + "_tint").update(subtype="COLOR", min=0., max=4.)
+        scene["rp_environment_" + region + "_exposure"] = _native_continuous(environment[region + "_exposure"])
+        scene.id_properties_ui("rp_environment_" + region + "_exposure").update(min=-4., max=4.)
 
 
 def _submit(runtime, config, *, kind="preview", reason="edit", local_edits=None):
@@ -384,6 +433,10 @@ def extract_config(scene):
         config["material"]["roughness"] = _stable(float(scene["rp_roughness"]), config["material"]["roughness"])
     if "rp_f0" in scene:
         config["material"]["f0"] = _stable(list(scene["rp_f0"]), config["material"]["f0"])
+    if "base" in config:
+        for field in ("exposure", "contrast", "saturation"):
+            config["base"][field] = _stable(float(scene["rp_base_"+field]), config["base"][field])
+        config["base"]["mask"] = "LIGHT" if bool(scene["rp_base_use_light_mask"]) else "ALL"
     if "projection" in config:
         projection = config["projection"]
         for field in ("enabled", "point", "normal", "strength", "transmission"):
@@ -396,6 +449,23 @@ def extract_config(scene):
         # Retain exact saved light ordering until the selection actually changes.
         if selected != set(projection["light_ids"]):
             projection["light_ids"] = [light["id"] for light in config["lights"] if light["id"] in selected]
+    if config["version"] == ANIME_VERSION:
+        anime = config["anime"]
+        for field in ANIME_NUMBER_LIMITS:
+            value = scene["rp_anime_" + field]
+            value = int(value) if field == "cel_steps" else float(value)
+            anime[field] = _stable(value, anime[field])
+        anime["shadow_color"] = _stable(list(scene["rp_anime_shadow_color"]), anime["shadow_color"])
+        for field in ("solo_light_id", "subject_source", "view"):
+            anime[field] = scene["rp_anime_" + field]
+        selected = {ident for ident in found if bool(next(o for o in scene.objects
+                    if o.get(OWNER) == owner and o.get("relight_id") == ident).get("rp_anime_rim_selected", False))}
+        if selected != set(anime["rim_light_ids"]):
+            anime["rim_light_ids"] = [light["id"] for light in config["lights"] if light["id"] in selected]
+        environment = config.setdefault("environment", {})
+        for region in ("subject", "background"):
+            environment[region + "_tint"] = _stable(list(scene["rp_environment_" + region + "_tint"]), environment.get(region + "_tint", [1., 1., 1.]))
+            environment[region + "_exposure"] = _stable(float(scene["rp_environment_" + region + "_exposure"]), environment.get(region + "_exposure", 0.))
     return config
 
 
@@ -588,12 +658,12 @@ def _descriptor_path(descriptor):
     return descriptor.get("file", descriptor.get("path"))
 
 
-def _show(scene, manifest):
+def _load_image(scene, descriptor):
     owner = scene[OWNER]
     background = next(o for o in scene.objects if o.get(OWNER) == owner and o.get("rp_background"))
-    path = _descriptor_path(manifest["display"])
+    path = _descriptor_path(descriptor)
     if not path or not Path(path).is_absolute() or not Path(path).is_file():
-        raise ValueError("Passed display requires an existing absolute path")
+        raise ValueError("Selected display requires an existing absolute path")
     image = bpy.data.images.load(path, check_existing=False)
     _tag(image, owner)
     image.colorspace_settings.name = "sRGB"
@@ -606,6 +676,28 @@ def _show(scene, manifest):
         old = bpy.data.images.get(previous)
         if old and old.get(OWNER) == owner and old.users == 0:
             bpy.data.images.remove(old)
+
+
+def _refresh_display(scene, manifest=None):
+    manifest = manifest or json.loads(scene["rp_shown_manifest"])
+    if scene.get("rp_display_mode", "RESULT") == "ORIGINAL":
+        baseline = json.loads(scene.get("rp_baseline_manifest", "null"))
+        if not baseline:
+            raise ValueError("当前会话没有可对照的 Original 基线")
+        descriptor, displayed = baseline["display"], "ORIGINAL"
+    else:
+        view = manifest.get("view", "RESULT")
+        descriptor = manifest.get("view_display") if view != "RESULT" else manifest["display"]
+        if descriptor is None:
+            descriptor, displayed = manifest["display"], "RESULT"
+        else:
+            displayed = view
+    _load_image(scene, descriptor)
+    scene["rp_displayed_view"] = displayed
+
+
+def _show(scene, manifest):
+    _refresh_display(scene, manifest)
     scene["rp_shown_manifest"] = _json(manifest)
     scene["rp_shown_maps_summary"] = _json({"derived_cache_id": manifest.get("derived_cache_id"),
                                            "generation": manifest.get("generation")})
@@ -761,6 +853,8 @@ def setup(ready_file, owned_scene_name=None, *, client_factory=None, open_window
     scene["rp_ready_snapshot"] = _json(ready)
     scene["rp_status"] = "初始化；结果尚未显示"
     scene["rp_shown_revision"] = -1
+    scene["rp_display_mode"] = "RESULT"
+    scene["rp_displayed_view"] = "RESULT"
     scene["rp_region_order"] = "[]"
     scene["rp_local_version"] = local_version
     scene["rp_applied_local_edits"] = _json(_empty_local_edits(local_version))
@@ -775,9 +869,17 @@ def setup(ready_file, owned_scene_name=None, *, client_factory=None, open_window
     scene["rp_f0"] = _native_continuous(config["material"]["f0"])
     scene.id_properties_ui("rp_roughness").update(min=.02, max=1.)
     scene.id_properties_ui("rp_f0").update(subtype="COLOR", min=0., max=1.)
+    if "base" in config:
+        for field in ("exposure", "contrast", "saturation"):
+            scene["rp_base_"+field] = _native_continuous(config["base"][field])
+        scene["rp_base_use_light_mask"] = config["base"]["mask"] == "LIGHT"
+        scene.id_properties_ui("rp_base_exposure").update(min=-4., max=4.)
+        scene.id_properties_ui("rp_base_contrast").update(min=.25, max=2.)
+        scene.id_properties_ui("rp_base_saturation").update(min=0., max=2.)
     for light in config["lights"]:
         _new_light(scene, collection, owner, light, geometry)
     _projection_properties(scene, config)
+    _anime_properties(scene, config)
     background = _tag(bpy.data.objects.new("Relight Image " + owner[:8], None), owner)
     collection.objects.link(background)
     background["rp_background"] = True
@@ -797,8 +899,10 @@ def setup(ready_file, owned_scene_name=None, *, client_factory=None, open_window
                "applied_local_edits": _empty_local_edits(local_version)}
     _sessions[owner] = runtime
     if ready.get("baseline_display"):
-        _show(scene, {"display": ready["baseline_display"], "revision": -1,
-                      "baseline": True, "session_id": ready["session_id"]})
+        baseline = {"display": ready["baseline_display"], "revision": -1,
+                    "baseline": True, "session_id": ready["session_id"], "view": "RESULT"}
+        scene["rp_baseline_manifest"] = _json(baseline)
+        _show(scene, baseline)
     ticket = _submit(runtime, runtime["last_config"], kind="preview", reason="setup", local_edits=_empty_local_edits(local_version))
     runtime["latest"] = copy.deepcopy(ticket)
     scene["rp_latest_revision"] = ticket["revision"]
@@ -838,12 +942,20 @@ def bind(scene, ready_file, *, client_factory=None):
         scene["rp_local_version"] = LOCAL_VERSION
         scene["rp_initial_config"] = _json(config)
         _projection_properties(scene, config)
+    _anime_properties(scene, config)
     scene["rp_applied_local_edits"] = _json(applied)
     scene["rp_pending_local_edits"] = _json(extract_local_edits(scene))
     scene["rp_current_config"] = _json(config)
     scene["rp_applied_config"] = _json(config)
     scene["rp_ready_file"] = str(ready_file)
     scene["rp_ready_snapshot"] = _json(client.ready)
+    if client.ready.get("baseline_display"):
+        baseline = {"display": client.ready["baseline_display"], "revision": -1,
+                    "baseline": True, "session_id": client.ready["session_id"], "view": "RESULT"}
+        scene["rp_baseline_manifest"] = _json(baseline)
+    elif "rp_baseline_manifest" in scene:
+        del scene["rp_baseline_manifest"]
+    scene["rp_display_mode"] = "RESULT"
     scene["rp_shown_revision"] = -1
     runtime = {"client": client, "last_config": copy.deepcopy(config), "latest": None, "events": [], "timer": None,
                "applied_local_edits": copy.deepcopy(applied)}
@@ -875,6 +987,10 @@ def request_final(scene):
     applied = runtime.get("applied_local_edits", _empty_local_edits())
     if extract_local_edits(scene) != applied:
         raise ValueError("局部区域有未应用修改；先应用局部编辑，再输出原尺寸")
+    if config["version"] == ANIME_VERSION:
+        config["anime"]["view"] = "RESULT"
+        scene["rp_anime_view"] = "RESULT"
+    scene["rp_display_mode"] = "RESULT"
     ticket = _submit(runtime, config, kind="final", reason="user_final", local_edits=applied)
     runtime["latest"] = copy.deepcopy(ticket)
     runtime["last_config"] = copy.deepcopy(config)
@@ -1069,6 +1185,58 @@ class RP_OT_apply_local(bpy.types.Operator):
             return {"CANCELLED"}
 
 
+class RP_OT_display_mode(bpy.types.Operator):
+    bl_idname = "relight_preview.display_mode"
+    bl_label = "切换原图或结果"
+    mode: StringProperty(default="RESULT")
+
+    def execute(self, context):
+        try:
+            if self.mode not in ("ORIGINAL", "RESULT"):
+                raise ValueError("未知显示对照模式")
+            if self.mode == "ORIGINAL" and "rp_baseline_manifest" not in context.scene:
+                raise ValueError("当前会话没有 Original 基线")
+            context.scene["rp_display_mode"] = self.mode
+            _refresh_display(context.scene)
+            return {"FINISHED"}
+        except Exception as exc:
+            self.report({"ERROR"}, str(exc))
+            return {"CANCELLED"}
+
+
+class RP_OT_anime_mode(bpy.types.Operator):
+    bl_idname = "relight_preview.anime_mode"
+    bl_label = "切换 Anime 视图或 Solo"
+    field: StringProperty(default="view")
+    value: StringProperty(default="RESULT")
+
+    def execute(self, context):
+        try:
+            scene = context.scene
+            config = json.loads(scene["rp_initial_config"])
+            if config["version"] != ANIME_VERSION:
+                raise ValueError("只有新建 0.4 会话提供 Anime 控件")
+            if self.field == "view":
+                if self.value not in ANIME_VIEWS:
+                    raise ValueError("未知 Anime 诊断视图")
+                scene["rp_display_mode"] = "RESULT"
+            elif self.field == "subject_source":
+                if self.value not in ("LIGHT_MASK", "DEPTH_VALID", "ALPHA"):
+                    raise ValueError("未知主体来源")
+            elif self.field == "solo_light_id":
+                ids = {light["id"] for light in config["lights"]}
+                if self.value and self.value not in ids:
+                    raise ValueError("Solo 灯 ID 不存在")
+            else:
+                raise ValueError("不支持的 Anime 模式字段")
+            scene["rp_anime_" + self.field] = self.value
+            scene.update_tag()
+            return {"FINISHED"}
+        except Exception as exc:
+            self.report({"ERROR"}, str(exc))
+            return {"CANCELLED"}
+
+
 class RP_PT_panel(bpy.types.Panel):
     bl_label = "画面拖灯预览"
     bl_space_type = "VIEW_3D"
@@ -1088,9 +1256,70 @@ class RP_PT_panel(bpy.types.Panel):
         layout.prop(scene, '["rp_mix"]', text="混合")
         layout.prop(scene, '["rp_bypass"]', text="旁路")
         layout.prop(scene, '["rp_line_protect"]', text="线稿保护")
+        initial_config = json.loads(scene["rp_initial_config"])
+        if initial_config["version"] == ANIME_VERSION:
+            box = layout.box()
+            box.label(text="2.5D 后期合成（实验；非真实 3D 反演）")
+            row = box.row(align=True)
+            for mode in ("ORIGINAL", "RESULT"):
+                op = row.operator("relight_preview.display_mode", text=mode,
+                                  depress=scene.get("rp_display_mode", "RESULT") == mode)
+                op.mode = mode
+            box.label(text="当前图像：" + str(scene.get("rp_displayed_view", "RESULT")))
+            views = box.grid_flow(columns=3, align=True)
+            for view in ANIME_VIEWS:
+                op = views.operator("relight_preview.anime_mode", text=ANIME_VIEW_LABELS[view],
+                                    depress=scene.get("rp_anime_view", "RESULT") == view)
+                op.field, op.value = "view", view
+            if scene.get("rp_anime_view") == "DELTA":
+                box.prop(scene, '["rp_anime_delta_gain"]', text="差分放大倍数（仅诊断）")
+            box.label(text="Solo 与轮廓灯")
+            for light in scene.objects:
+                if light.get(OWNER) != owner or not light.get("relight_id"):
+                    continue
+                ident = light["relight_id"]
+                row = box.row(align=True)
+                row.label(text=ident)
+                solo = scene.get("rp_anime_solo_light_id", "") == ident
+                op = row.operator("relight_preview.anime_mode", text="取消 Solo" if solo else "Solo")
+                op.field, op.value = "solo_light_id", "" if solo else ident
+                row.prop(light, '["rp_anime_rim_selected"]', text="轮廓")
+            row = box.row(align=True)
+            row.label(text="主体来源")
+            for source, label in (("LIGHT_MASK", "艺术区域"), ("DEPTH_VALID", "深度有效域"), ("ALPHA", "Alpha")):
+                op = row.operator("relight_preview.anime_mode", text=label,
+                                  depress=scene.get("rp_anime_subject_source") == source)
+                op.field, op.value = "subject_source", source
+            environment = box.box()
+            environment.label(text="环境光变化（保留原图已有光照）")
+            environment.prop(scene, '["rp_environment_subject_tint"]', text="主体环境色（乘算）")
+            environment.prop(scene, '["rp_environment_subject_exposure"]', text="主体环境曝光 EV")
+            environment.prop(scene, '["rp_environment_background_tint"]', text="背景环境色（乘算）")
+            environment.prop(scene, '["rp_environment_background_exposure"]', text="背景环境曝光 EV")
+            environment.label(text="灯光强度设为 0 时仅调整环境")
+            shape = box.box()
+            shape.label(text="二维光形、深度形体与独立影色")
+            for field in ("form", "wrap", "para_spread", "back_dark", "back_span", "dark_side_reach",
+                          "shadow_lo", "shadow_hi", "shadow_tint"):
+                shape.prop(scene, '["rp_anime_' + field + '"]', text=ANIME_FIELD_LABELS[field])
+            shape.prop(scene, '["rp_anime_shadow_color"]', text="未受光影色（sRGB 选择）")
+            for field in ("cel", "cel_steps", "cel_soft"):
+                shape.prop(scene, '["rp_anime_' + field + '"]', text=ANIME_FIELD_LABELS[field])
+            rim = box.box()
+            rim.label(text="深度内轮廓与线稿恢复")
+            for field in ("rim_width", "rim_edge0", "rim_edge1", "rim_gain", "rim_white_mix",
+                          "line_core_lo", "line_core_hi"):
+                rim.prop(scene, '["rp_anime_' + field + '"]', text=ANIME_FIELD_LABELS[field])
         if "rp_roughness" in scene:
             layout.prop(scene, '["rp_roughness"]', text="全局高光粗糙度")
             layout.prop(scene, '["rp_f0"]', text="全局 F0")
+        if "base" in json.loads(scene["rp_initial_config"]):
+            box = layout.box()
+            box.label(text="基础影调（2D，非反演原灯）")
+            box.prop(scene, '["rp_base_exposure"]', text="基础曝光 EV")
+            box.prop(scene, '["rp_base_contrast"]', text="基础对比度")
+            box.prop(scene, '["rp_base_saturation"]', text="基础饱和度")
+            box.prop(scene, '["rp_base_use_light_mask"]', text="仅灯光遮罩区域")
         if "projection" in json.loads(scene["rp_initial_config"]):
             box = layout.box()
             box.label(text="受控平面阴影")
@@ -1171,7 +1400,7 @@ class RP_PT_panel(bpy.types.Panel):
 
 
 _classes = (RP_AddonPreferences, RP_OT_start, RP_OT_bind, RP_OT_stop, RP_OT_final, RP_OT_save,
-            RP_OT_add_region, RP_OT_region_action, RP_OT_apply_local, RP_PT_panel)
+            RP_OT_add_region, RP_OT_region_action, RP_OT_apply_local, RP_OT_display_mode, RP_OT_anime_mode, RP_PT_panel)
 
 
 def register():

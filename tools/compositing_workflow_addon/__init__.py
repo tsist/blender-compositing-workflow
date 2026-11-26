@@ -1,6 +1,6 @@
 """Compositing Workflow；合同可由普通 Python 导入。"""
-bl_info = {'name': 'Compositing Workflow', 'author': 'Blender AI', 'version': (0, 9, 0),
-           'blender': (5, 2, 1), 'description': 'Managed compositor groups and guarded interactive relight preview',
+bl_info = {'name': 'Compositing Workflow', 'author': 'Blender AI', 'version': (0, 10, 0),
+           'blender': (5, 3, 0), 'description': 'Managed compositor groups and guarded interactive relight preview',
            'category': 'Compositing'}
 
 

@@ -6,8 +6,9 @@ from urllib.parse import unquote,urlsplit
 sys.dont_write_bytecode=True
 ROOT=Path(__file__).resolve().parents[1]
 ADDON='tools/compositing_workflow_addon/'
-ADDON_FILES=tuple(sorted(('__init__.py','contract.py','core.py','movie_contract.py','depth_contract.py','depth_estimate_contract.py','depth_math.py','relight_preview_ui.py','runtime.py','blender_manifest.toml','LICENSE','README.md')))
-REFERENCE_PAIRS={x:x for x in ('usage','contract','validation','dependencies','color-hdr','licensing','depth-data','rgb-estimate','depth-relight','relight-session','imported-normal','depth-sequence','finite-relight-study')}
+NATIVE_FILES=tuple(sorted(('__init__.py','contract.py','core.py','movie_contract.py','depth_contract.py','depth_estimate_contract.py','depth_math.py','relight_preview_ui.py','runtime.py','blender_manifest.toml','scene_effects.py')))
+ADDON_FILES=tuple(sorted((*NATIVE_FILES,'LICENSE','README.md')))
+REFERENCE_PAIRS={x:x for x in ('usage','contract','validation','dependencies','color-hdr','licensing','depth-data','rgb-estimate','depth-relight','relight-session','imported-normal','depth-sequence','finite-relight-study','production-effects')}
 BLOCKED_PARTS={'.git','runtime','audit','__pycache__','.venv','venv','site-packages','dist-info'}
 TEXT_SUFFIXES={'.py','.json','.md','.txt','.toml','.ps1','.yml','.yaml'}
 def sha(data):return hashlib.sha256(data).hexdigest()
@@ -99,6 +100,8 @@ def verify(root=ROOT):
     if support!={r['file'] for r in pub['support_documents']}:raise ValueError('Support exact namespace differs')
     native={p.name for p in (root/ADDON).iterdir() if p.is_file()}
     if native!=set(ADDON_FILES):raise ValueError('Native exact member namespace differs')
+    archive_order=[row['file'] for row in pub['native_archive_layout']]
+    if sorted(archive_order)!=list(NATIVE_FILES):raise ValueError('Native archive layout differs from accepted package members')
     if sha((root/'LICENSE').read_bytes())!='3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986' or (root/'LICENSE').read_bytes()!=(root/ADDON/'LICENSE').read_bytes():raise ValueError('Complete reviewed GPL text required')
     cli=literal_assignment(root/'tools/blenderctl/protocol.py','VERSION')
     manifest=tomllib.loads((root/ADDON/'blender_manifest.toml').read_text(encoding='utf-8'))

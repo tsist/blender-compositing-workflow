@@ -819,7 +819,7 @@
     },
     {
       "path": "tools/compositing_workflow_addon/__init__.py",
-      "sha256": "0553853aaa2519676b960f40816c2570c0d1667e804f78f8721b1aec1212d427"
+      "sha256": "d0473351cd82adf6acde63a7480e8a706c0dd8223c92dfbe60fbd8e9f92319b7"
     },
     {
       "path": "tools/compositing_workflow_addon/contract.py",
@@ -847,11 +847,15 @@
     },
     {
       "path": "tools/compositing_workflow_addon/relight_preview_ui.py",
-      "sha256": "1f72848d363aeca455883ac5fcdbc1439aee0f44808443ee1ceff615aa45d2dd"
+      "sha256": "2d8fb3e29f2c1b5e22e9324f209c79820c50485ef340324b8f64079945f2879c"
     },
     {
       "path": "tools/compositing_workflow_addon/runtime.py",
       "sha256": "7adc8f71c4b65df99f9310a78c6df2e762b93a676f2e3217f0ee378fe7328791"
+    },
+    {
+      "path": "tools/compositing_workflow_addon/scene_effects.py",
+      "sha256": "a1ae79078498fb3b684a3bd8f576b7fb017cfd5ce54bfc4007fb0403f01c2c52"
     }
   ]
 }

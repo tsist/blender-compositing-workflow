@@ -1,11 +1,11 @@
 # Blender 合成工作流
 
-实验性预发布 **0.9.0** 支持 Blender 5.3.0 的静态合成效果栈。创建、修改和解除管理保留原有栈顺序、活动效果和参与开关。动态补光的具名作品验收归属 0.8.0。
+Compositing Workflow **0.10.0** 支持 Blender **5.3.0** 原生场景效果栈的具名编辑、独立预览与渲染开关和依赖保护。参见[生产请求示例](docs/production-effects.md)，配合独立的 blenderctl v0.64.0 分发及生产包 1.0.0。
 
 
 [English](README.md)
 
-Compositing Workflow 原生扩展 **0.9.0**、兼容 CLI 源码 **0.75.0**、可移植技能 **0.9.0**，GPL-3.0-or-later。静态 CPU 合成实测环境为 Windows、Blender 5.3.0 构建 `02f0899d78e3` 与 5.2.1 LTS 构建 `9e2066aef7ef`。在 CLI 命令前用 `--blender` 选择可执行文件。
+原生扩展与可移植技能为 **0.10.0**，许可证为 GPL-3.0-or-later。效果栈实测环境为 Windows Blender 5.3.0 构建 `02f0899d78e3`。本仓随附 CLI 源码 **0.75.0** 服务以下受管节点图与深度补光工作流。
 
 支持可编辑合成图、Image/Render Layers、有限序列与显式SDR Movie、模板/批量/静态候选、受保护工程与技术HDR输出。新增深度准备/冷读、固定环境RGB估深、补光、GPU热会话以及2–120帧镜头序列。全部13操作通过 `compositing describe` 发现，详见[使用说明](docs/usage.md)与[深度序列](docs/depth-sequence.md)。
 
@@ -13,7 +13,7 @@ Compositing Workflow 原生扩展 **0.9.0**、兼容 CLI 源码 **0.75.0**、可
 
 命令使用显式 `BLENDERCTL_ROOT`、`BLENDERCTL_PYTHON`（已批准bundled Python）与实际Blender路径；Host、固定GPU环境、GUI是三个角色。GPU profile没有随包发行，不能通过搬目录或伪造精简profile取得新机器准入。不会自动下载、安装或降级guard。
 
-运行时精确集合为213文件，aggregate `ae89b1e85145c2d2385bc7db312557aee9e44499108299dc18dac7b48cd34370`；Geometry持久化支持8源另记，不据其它领域源码存在宣称整个领域可用。完整逐成员SHA/大小、Schema和公开说明记录在PUBLICATION；构建输出三个独立包及各自member index。
+[发布清单](PUBLICATION.json)记录运行源码和逐成员指纹。Geometry持久化支持8源另记，不据其它领域源码存在宣称整个领域可用。完整逐成员SHA/大小、Schema和公开说明记录在PUBLICATION；构建输出三个独立包及各自member index。
 
 [验证矩阵](docs/validation.md)区分历史证据、最终包CPU检查、实际运行、视觉与用户认可。具名真实1080p/120帧稳定整片、最终导出helper运行及GUI live已按矩阵完成有限验收；强实验与额外AI解析失败保留。静态绿色或文件存在不能提升为作品通过。
 

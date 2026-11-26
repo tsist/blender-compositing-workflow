@@ -1,14 +1,14 @@
 {
   "schema": "compositing-publication-v2",
-  "release": "0.9.0",
+  "release": "0.10.0",
   "publication_state": "prepared_experimental_prerelease",
-  "package_revision": "0.9.0",
-  "release_tag": "v0.9.0",
+  "package_revision": "0.10.0",
+  "release_tag": "v0.10.0",
   "publication_boundary": "Prepared source-only artifacts; publisher independently verifies remote commit, release and assets",
   "cli": "0.75.0",
-  "addon": "0.9.0",
-  "skill": "0.9.0",
-  "runtime_identity": "0aca3e60b1a31cd8724c8dfe6ec106a3dd1ab48f3c5c51b1bf04a5e8d3bde1eb",
+  "addon": "0.10.0",
+  "skill": "0.10.0",
+  "runtime_identity": "42d6baf5ebf37dbde179cb3ee61919a7bbf4098e8274ad2642b711e7955827fa",
   "runtime_documents": [
     {
       "file": "tools/blenderctl/adaptive_sampling.py",
@@ -1032,13 +1032,13 @@
     },
     {
       "file": "tools/compositing_workflow_addon/__init__.py",
-      "expected_sha256": "0553853aaa2519676b960f40816c2570c0d1667e804f78f8721b1aec1212d427",
-      "bytes": 491
+      "expected_sha256": "d0473351cd82adf6acde63a7480e8a706c0dd8223c92dfbe60fbd8e9f92319b7",
+      "bytes": 506
     },
     {
       "file": "tools/compositing_workflow_addon/blender_manifest.toml",
-      "expected_sha256": "44c85f7ea332f84363cd73f49092845333b8bb3d21a3536cdbb5dd7653bb4c4c",
-      "bytes": 287
+      "expected_sha256": "85480e20dcfc456eaa91b845fd50698390a732b742c83c4b8e0e8fa8278ebe94",
+      "bytes": 297
     },
     {
       "file": "tools/compositing_workflow_addon/contract.py",
@@ -1072,13 +1072,18 @@
     },
     {
       "file": "tools/compositing_workflow_addon/relight_preview_ui.py",
-      "expected_sha256": "1f72848d363aeca455883ac5fcdbc1439aee0f44808443ee1ceff615aa45d2dd",
-      "bytes": 60790
+      "expected_sha256": "2d8fb3e29f2c1b5e22e9324f209c79820c50485ef340324b8f64079945f2879c",
+      "bytes": 74349
     },
     {
       "file": "tools/compositing_workflow_addon/runtime.py",
       "expected_sha256": "7adc8f71c4b65df99f9310a78c6df2e762b93a676f2e3217f0ee378fe7328791",
       "bytes": 265
+    },
+    {
+      "file": "tools/compositing_workflow_addon/scene_effects.py",
+      "expected_sha256": "a1ae79078498fb3b684a3bd8f576b7fb017cfd5ce54bfc4007fb0403f01c2c52",
+      "bytes": 27142
     }
   ],
   "schema_documents": [
@@ -1856,8 +1861,8 @@
   "support_documents": [
     {
       "file": "tools/blender/build_compositing_native.py",
-      "expected_sha256": "b3e2182033accee6101a08b75c53ffb9a826db6c9b364c9e4e676df5d9c540cb",
-      "bytes": 8370
+      "expected_sha256": "d097661c2a14b340b1dbb13f17aabb429a5c9d7a8b17edefd493671bdaac0a68",
+      "bytes": 8388
     },
     {
       "file": "tools/blender/relight_preview_launch.py",
@@ -1922,9 +1927,34 @@
       "bytes": 98
     },
     {
+      "file": "LICENSE",
+      "expected_sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986",
+      "bytes": 35149
+    },
+    {
+      "file": "NOTICE.md",
+      "expected_sha256": "e7c4c998ffbdd4a4d7b45dbd2d165468f45b505d8033c058b061a90190fa2c4c",
+      "bytes": 1478
+    },
+    {
+      "file": "README.md",
+      "expected_sha256": "8de6faa74c9820a775a158e82c9df004818aa2704152143b9426af7224c22e59",
+      "bytes": 4524
+    },
+    {
+      "file": "README.zh-CN.md",
+      "expected_sha256": "fad8b0ce562ef557148bb2e06b4bdd5c9a4124679b377dc46d7656e198d7b441",
+      "bytes": 2556
+    },
+    {
       "file": "blenderctl.ps1",
       "expected_sha256": "4f8a4f915df164310ae4c89586535db76bdc194d5230c5e848e2a31d8de86d6a",
       "bytes": 865
+    },
+    {
+      "file": "docs/SKILLS.md",
+      "expected_sha256": "6ddb535f543ab3726898a2dd8848d8723ad23e21cb0a0547c4cbab7243ddda55",
+      "bytes": 1242
     },
     {
       "file": "docs/cli/通用化开发清单.json",
@@ -1977,6 +2007,11 @@
       "bytes": 3932
     },
     {
+      "file": "docs/production-effects.md",
+      "expected_sha256": "ae9ab5a7871841571023b7d619ea9a46dd39dedc8b2ed25a97b21f44ae007a36",
+      "bytes": 2534
+    },
+    {
       "file": "docs/relight-session.md",
       "expected_sha256": "fb5ff65dd6c7754f55c705eb3fac13453a60ca5d9e2985d2a4fdfbf71733770e",
       "bytes": 3517
@@ -1985,11 +2020,6 @@
       "file": "docs/rgb-estimate.md",
       "expected_sha256": "de1dcc36b29688795a283e11062af69f99f8e339b4de097d7c6913637b41198d",
       "bytes": 1380
-    },
-    {
-      "file": "docs/SKILLS.md",
-      "expected_sha256": "6ddb535f543ab3726898a2dd8848d8723ad23e21cb0a0547c4cbab7243ddda55",
-      "bytes": 1242
     },
     {
       "file": "docs/usage.md",
@@ -2017,29 +2047,9 @@
       "bytes": 1860
     },
     {
-      "file": "LICENSE",
-      "expected_sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986",
-      "bytes": 35149
-    },
-    {
-      "file": "NOTICE.md",
-      "expected_sha256": "e7c4c998ffbdd4a4d7b45dbd2d165468f45b505d8033c058b061a90190fa2c4c",
-      "bytes": 1478
-    },
-    {
-      "file": "README.md",
-      "expected_sha256": "49999a163322ee832593cd381b749a7fe2869618f4444619351dab1e07a553c0",
-      "bytes": 4617
-    },
-    {
-      "file": "README.zh-CN.md",
-      "expected_sha256": "8a3c210195572bd358b259be79f8a938318ec9e2edb9613329ed9682cd5815c1",
-      "bytes": 2608
-    },
-    {
       "file": "scripts/build_release.py",
-      "expected_sha256": "95049b6c0b406d9016ce17a099c39284dc73d6dfaab96b95a014a1ba22d3a705",
-      "bytes": 4780
+      "expected_sha256": "e28f7e7bd1421190a71284acc9d75c299c1359e35102dd24b298bf62cb1909ea",
+      "bytes": 5235
     },
     {
       "file": "scripts/make_source_index.py",
@@ -2048,13 +2058,18 @@
     },
     {
       "file": "scripts/verify_archives.py",
-      "expected_sha256": "6d00982b809082def01dad8cdf7ef7e4443c535ed8b163233122af6883bf8f33",
-      "bytes": 5199
+      "expected_sha256": "5f98240ac0155b57e7f2baf3c5a9a136d40df66b484db598624f7f972cba951f",
+      "bytes": 5533
     },
     {
       "file": "scripts/verify_release.py",
-      "expected_sha256": "386f7299b93456c793c6267d7e96a76c2322e1da9a213447e1a1a33b9316064f",
-      "bytes": 10702
+      "expected_sha256": "74d4f8adbce1c8fddfa1d08668c26e673fa7c3a4cf08abfce9e4d93c82f5587e",
+      "bytes": 10987
+    },
+    {
+      "file": "skills/blender-compositing/SKILL.md",
+      "expected_sha256": "719f9ebb2d859920082c7d053c391293d3a309de62c74b1aa7294a9ae41ad011",
+      "bytes": 11129
     },
     {
       "file": "skills/blender-compositing/agents/openai.yaml",
@@ -2117,6 +2132,11 @@
       "bytes": 3932
     },
     {
+      "file": "skills/blender-compositing/references/production-effects.md",
+      "expected_sha256": "ae9ab5a7871841571023b7d619ea9a46dd39dedc8b2ed25a97b21f44ae007a36",
+      "bytes": 2534
+    },
+    {
       "file": "skills/blender-compositing/references/relight-session.md",
       "expected_sha256": "fb5ff65dd6c7754f55c705eb3fac13453a60ca5d9e2985d2a4fdfbf71733770e",
       "bytes": 3517
@@ -2152,14 +2172,9 @@
       "bytes": 30783
     },
     {
-      "file": "skills/blender-compositing/SKILL.md",
-      "expected_sha256": "29e39c433a6265dfc3884ad3219d56ef7cd1db6215293825a72620d4dd1c0b3a",
-      "bytes": 10622
-    },
-    {
       "file": "skills/blender-compositing/source-index.json",
-      "expected_sha256": "b2e5ec08937fd53593acc7e360ede1b1f428616bc652a71ff7fb7dbeea198bb0",
-      "bytes": 32348
+      "expected_sha256": "3de005952a57ac1e356c2773f75f2fcaec3e853323ba17d239a2c204a4007489",
+      "bytes": 32511
     },
     {
       "file": "tools/compositing_workflow_addon/LICENSE",
@@ -2176,15 +2191,15 @@
   "support_scope": "Original 7 Python + manifest geometry persistence imports and two public Blender support scripts; separately inventoried, no other-domain certification",
   "sequence_producer_identity": "49801a5c64273a1d1d6c2b8661965448cc5da1efad6440ad36cee8ca6a5bd017",
   "sequence_identity_scope": "Sequence declared producer subset, distinct from complete runtime identity; historical a968 evidence is not relabelled",
-  "native_archive_sha256": "a7f8282459ebf3ab3d6d09539ca62e20202a99db9f972a47e9f30d27990a191d",
+  "native_archive_sha256": "ccebc1128167377e5e57f407c83cd87a7959effa629040df041231b2597e2001",
   "verified_code_mapping": {
-    "runtime": "0aca3e60b1a31cd8724c8dfe6ec106a3dd1ab48f3c5c51b1bf04a5e8d3bde1eb",
+    "runtime": "42d6baf5ebf37dbde179cb3ee61919a7bbf4098e8274ad2642b711e7955827fa",
     "sequence": "49801a5c64273a1d1d6c2b8661965448cc5da1efad6440ad36cee8ca6a5bd017",
     "finite_helper_sha256": "f2a0e546a9a5193b24ea94e671df83995aad79d62284f895fcdee1ee8c9a925e",
-    "scope": "Static 5.3 compositor stack migration; earlier motion evidence remains with 0.8.0."
+    "scope": "Native scene-effects release for Windows Blender 5.3.0 build 02f0899d78e3. Earlier motion evidence remains with 0.8.0."
   },
   "package_contracts": {
-    "native": "Exact 9 Python files, manifest, complete GPL LICENSE and README.",
+    "native": "Exact 10 Python files and extension manifest from the accepted native ZIP. Complete GPL text accompanies the release and remains in the source tree.",
     "skill": "One blender-compositing directory with SKILL/references/helpers/source-index; separate LICENSE and NOTICE; no runtime",
     "source": "Exact union of inventoried sources plus PUBLICATION.json; three archives have separate member SHA/bytes indexes"
   },
@@ -2197,5 +2212,155 @@
     "private audit/Wiki/working memory",
     "credentials/user configuration"
   ],
-  "acceptance": "Static inventory/build/unpack checks do not certify runtime or visual quality; see docs/validation.md"
+  "acceptance": "Static inventory/build/unpack checks do not certify runtime or visual quality; see docs/validation.md",
+  "production_cli": {
+    "repository": "tsist/blenderctl",
+    "version": "0.64.0",
+    "operation_release": "1.0.0"
+  },
+  "native_archive_layout": [
+    {
+      "file": "blender_manifest.toml",
+      "date_time": [
+        2026,
+        11,
+        26,
+        15,
+        42,
+        24
+      ],
+      "create_system": 0,
+      "external_attr": 2176188416
+    },
+    {
+      "file": "contract.py",
+      "date_time": [
+        2026,
+        10,
+        10,
+        5,
+        14,
+        18
+      ],
+      "create_system": 0,
+      "external_attr": 2176188416
+    },
+    {
+      "file": "core.py",
+      "date_time": [
+        2026,
+        11,
+        19,
+        2,
+        39,
+        20
+      ],
+      "create_system": 0,
+      "external_attr": 2176188416
+    },
+    {
+      "file": "depth_contract.py",
+      "date_time": [
+        2026,
+        10,
+        13,
+        23,
+        40,
+        4
+      ],
+      "create_system": 0,
+      "external_attr": 2176188416
+    },
+    {
+      "file": "depth_estimate_contract.py",
+      "date_time": [
+        2026,
+        10,
+        12,
+        6,
+        49,
+        42
+      ],
+      "create_system": 0,
+      "external_attr": 2176188416
+    },
+    {
+      "file": "depth_math.py",
+      "date_time": [
+        2026,
+        10,
+        13,
+        23,
+        40,
+        4
+      ],
+      "create_system": 0,
+      "external_attr": 2176188416
+    },
+    {
+      "file": "movie_contract.py",
+      "date_time": [
+        2026,
+        10,
+        10,
+        5,
+        39,
+        14
+      ],
+      "create_system": 0,
+      "external_attr": 2176188416
+    },
+    {
+      "file": "relight_preview_ui.py",
+      "date_time": [
+        2026,
+        10,
+        26,
+        23,
+        8,
+        8
+      ],
+      "create_system": 0,
+      "external_attr": 2176188416
+    },
+    {
+      "file": "runtime.py",
+      "date_time": [
+        2026,
+        11,
+        19,
+        2,
+        28,
+        38
+      ],
+      "create_system": 0,
+      "external_attr": 2176188416
+    },
+    {
+      "file": "scene_effects.py",
+      "date_time": [
+        2026,
+        11,
+        26,
+        14,
+        19,
+        38
+      ],
+      "create_system": 0,
+      "external_attr": 2176188416
+    },
+    {
+      "file": "__init__.py",
+      "date_time": [
+        2026,
+        11,
+        26,
+        15,
+        42,
+        24
+      ],
+      "create_system": 0,
+      "external_attr": 2176188416
+    }
+  ]
 }

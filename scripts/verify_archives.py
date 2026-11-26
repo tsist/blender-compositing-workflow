@@ -3,7 +3,7 @@ from __future__ import annotations
 import argparse,ast,json,sys,zipfile
 from pathlib import Path,PurePosixPath
 sys.dont_write_bytecode=True
-from verify_release import ADDON_FILES,check_links,private_findings,sha,verify
+from verify_release import NATIVE_FILES,check_links,private_findings,sha,verify
 def verify_archives(dist,work):
     dist=dist.resolve(strict=True);work=work.resolve()
     if work.exists():raise ValueError('Use a new independent unpack directory')
@@ -11,7 +11,9 @@ def verify_archives(dist,work):
     if len(index['artifacts'])!=3:raise ValueError('Exactly three artifacts required')
     artifacts=index['artifacts']
     if len({x['file'] for x in artifacts})!=3:raise ValueError('Duplicate archive identity')
-    expected_sums=''.join(x['sha256']+'  '+x['file']+'\n' for x in sorted(artifacts,key=lambda x:x['file']))
+    license_text=(dist/'LICENSE').read_bytes()
+    if index['license']!={'file':'LICENSE','sha256':sha(license_text),'bytes':len(license_text)}:raise ValueError('License attachment differs from index')
+    expected_sums=''.join(x['sha256']+'  '+x['file']+'\n' for x in sorted([*artifacts,index['license']],key=lambda x:x['file']))
     if (dist/'SHA256SUMS').read_bytes()!=expected_sums.encode():raise ValueError('SHA256SUMS differs from exact artifact set')
     work.mkdir(parents=True,exist_ok=False);results=[];trees={}
     for i,item in enumerate(artifacts):
@@ -26,7 +28,7 @@ def verify_archives(dist,work):
         if len(expected)!=len(rows) or len(rows)!=item['entries']:raise ValueError('Duplicate member index path or incorrect count')
         target=work/str(i);target.mkdir();names=[]
         with zipfile.ZipFile(path) as z:
-            if z.testzip() is not None or z.namelist()!=sorted(expected):raise ValueError('Archive namespace/CRC differs')
+            if z.testzip() is not None or z.namelist()!=list(expected):raise ValueError('Archive namespace/CRC differs')
             for info in z.infolist():
                 member=info.filename;pure=PurePosixPath(member)
                 if pure.is_absolute() or '..' in pure.parts or '\\' in member or ':' in member or (info.external_attr>>16)&0o170000==0o120000:raise ValueError('Unsafe archive entry')
@@ -38,7 +40,7 @@ def verify_archives(dist,work):
                 if output.suffix=='.py':ast.parse(text,filename=member)
         links=check_links(target,names)
         if name.endswith('-native.zip'):
-            if set(names)!=set(ADDON_FILES):raise ValueError('Native exact11 namespace mismatch')
+            if set(names)!=set(NATIVE_FILES):raise ValueError('Native member namespace mismatch')
             kind='native'
         elif '-skill-' in name:
             if [x for x in names if x.endswith('/SKILL.md')]!=['blender-compositing/SKILL.md']:raise ValueError('Standalone archive must have one skill')
@@ -52,7 +54,8 @@ def verify_archives(dist,work):
         results.append({'archive':name,'kind':kind,'members':len(names),'local_links':links,'sha256':sha(data)})
     if set(trees)!={'native','skill','source'}:raise ValueError('Missing independent artifact role')
     source=trees['source']
-    for member in ADDON_FILES:
+    if (source/'LICENSE').read_bytes()!=license_text:raise ValueError('License attachment differs from source')
+    for member in NATIVE_FILES:
         if (trees['native']/member).read_bytes()!=(source/'tools/compositing_workflow_addon'/member).read_bytes():raise ValueError('Native/source bytes differ: '+member)
     for p in (trees['skill']/'blender-compositing').rglob('*'):
         if p.is_file() and p.read_bytes()!=(source/'skills'/p.relative_to(trees['skill'])).read_bytes():raise ValueError('Skill/source bytes differ')

@@ -20,7 +20,7 @@ import zipfile
 SOURCE_MEMBERS = (
     "__init__.py", "blender_manifest.toml", "contract.py", "core.py",
     "depth_contract.py", "depth_estimate_contract.py", "depth_math.py",
-    "movie_contract.py", "relight_preview_ui.py", "runtime.py",
+    "movie_contract.py", "relight_preview_ui.py", "runtime.py", "scene_effects.py",
 )
 MEMBERS = tuple(sorted((*SOURCE_MEMBERS, "LICENSE", "README.md")))
 GPL3_SHA256 = "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986"
@@ -88,7 +88,7 @@ Restart Blender after changing source roots to avoid global module conflicts.
 Establish an external guarded live session before selecting its ready JSON.
 The extension does not install dependencies or start the compute session.
 
-The native package contains exactly twelve source/document members. Adjacent
+This development build contains thirteen source/document members. Adjacent
 package-index.json records their sizes, SHA-256 and original source identities.
 Installation, GUI, preference persistence, live bind and image validation are
 separate acceptance steps; a successful build alone does not certify them.
