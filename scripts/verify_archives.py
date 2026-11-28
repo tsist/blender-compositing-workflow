@@ -35,6 +35,9 @@ def verify_archives(dist,work):
                 body=z.read(info);row=expected[member]
                 if sha(body)!=row['sha256'] or len(body)!=row['bytes']:raise ValueError('Member SHA/size differs: '+member)
                 output=target.joinpath(*pure.parts);output.parent.mkdir(parents=True,exist_ok=True);output.write_bytes(body);names.append(member)
+                if output.suffix.lower()=='.png':
+                    if body[:8]!=b'\x89PNG\r\n\x1a\n':raise ValueError('Invalid PNG archive entry: '+member)
+                    continue
                 text=body.decode('utf-8-sig');findings=private_findings(text)
                 if findings:raise ValueError('Private archive content in '+member+': '+str(findings))
                 if output.suffix=='.py':ast.parse(text,filename=member)

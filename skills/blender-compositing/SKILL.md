@@ -7,6 +7,8 @@ metadata:
 
 # Blender 合成
 
+用 `blenderctl compositing describe` 读当前合成合同。多层 EXR 的 Cryptomatte 和光组按实际层名连接。项目 OCIO 随配置、外部变换和媒体的 SHA-256 一起锁定，分别检查线性通道、显示视图和最终编码。
+
 本技能负责利用渲染出来的多层通道做色调统一、辉光景深、线稿叠合、局部深度补光与成片输出，属于 [合成部门](https://github.com/tsist/blender-ai-workflow/blob/main/skills/blender-work-methodology/references/departments/compositing.md)。公共 CLI 的批次目录、SHA 校验与长作业等待规则见 [blender-cli](https://github.com/tsist/blenderctl/blob/main/skills/blender-cli/SKILL.md)。
 
 ## 第一步：先划清合成边界，再查真实入口
@@ -29,10 +31,6 @@ $ctl = './blenderctl.ps1'
 
 需要跑哪项子命令，先跑一次 `--help` 或 `describe --operation <op> --schema` 拿到精确字段。
 
-## Blender 5.3 场景效果栈
-
-使用 [blenderctl v0.64.0](https://github.com/tsist/blenderctl/releases/tag/v0.64.0) 的 `production.run`，设置 `release: "1.0.0"` 与 `domain: "compositing"`。按实例名检查、插入、换序、调参、旁路或移除效果，用原生组合节点组暴露可复用控件。读取保存和重开回执，并分别检查 Viewer 与 Render Result。涉及驱动或动画引用的移除先经依赖检查。[可移植请求示例](references/production-effects.md)
-
 ## 第二步：核对输入色彩、视图变换与 Alpha 预乘
 
 开干前先摸清源工程和素材的色彩身份。把色彩空间和 Alpha 搞混，后面怎么调色都会偏色或出黑边。
@@ -40,7 +38,7 @@ $ctl = './blenderctl.ps1'
 1. **分清线性 EXR 与显示编码素材**：多层线性 EXR 保留场景线性光数据，遍历全部 subimage 核对所需层和通道，主图默认对应 `Combined`。已经显示编码的 sRGB PNG 或 SDR 视频已烘焙视图映射，目标若为保留原图外观，在独立工作副本上切到 `Standard` / `sRGB`、`None` look、曝光 `0` 与伽马 `1` 后再合成；目标若为重做场景调色，再沿用 `AgX` 这类场景视图变换。
 2. **明确每张输入的色彩空间与 Alpha 模式**：在请求里逐项写出主源和额外图像的 `file`、SHA256、`colorspace` 与 `alpha_mode`。PNG 经过 `OIIO` 读取时按直通（Unassociated / Straight）口径检查，合成边缘出现黑边或发灰时优先核对预乘方式。
 3. **核对渲染层与去噪通道**：使用 `Render Layers` 时核对目标 `Scene` 和 `ViewLayer`。后台预览阶段关闭原生去噪时，节点去噪直接接 `Image` 以及已启用的 `Denoising Albedo` 与 `Denoising Normal`。
-4. **先读后改，保留原件**：在 `work/audit/<batch>//jobs` 下工作，用 `compositing inspect` 摸清已有节点图与保护对象，所有改动落在独立工作副本里，源文件留着对照。
+4. **先读后改，保留原件**：在 `work/audit/<batch>/>/jobs` 下工作，用 `compositing inspect` 摸清已有节点图与保护对象，所有改动落在独立工作副本里，源文件留着对照。
 
 ```powershell
 & $ctl --jobs-dir $jobs compositing inspect $src `
@@ -96,6 +94,12 @@ $ctl = './blenderctl.ps1'
 2. **同视图前后对照**：把原图、`baseline` 与 `result` 同视图并排对比，再放大到 100% 裁切查边缘、Alpha 轮廓、接触阴影、高光和噪点。序列镜头额外播放连续帧排查闪烁。
 3. **核对回执与冷重开**：核对 `$LASTEXITCODE`、返回 `ok`、源工程保护与独立解码，再对最终 `.blend` 候选跑一次 `compositing inspect` 冷重开确认外链完好。
 
+## Blender 5.3 场景效果栈
+
+整幅结果的场景效果使用原生 **Compositor & Effects**，先从 `discover --product compositing` 核对本机候选，再提交 `production.run`，`domain` 取 `compositing`。先读原生栈，按效果实例名增加、移除、插入、换序或旁路。调参数按接口 socket identifier，分别指定预览和渲染开关。同组多实例有独立控件。
+
+可引用 Blender Essentials 具名效果或项目本地节点组，也可用多个现有节点构造资产并暴露控件。删除前读取驱动依赖回执，效果仍被原生驱动变量引用或删除会使数字索引改绑时返回冲突。修改后对照邻项手调、求值顺序，两项开关分别检查。像素验证使用同机位同帧的场景线性渲染，现场预览按原生 Viewer 读回。不同工程可一轮并行；同场景的栈动作按顺序传候选。本机候选调用（`work/audit/<batch>/`）
+
 ## 交给下游
 
 向用户审看或剪辑部门交付时给齐四样东西，并分别写明技术验收、画面观察与用户确认状态：
@@ -125,6 +129,4 @@ $ctl = './blenderctl.ps1'
 - [契约文档、Wiki 与历史实证索引](references/sources.md)
 - 本技能附带脚本：`scripts/alpha_layout.py` · `scripts/session_study.py`
 
-## Runtime Identity
-
-Verified static runtime identity: `42d6baf5ebf37dbde179cb3ee61919a7bbf4098e8274ad2642b711e7955827fa`.
+<!-- runtime_identity: daf85c3c01c8d1d6730f8f0075e8f7ec194341e153b7dfd92690d15b1645fcd9 -->

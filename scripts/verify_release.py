@@ -6,18 +6,19 @@ from urllib.parse import unquote,urlsplit
 sys.dont_write_bytecode=True
 ROOT=Path(__file__).resolve().parents[1]
 ADDON='tools/compositing_workflow_addon/'
-NATIVE_FILES=tuple(sorted(('__init__.py','contract.py','core.py','movie_contract.py','depth_contract.py','depth_estimate_contract.py','depth_math.py','relight_preview_ui.py','runtime.py','blender_manifest.toml','scene_effects.py')))
+NATIVE_FILES=('__init__.py', '_ui_kit/__init__.py', '_ui_kit/hud_overlay.py', '_ui_kit/icons.py', '_ui_kit/icons/brand_compositing_32.png', '_ui_kit/icons/brand_compositing_64.png', '_ui_kit/icons/compositing_crypto_cdl_32.png', '_ui_kit/icons/compositing_light_mix_32.png', '_ui_kit/icons/compositing_relight_preview_32.png', '_ui_kit/icons/compositing_scene_effects_32.png', '_ui_kit/icons/status_error_32.png', '_ui_kit/icons/status_info_32.png', '_ui_kit/icons/status_ok_32.png', '_ui_kit/icons/status_running_32.png', '_ui_kit/icons/status_safe_32.png', '_ui_kit/icons/status_warn_32.png', '_ui_kit/job_runner.py', '_ui_kit/layout_kit.py', '_ui_kit/sidebar_dock.py', '_ui_kit/theme_tokens.py', 'blender_manifest.toml', 'c5.py', 'c5_ocio.py', 'contract.py', 'core.py', 'depth_contract.py', 'depth_estimate_contract.py', 'depth_math.py', 'host_compat.py', 'movie_contract.py', 'relight_launch_worker.py', 'relight_preview_ui.py', 'runtime.py', 'scene_effects.py', 'workbench.py', 'workbench_render_worker.py')
 ADDON_FILES=tuple(sorted((*NATIVE_FILES,'LICENSE','README.md')))
 REFERENCE_PAIRS={x:x for x in ('usage','contract','validation','dependencies','color-hdr','licensing','depth-data','rgb-estimate','depth-relight','relight-session','imported-normal','depth-sequence','finite-relight-study','production-effects')}
 BLOCKED_PARTS={'.git','runtime','audit','__pycache__','.venv','venv','site-packages','dist-info'}
 TEXT_SUFFIXES={'.py','.json','.md','.txt','.toml','.ps1','.yml','.yaml'}
+BINARY_SUFFIXES={'.png'}
 def sha(data):return hashlib.sha256(data).hexdigest()
 def safe_file(root,name):
     pure=PurePosixPath(name)
     if not name or '\\' in name or pure.is_absolute() or ':' in name or any(p in BLOCKED_PARTS or p in {'','..'} for p in pure.parts):raise ValueError('Unsafe publication path: '+name)
     path=root.joinpath(*pure.parts)
     if path.is_symlink() or not path.is_file() or not path.resolve().is_relative_to(root.resolve()):raise ValueError('Missing/nonregular publication file: '+name)
-    if path.suffix not in TEXT_SUFFIXES and path.name not in {'LICENSE','.gitignore','.gitattributes'}:raise ValueError('Non-source publication member: '+name)
+    if path.suffix not in TEXT_SUFFIXES and path.suffix not in BINARY_SUFFIXES and path.name not in {'LICENSE','.gitignore','.gitattributes'}:raise ValueError('Non-source publication member: '+name)
     return path
 def load_publication(root):return json.loads((root/'PUBLICATION.json').read_text(encoding='utf-8-sig'))
 def publication_rows(publication):
@@ -98,7 +99,7 @@ def verify(root=ROOT):
     support={p.relative_to(root).as_posix() for p in (root/'tools/geometry_nodes_workflow_addon').glob('*') if p.is_file()}
     support|={p.relative_to(root).as_posix() for p in (root/'tools/blender').glob('*') if p.is_file()}
     if support!={r['file'] for r in pub['support_documents']}:raise ValueError('Support exact namespace differs')
-    native={p.name for p in (root/ADDON).iterdir() if p.is_file()}
+    native={p.relative_to(root/ADDON).as_posix() for p in (root/ADDON).rglob('*') if p.is_file() and '__pycache__' not in p.parts}
     if native!=set(ADDON_FILES):raise ValueError('Native exact member namespace differs')
     archive_order=[row['file'] for row in pub['native_archive_layout']]
     if sorted(archive_order)!=list(NATIVE_FILES):raise ValueError('Native archive layout differs from accepted package members')
@@ -110,7 +111,11 @@ def verify(root=ROOT):
     if manifest['id']!='compositing_workflow_addon' or manifest['license']!=['SPDX:GPL-3.0-or-later']:raise ValueError('Native manifest id/license mismatch')
     counts={'python_ast':0,'json_parse':0,'toml_parse':0,'text_privacy_scan':0}
     for name in names:
-        p=safe_file(root,name);text=p.read_text(encoding='utf-8-sig');findings=private_findings(text)
+        p=safe_file(root,name)
+        if p.suffix in BINARY_SUFFIXES:
+            if p.read_bytes()[:8]!=b'\x89PNG\r\n\x1a\n':raise ValueError('Invalid PNG: '+name)
+            continue
+        text=p.read_text(encoding='utf-8-sig');findings=private_findings(text)
         if findings:raise ValueError('Private content in '+name+': '+', '.join(findings))
         counts['text_privacy_scan']+=1
         if p.suffix=='.py':ast.parse(text,filename=name);counts['python_ast']+=1

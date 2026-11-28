@@ -11,13 +11,26 @@ import math
 import os
 from pathlib import Path
 import sys
+import tempfile
 import time
 import uuid
 
 import bpy
 from mathutils import Quaternion, Vector
-from bpy.props import StringProperty, EnumProperty
+from bpy.props import StringProperty, EnumProperty, PointerProperty
 from bpy.app.handlers import persistent
+
+from . import workbench
+from ._ui_kit import (
+    BackgroundJobRunner, HUDManager, SidebarDock, apply_collection_theme, draw_brand_header, ensure_object_mode,
+    get_theme, primary_button, progress_card, prop_column, section_panel, status_banner,
+)
+
+DOMAIN = "compositing"
+THEME = get_theme(DOMAIN)
+_ICONS = workbench.ICONS
+_LAUNCHER = BackgroundJobRunner(DOMAIN)
+_launch_directory = None
 
 OWNER = "relight_preview_owner_v1"
 _sessions = {}
@@ -181,7 +194,11 @@ def _cli_selection():
     configured = os.environ.get("BLENDERCTL_ROOT", "").strip()
     if configured:
         return configured, "BLENDERCTL_ROOT"
-    return str(Path(__file__).resolve().parents[2]), "源码兄弟目录"
+    source = Path(__file__).resolve().parents[2]
+    for root in (source, *Path(bpy.app.binary_path).resolve().parents):
+        if (root / "tools/blenderctl/compositing_relight_session_client.py").is_file():
+            return str(root), "本机 Blender 项目"
+    return str(source), "源码兄弟目录"
 
 
 def _cli_files():
@@ -255,18 +272,17 @@ class RP_AddonPreferences(bpy.types.AddonPreferences):
     bl_idname = _ADDON_ID
 
     cli_root: StringProperty(
-        name="配套 CLI 源码根",
-        description="匹配的配套源码根目录，需包含 tools/blenderctl；只定位客户端，不启动或安装计算环境",
+        name="补光工具根目录",
+        description="与 Blender 安装配套的项目目录，包含 tools/blenderctl",
         subtype="DIR_PATH", default="",
     )
+    runtime_profile: StringProperty(name="本机 GPU 环境档案", subtype="FILE_PATH")
 
     def draw(self, context):
         layout = self.layout
         layout.prop(self, "cli_root")
-        layout.label(text="选择顺序：此设置 → BLENDERCTL_ROOT → 源码兄弟目录")
-        layout.label(text="需先由外部 CLI 建立活会话，再在 Relight 选择 ready JSON")
-        layout.label(text="扩展 ZIP 不包含配套 CLI 或计算环境；不会自动安装或启动任务")
-        layout.label(text="切换源码来源后请重启 Blender，避免已加载的同名模块冲突")
+        layout.prop(self, "runtime_profile")
+        layout.label(text="使用本机配套补光环境创建或绑定会话")
 
 
 def _assert_main():
@@ -840,6 +856,7 @@ def setup(ready_file, owned_scene_name=None, *, client_factory=None, open_window
     scene = _tag(bpy.data.scenes.new(owned_scene_name or "Relight Preview " + owner[:8]), owner)
     collection = _tag(bpy.data.collections.new("Relight Controls " + owner[:8]), owner)
     scene.collection.children.link(collection)
+    apply_collection_theme(collection, DOMAIN)
     scene.view_settings.view_transform = "Standard"
     scene.view_settings.look = "None"
     scene.view_settings.exposure = 0.
@@ -1026,6 +1043,9 @@ def stop(owner):
 
 @persistent
 def _load_pre(_):
+    _cancel_launch()
+    _LAUNCHER.cleanup()
+    workbench.RENDER.cleanup()
     for owner in list(_sessions):
         stop(owner)
 
@@ -1054,7 +1074,7 @@ def _save_pre(_):
 class RP_OT_start(bpy.types.Operator):
     bl_idname = "relight_preview.start"
     bl_label = "建立独立拖灯预览"
-    ready_file: StringProperty(name="Session ready JSON", subtype="FILE_PATH")
+    ready_file: StringProperty(name="已就绪的补光会话", subtype="FILE_PATH")
 
     def execute(self, context):
         try:
@@ -1072,7 +1092,7 @@ class RP_OT_start(bpy.types.Operator):
 class RP_OT_bind(bpy.types.Operator):
     bl_idname = "relight_preview.bind"
     bl_label = "绑定新热会话"
-    ready_file: StringProperty(name="New session ready JSON", subtype="FILE_PATH")
+    ready_file: StringProperty(name="新补光会话", subtype="FILE_PATH")
 
     def execute(self, context):
         try:
@@ -1085,6 +1105,125 @@ class RP_OT_bind(bpy.types.Operator):
     def invoke(self, context, event):
         context.window_manager.fileselect_add(self)
         return {"RUNNING_MODAL"}
+
+
+def _input_path(raw, label):
+    if not raw:
+        raise ValueError(f"请选择{label}")
+    result = Path(bpy.path.abspath(raw)).resolve()
+    if not result.is_file():
+        raise ValueError(f"找不到{label}")
+    return str(result)
+
+
+def _default_profile(folder):
+    addon = bpy.context.preferences.addons.get(_ADDON_ID)
+    selected = getattr(getattr(addon, "preferences", None), "runtime_profile", "")
+    if selected:
+        return _input_path(selected, "扩展设置中的 GPU 环境档案")
+    profile = Path(os.environ.get("BLENDER_RELIGHT_PROFILE") or str(folder.parents[1] / "work/relight-profile/PROFILE.json"))
+    if not profile.is_file():
+        raise ValueError("请在扩展设置选择已配置的 GPU 环境档案")
+    return str(profile)
+
+
+def _cancel_launch_job(directory):
+    (directory / "cancel").touch(exist_ok=True)
+    active = directory / "active.json"
+    try:
+        path = Path(json.loads(active.read_text(encoding="utf-8"))["directory"]).resolve()
+        if path.parent == (directory / "j").resolve():
+            (path / "cancel.request").touch(exist_ok=True)
+    except (OSError, ValueError, KeyError):
+        # The worker also watches the cancellation marker if its job receipt is not yet readable.
+        pass
+
+
+def _cancel_launch():
+    if _launch_directory and _LAUNCHER.running:
+        _cancel_launch_job(_launch_directory)
+
+
+class RP_OT_launch(bpy.types.Operator):
+    bl_idname = "relight_preview.launch"
+    bl_label = "启动实时深度补光"
+
+    def execute(self, context):
+        global _launch_directory
+        scene = context.scene
+        state = workbench.settings(scene)
+        try:
+            if _LAUNCHER.running or workbench.RENDER.running:
+                raise ValueError("请等候当前合成后台任务或先取消")
+            folder, _, _ = _cli_files()
+            profile = _default_profile(folder)
+            blend = Path(bpy.app.binary_path)
+            version = ".".join(str(value) for value in bpy.app.version[:2])
+            python = blend.parent / version / "python/bin/python.exe"
+            if not python.is_file():
+                raise ValueError("当前 Blender 缺少配套运算 Python")
+            raw = {}
+            if state.depth_input == "BUNDLE":
+                bundle = _input_path(state.depth_bundle, "深度包")
+            else:
+                bundle = ""
+                raw = {
+                    "rgb": _input_path(state.relight_rgb, "原图 PNG"),
+                    "depth": _input_path(state.relight_depth, "标量深度图"),
+                    "depth_channel": state.depth_channel.strip(), "depth_strength": state.depth_strength,
+                    "near_order": state.near_order,
+                }
+            _launch_directory = directory = Path(tempfile.mkdtemp(prefix="cfr_"))
+            request = directory / "request.json"
+            request.write_text(_json({
+                "tools": str(folder), "runtime_profile": profile, "blender": str(blend),
+                "bundle": bundle, "mode": state.relight_mode, **raw,
+            }), encoding="utf-8")
+            scene_name, scene_pointer = scene.name, scene.as_pointer()
+            window_pointer = context.window.as_pointer() if context.window else None
+            mode = state.relight_mode
+
+            def completed(ok, payload):
+                target = bpy.data.scenes.get(scene_name)
+                window = next((w for w in bpy.context.window_manager.windows if w.as_pointer() == window_pointer), None)
+                if ((directory / "cancel").exists() or target is None or target.as_pointer() != scene_pointer
+                        or (window is None and not bpy.app.background)):
+                    _cancel_launch_job(directory)
+                    return
+                if not ok:
+                    workbench.report(target, "补光未能启动。" + payload.get("error", "后台作业失败"), "ERROR")
+                    return
+                try:
+                    with bpy.context.temp_override(window=window) if window else bpy.context.temp_override():
+                        preview = setup(payload["ready"], open_window=not bpy.app.background)
+                    preview_state = workbench.settings(preview)
+                    preview_state.depth_input = "BUNDLE"
+                    preview_state.depth_bundle = payload["bundle"]
+                    preview_state.relight_mode = mode
+                    workbench.report(target, "已打开交互补光窗口")
+                except Exception as error:
+                    Path(payload["ready"]).with_name("cancel.request").touch(exist_ok=True)
+                    workbench.report(target, "补光窗口未能打开。" + str(error), "ERROR")
+
+            _LAUNCHER.start(
+                [str(python), "-B", str(Path(__file__).with_name("relight_launch_worker.py")), str(request)],
+                label="启动实时深度补光", status_file=directory / "status.json",
+                result_file=directory / "result.json", on_complete=completed,
+            )
+            workbench.report(scene, "正在准备深度补光", "RUNNING")
+            return {"FINISHED"}
+        except (OSError, RuntimeError, ValueError) as error:
+            return workbench.fail(self, context, error)
+
+
+class RP_OT_cancel_launch(bpy.types.Operator):
+    bl_idname = "relight_preview.cancel_launch"
+    bl_label = "取消补光启动"
+
+    def execute(self, context):
+        _cancel_launch()
+        workbench.report(context.scene, "已请求取消补光启动", "WARN")
+        return {"FINISHED"}
 
 
 class RP_OT_stop(bpy.types.Operator):
@@ -1134,11 +1273,14 @@ class RP_OT_add_region(bpy.types.Operator):
 
     def execute(self, context):
         try:
-            obj = add_region(context.scene, self.target, shape=self.shape)
-            for selected in context.selected_objects:
-                selected.select_set(False)
-            obj.select_set(True)
-            context.view_layer.objects.active = obj
+            select_new = context.mode == "OBJECT"
+            with ensure_object_mode(context):
+                obj = add_region(context.scene, self.target, shape=self.shape)
+                if select_new:
+                    for selected in context.selected_objects:
+                        selected.select_set(False)
+                    obj.select_set(True)
+                    context.view_layer.objects.active = obj
             return {"FINISHED"}
         except Exception as exc:
             self.report({"ERROR"}, str(exc))
@@ -1195,7 +1337,7 @@ class RP_OT_display_mode(bpy.types.Operator):
             if self.mode not in ("ORIGINAL", "RESULT"):
                 raise ValueError("未知显示对照模式")
             if self.mode == "ORIGINAL" and "rp_baseline_manifest" not in context.scene:
-                raise ValueError("当前会话没有 Original 基线")
+                raise ValueError("当前会话没有原图可供对照")
             context.scene["rp_display_mode"] = self.mode
             _refresh_display(context.scene)
             return {"FINISHED"}
@@ -1206,7 +1348,7 @@ class RP_OT_display_mode(bpy.types.Operator):
 
 class RP_OT_anime_mode(bpy.types.Operator):
     bl_idname = "relight_preview.anime_mode"
-    bl_label = "切换 Anime 视图或 Solo"
+    bl_label = "切换动画补光视图或独显光源"
     field: StringProperty(default="view")
     value: StringProperty(default="RESULT")
 
@@ -1215,10 +1357,10 @@ class RP_OT_anime_mode(bpy.types.Operator):
             scene = context.scene
             config = json.loads(scene["rp_initial_config"])
             if config["version"] != ANIME_VERSION:
-                raise ValueError("只有新建 0.4 会话提供 Anime 控件")
+                raise ValueError("请选择动漫补光会话")
             if self.field == "view":
                 if self.value not in ANIME_VIEWS:
-                    raise ValueError("未知 Anime 诊断视图")
+                    raise ValueError("未知诊断视图")
                 scene["rp_display_mode"] = "RESULT"
             elif self.field == "subject_source":
                 if self.value not in ("LIGHT_MASK", "DEPTH_VALID", "ALPHA"):
@@ -1226,9 +1368,9 @@ class RP_OT_anime_mode(bpy.types.Operator):
             elif self.field == "solo_light_id":
                 ids = {light["id"] for light in config["lights"]}
                 if self.value and self.value not in ids:
-                    raise ValueError("Solo 灯 ID 不存在")
+                    raise ValueError("独显的补光灯不存在")
             else:
-                raise ValueError("不支持的 Anime 模式字段")
+                raise ValueError("动漫补光不支持此控件")
             scene["rp_anime_" + self.field] = self.value
             scene.update_tag()
             return {"FINISHED"}
@@ -1238,34 +1380,88 @@ class RP_OT_anime_mode(bpy.types.Operator):
 
 
 class RP_PT_panel(bpy.types.Panel):
-    bl_label = "画面拖灯预览"
-    bl_space_type = "VIEW_3D"
+    bl_label = ""
+    bl_space_type = THEME.editor_space
     bl_region_type = "UI"
-    bl_category = "Relight"
+    bl_category = THEME.tab_label
+    bl_options = {"HEADER_LAYOUT_EXPAND"}
+
+    def draw_header(self, context):
+        draw_brand_header(self.layout, DOMAIN, _ICONS, fallback_icon="NODE_COMPOSITING")
 
     def draw(self, context):
         layout, scene = self.layout, context.scene
-        layout.operator("relight_preview.start")
+        workbench.draw_progress(layout)
+        if _LAUNCHER.running:
+            progress_card(layout, DOMAIN, _ICONS, text=_LAUNCHER.detail, factor=_LAUNCHER.progress,
+                          cancel_operator="relight_preview.cancel_launch")
         owner = scene.get(OWNER)
-        if not owner:
-            return
+        if owner:
+            data = json.loads(scene["rp_initial_config"])
+            if scene.get("rp_baseline_manifest"):
+                row = layout.row(align=True)
+                for mode, title in (("ORIGINAL", "原图"), ("RESULT", "补光结果")):
+                    operator = row.operator("relight_preview.display_mode", text=title,
+                                            depress=scene.get("rp_display_mode", "RESULT") == mode)
+                    operator.mode = mode
+            row = layout.row(align=True)
+            row.prop(scene, '["rp_mix"]', text="补光混合")
+            row.prop(scene, '["rp_bypass"]', text="旁路", toggle=True)
+            if data["version"] == ANIME_VERSION:
+                row = layout.row(align=True)
+                for view in ("RESULT", "FORM", "RIM"):
+                    operator = row.operator("relight_preview.anime_mode", text=ANIME_VIEW_LABELS[view],
+                                            depress=scene.get("rp_anime_view", "RESULT") == view)
+                    operator.field, operator.value = "view", view
+            row = layout.row(align=True)
+            row.operator("relight_preview.bind", text="绑定新会话", icon="LINKED")
+            if owner in _sessions:
+                row.operator("relight_preview.final", text="原尺寸输出", icon="RENDER_STILL")
+                row.operator("relight_preview.stop", text="停止", icon="CANCEL")
+            row = layout.row(align=True)
+            row.prop(scene, '["rp_save_path"]', text="")
+            row.operator("relight_preview.save", text="保存副本", icon="FILE_TICK")
+            if data["version"] == ANIME_VERSION or scene.get("rp_ready_snapshot"):
+                _, advanced = section_panel(
+                    layout, "CF_relight_controls", "光形、区域与补光诊断",
+                    icon_value=_ICONS.action_id("relight_preview"), default_closed=True,
+                )
+                if advanced is not None:
+                    self._draw_relight_controls(advanced, context)
+        else:
+            state = workbench.settings(scene)
+            layout.row(align=True).prop(state, "depth_input", expand=True)
+            fields = prop_column(layout, align=True)
+            if state.depth_input == "BUNDLE":
+                fields.prop(state, "depth_bundle")
+            else:
+                fields.prop(state, "relight_rgb")
+                fields.prop(state, "relight_depth")
+                if state.relight_depth.lower().endswith(".exr"):
+                    fields.prop(state, "depth_channel")
+                fields.prop(state, "near_order")
+                fields.prop(state, "depth_strength")
+            layout.row(align=True).prop(state, "relight_mode", expand=True)
+            primary_button(
+                layout, "relight_preview.launch", "启动实时深度补光",
+                icon_value=_ICONS.action_id("relight_preview"), icon="PLAY",
+                enabled=not (_LAUNCHER.running or workbench.RENDER.running),
+            )
+            layout.operator("relight_preview.start", text="打开已有会话", icon="LINKED")
+        workbench.draw_finish(layout, context, launching=_LAUNCHER.running)
+        if owner:
+            status_banner(layout, context, scene.get("rp_status", ""), icon_pack=_ICONS)
+        workbench.draw_status(layout, context)
+
+    def _draw_relight_controls(self, layout, context):
+        scene = context.scene
+        owner = scene[OWNER]
         layout.label(text="G：画面移动；R：发光方向；高度：Z")
-        layout.label(text="后期相对强度独立于原生 Watts")
-        layout.label(text=str(scene.get("rp_status", ""))[:110])
-        layout.label(text=f"最新 {scene.get('rp_latest_revision', -1)} / 显示 {scene.get('rp_shown_revision', -1)}")
-        layout.prop(scene, '["rp_mix"]', text="混合")
-        layout.prop(scene, '["rp_bypass"]', text="旁路")
         layout.prop(scene, '["rp_line_protect"]', text="线稿保护")
         initial_config = json.loads(scene["rp_initial_config"])
         if initial_config["version"] == ANIME_VERSION:
             box = layout.box()
-            box.label(text="2.5D 后期合成（实验；非真实 3D 反演）")
-            row = box.row(align=True)
-            for mode in ("ORIGINAL", "RESULT"):
-                op = row.operator("relight_preview.display_mode", text=mode,
-                                  depress=scene.get("rp_display_mode", "RESULT") == mode)
-                op.mode = mode
-            box.label(text="当前图像：" + str(scene.get("rp_displayed_view", "RESULT")))
+            box.label(text="动漫光形与诊断")
             views = box.grid_flow(columns=3, align=True)
             for view in ANIME_VIEWS:
                 op = views.operator("relight_preview.anime_mode", text=ANIME_VIEW_LABELS[view],
@@ -1273,7 +1469,7 @@ class RP_PT_panel(bpy.types.Panel):
                 op.field, op.value = "view", view
             if scene.get("rp_anime_view") == "DELTA":
                 box.prop(scene, '["rp_anime_delta_gain"]', text="差分放大倍数（仅诊断）")
-            box.label(text="Solo 与轮廓灯")
+            box.label(text="独显光源与轮廓灯")
             for light in scene.objects:
                 if light.get(OWNER) != owner or not light.get("relight_id"):
                     continue
@@ -1281,7 +1477,7 @@ class RP_PT_panel(bpy.types.Panel):
                 row = box.row(align=True)
                 row.label(text=ident)
                 solo = scene.get("rp_anime_solo_light_id", "") == ident
-                op = row.operator("relight_preview.anime_mode", text="取消 Solo" if solo else "Solo")
+                op = row.operator("relight_preview.anime_mode", text="取消独显" if solo else "独显")
                 op.field, op.value = "solo_light_id", "" if solo else ident
                 row.prop(light, '["rp_anime_rim_selected"]', text="轮廓")
             row = box.row(align=True)
@@ -1315,7 +1511,7 @@ class RP_PT_panel(bpy.types.Panel):
             layout.prop(scene, '["rp_f0"]', text="全局 F0")
         if "base" in json.loads(scene["rp_initial_config"]):
             box = layout.box()
-            box.label(text="基础影调（2D，非反演原灯）")
+            box.label(text="基础影调")
             box.prop(scene, '["rp_base_exposure"]', text="基础曝光 EV")
             box.prop(scene, '["rp_base_contrast"]', text="基础对比度")
             box.prop(scene, '["rp_base_saturation"]', text="基础饱和度")
@@ -1331,7 +1527,6 @@ class RP_PT_panel(bpy.types.Panel):
             for light in scene.objects:
                 if light.get(OWNER) == owner and light.get("relight_id"):
                     box.prop(light, '["rp_projection_selected"]', text=light["relight_id"])
-            box.label(text="位置与法线为可编辑假设；并非场景恢复")
         if _supports_local(json.loads(scene["rp_ready_snapshot"])):
             box = layout.box()
             box.label(text="局部：G 移动 / S 大小 / R 平面旋转")
@@ -1392,14 +1587,10 @@ class RP_PT_panel(bpy.types.Panel):
                     layout.prop(data, "size_y", text="尺寸 Y")
             if data.type == "SUN":
                 layout.prop(data, "angle", text="角宽")
-        layout.operator("relight_preview.bind")
-        layout.operator("relight_preview.final")
-        layout.operator("relight_preview.stop")
-        layout.prop(scene, '["rp_save_path"]', text="新工程路径")
-        layout.operator("relight_preview.save")
 
 
-_classes = (RP_AddonPreferences, RP_OT_start, RP_OT_bind, RP_OT_stop, RP_OT_final, RP_OT_save,
+_classes = (*workbench.CLASSES, RP_AddonPreferences, RP_OT_start, RP_OT_bind, RP_OT_launch, RP_OT_cancel_launch,
+            RP_OT_stop, RP_OT_final, RP_OT_save,
             RP_OT_add_region, RP_OT_region_action, RP_OT_apply_local, RP_OT_display_mode, RP_OT_anime_mode, RP_PT_panel)
 
 
@@ -1408,22 +1599,43 @@ def register():
     _assert_main()
     if _registered:
         return
-    for cls in _classes:
-        bpy.utils.register_class(cls)
-    bpy.app.handlers.load_pre.append(_load_pre)
-    bpy.app.handlers.save_pre.append(_save_pre)
-    _registered = True
+    completed = []
+    try:
+        _ICONS.register()
+        for cls in _classes:
+            bpy.utils.register_class(cls)
+            completed.append(cls)
+        setattr(bpy.types.Scene, workbench.PROPERTY, PointerProperty(type=workbench.CF_Settings))
+        SidebarDock.register_plugin(DOMAIN, _ICONS.icons_dir)
+        bpy.app.handlers.load_pre.append(_load_pre)
+        bpy.app.handlers.save_pre.append(_save_pre)
+        _registered = True
+    except Exception:
+        SidebarDock.unregister_plugin(DOMAIN)
+        if hasattr(bpy.types.Scene, workbench.PROPERTY):
+            delattr(bpy.types.Scene, workbench.PROPERTY)
+        for cls in reversed(completed):
+            bpy.utils.unregister_class(cls)
+        _ICONS.unregister()
+        raise
 
 
 def unregister():
     global _registered
     _assert_main()
+    _cancel_launch()
+    _LAUNCHER.cleanup()
+    workbench.RENDER.cleanup()
+    SidebarDock.unregister_plugin(DOMAIN)
+    HUDManager.clear(DOMAIN)
     for owner in list(_sessions):
         stop(owner)
     for handlers, callback in ((bpy.app.handlers.load_pre, _load_pre), (bpy.app.handlers.save_pre, _save_pre)):
         if callback in handlers:
             handlers.remove(callback)
     if _registered:
+        delattr(bpy.types.Scene, workbench.PROPERTY)
         for cls in reversed(_classes):
             bpy.utils.unregister_class(cls)
+    _ICONS.unregister()
     _registered = False

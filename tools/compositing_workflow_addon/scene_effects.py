@@ -24,8 +24,8 @@ NESTED_EFFECT_PATH = re.compile(r'\.compositor_effects\[')
 
 
 def _scene(scene_name):
-    if tuple(bpy.app.version) != (5, 3, 0) or not supported(bpy.app):
-        raise WorkflowError('UNSUPPORTED', 'Scene effects require the supported Blender 5.3.0 build')
+    if tuple(bpy.app.version) < (5, 3, 0) or not supported(bpy.app):
+        raise WorkflowError('UNSUPPORTED', 'Scene effects require Blender 5.3.0 or later')
     return core._scene(_name(scene_name))
 
 
@@ -137,8 +137,7 @@ def _guard_tree(tree):
         if core.OWNER in current or pointer in managed_roots:
             raise WorkflowError('CONFLICT', 'Managed compositor groups cannot acquire additional consumers', {'group': current.name})
         for node in current.nodes:
-            if node.bl_idname in core.FORBIDDEN:
-                raise WorkflowError('UNSUPPORTED', 'Scene effect contains an external-write or script node', {'group': current.name, 'node': node.name})
+            core.guard_output_node(node)
             nested = getattr(node, 'node_tree', None)
             if nested is not None:
                 pending.append(nested)

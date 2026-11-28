@@ -819,15 +819,23 @@
     },
     {
       "path": "tools/compositing_workflow_addon/__init__.py",
-      "sha256": "d0473351cd82adf6acde63a7480e8a706c0dd8223c92dfbe60fbd8e9f92319b7"
+      "sha256": "813e8efa899edbf82f69a90b0770a1c62d45b60b8caab1037adc69a4f5527683"
+    },
+    {
+      "path": "tools/compositing_workflow_addon/c5.py",
+      "sha256": "da280d36838ca813eb4869f9173efed4f08c8567093302763e646db9a1333bfc"
+    },
+    {
+      "path": "tools/compositing_workflow_addon/c5_ocio.py",
+      "sha256": "e94a70068a204f292f542321bd88075967acf6e61ae060ef743a04ddf3b93d4a"
     },
     {
       "path": "tools/compositing_workflow_addon/contract.py",
-      "sha256": "1b51b7bef6aa4a02a2f05e5d28236d9de30e0e9c0c2fcc3d47c9a1d91899b80b"
+      "sha256": "8408f42f109a79a46f9a46a202ffb81655c5934d62f31fff87801f10d4b3beb4"
     },
     {
       "path": "tools/compositing_workflow_addon/core.py",
-      "sha256": "ed550f564a765759cb7d3fe979bbc736f7bfca5ae431615b334b62e676fa19fc"
+      "sha256": "61855fb20a5884c77be60b27a7afae74c8aed595edc1a89d477e54969273187a"
     },
     {
       "path": "tools/compositing_workflow_addon/depth_contract.py",
@@ -842,20 +850,36 @@
       "sha256": "93ea6367c428c8afee171a2169d738e17413bd2e5597c4b18add150f74492a3d"
     },
     {
+      "path": "tools/compositing_workflow_addon/host_compat.py",
+      "sha256": "ffc9c2ae9abf3aeaccf97be9730f5e1ca82a64748acb2827d3971a44f70f17b9"
+    },
+    {
       "path": "tools/compositing_workflow_addon/movie_contract.py",
-      "sha256": "46ea7b1159541c268a79c103a85505d1839fd4c572e867074870269b52e60172"
+      "sha256": "dce6a7f0516e091c62c3e3ef5208677888a45ea71e2c25dc66c749808e236f46"
+    },
+    {
+      "path": "tools/compositing_workflow_addon/relight_launch_worker.py",
+      "sha256": "c2002208da63a355f37a428acac73eaa56ef32cd12449a68ab2331c77257f754"
     },
     {
       "path": "tools/compositing_workflow_addon/relight_preview_ui.py",
-      "sha256": "2d8fb3e29f2c1b5e22e9324f209c79820c50485ef340324b8f64079945f2879c"
+      "sha256": "9ac31477780d6f915b70cefa906755b15a22715bb166200529086c1393ac79d9"
     },
     {
       "path": "tools/compositing_workflow_addon/runtime.py",
-      "sha256": "7adc8f71c4b65df99f9310a78c6df2e762b93a676f2e3217f0ee378fe7328791"
+      "sha256": "7211d30570d3abc9d648dbe34badd74b956dc1368ccc217fcb6ef67f6ced5761"
     },
     {
       "path": "tools/compositing_workflow_addon/scene_effects.py",
-      "sha256": "a1ae79078498fb3b684a3bd8f576b7fb017cfd5ce54bfc4007fb0403f01c2c52"
+      "sha256": "6a74fe699d6a4e56525ba23c6df7846c1f1992b6f67f1c0b5ad9fcf47ea93097"
+    },
+    {
+      "path": "tools/compositing_workflow_addon/workbench.py",
+      "sha256": "da4a52fca4f2550e0299e2ef1707b65eccfaa612307afe61296a80c8703113a3"
+    },
+    {
+      "path": "tools/compositing_workflow_addon/workbench_render_worker.py",
+      "sha256": "531a96bf3ae2ab93f517a1ba45c8abced1d628f0a161eaa5da300ccb5d850529"
     }
   ]
 }

@@ -1,14 +1,14 @@
 {
   "schema": "compositing-publication-v2",
-  "release": "0.10.0",
+  "release": "1.0.0",
   "publication_state": "prepared_experimental_prerelease",
   "package_revision": "0.10.0",
   "release_tag": "v0.10.0",
   "publication_boundary": "Prepared source-only artifacts; publisher independently verifies remote commit, release and assets",
   "cli": "0.75.0",
-  "addon": "0.10.0",
-  "skill": "0.10.0",
-  "runtime_identity": "42d6baf5ebf37dbde179cb3ee61919a7bbf4098e8274ad2642b711e7955827fa",
+  "addon": "1.0.0",
+  "skill": "1.0.0",
+  "runtime_identity": "daf85c3c01c8d1d6730f8f0075e8f7ec194341e153b7dfd92690d15b1645fcd9",
   "runtime_documents": [
     {
       "file": "tools/blenderctl/adaptive_sampling.py",
@@ -1032,23 +1032,33 @@
     },
     {
       "file": "tools/compositing_workflow_addon/__init__.py",
-      "expected_sha256": "d0473351cd82adf6acde63a7480e8a706c0dd8223c92dfbe60fbd8e9f92319b7",
-      "bytes": 506
+      "expected_sha256": "813e8efa899edbf82f69a90b0770a1c62d45b60b8caab1037adc69a4f5527683",
+      "bytes": 544
     },
     {
       "file": "tools/compositing_workflow_addon/blender_manifest.toml",
-      "expected_sha256": "85480e20dcfc456eaa91b845fd50698390a732b742c83c4b8e0e8fa8278ebe94",
-      "bytes": 297
+      "expected_sha256": "75e4f66871d0170cf54dc3f16f90e9ed052f8c0f4f5bec5709575092a20e071c",
+      "bytes": 286
+    },
+    {
+      "file": "tools/compositing_workflow_addon/c5.py",
+      "expected_sha256": "da280d36838ca813eb4869f9173efed4f08c8567093302763e646db9a1333bfc",
+      "bytes": 8335
+    },
+    {
+      "file": "tools/compositing_workflow_addon/c5_ocio.py",
+      "expected_sha256": "e94a70068a204f292f542321bd88075967acf6e61ae060ef743a04ddf3b93d4a",
+      "bytes": 3002
     },
     {
       "file": "tools/compositing_workflow_addon/contract.py",
-      "expected_sha256": "1b51b7bef6aa4a02a2f05e5d28236d9de30e0e9c0c2fcc3d47c9a1d91899b80b",
-      "bytes": 40488
+      "expected_sha256": "8408f42f109a79a46f9a46a202ffb81655c5934d62f31fff87801f10d4b3beb4",
+      "bytes": 41717
     },
     {
       "file": "tools/compositing_workflow_addon/core.py",
-      "expected_sha256": "ed550f564a765759cb7d3fe979bbc736f7bfca5ae431615b334b62e676fa19fc",
-      "bytes": 95608
+      "expected_sha256": "61855fb20a5884c77be60b27a7afae74c8aed595edc1a89d477e54969273187a",
+      "bytes": 97306
     },
     {
       "file": "tools/compositing_workflow_addon/depth_contract.py",
@@ -1066,24 +1076,44 @@
       "bytes": 20633
     },
     {
+      "file": "tools/compositing_workflow_addon/host_compat.py",
+      "expected_sha256": "ffc9c2ae9abf3aeaccf97be9730f5e1ca82a64748acb2827d3971a44f70f17b9",
+      "bytes": 587
+    },
+    {
       "file": "tools/compositing_workflow_addon/movie_contract.py",
-      "expected_sha256": "46ea7b1159541c268a79c103a85505d1839fd4c572e867074870269b52e60172",
-      "bytes": 11711
+      "expected_sha256": "dce6a7f0516e091c62c3e3ef5208677888a45ea71e2c25dc66c749808e236f46",
+      "bytes": 11540
+    },
+    {
+      "file": "tools/compositing_workflow_addon/relight_launch_worker.py",
+      "expected_sha256": "c2002208da63a355f37a428acac73eaa56ef32cd12449a68ab2331c77257f754",
+      "bytes": 9707
     },
     {
       "file": "tools/compositing_workflow_addon/relight_preview_ui.py",
-      "expected_sha256": "2d8fb3e29f2c1b5e22e9324f209c79820c50485ef340324b8f64079945f2879c",
-      "bytes": 74349
+      "expected_sha256": "9ac31477780d6f915b70cefa906755b15a22715bb166200529086c1393ac79d9",
+      "bytes": 84111
     },
     {
       "file": "tools/compositing_workflow_addon/runtime.py",
-      "expected_sha256": "7adc8f71c4b65df99f9310a78c6df2e762b93a676f2e3217f0ee378fe7328791",
-      "bytes": 265
+      "expected_sha256": "7211d30570d3abc9d648dbe34badd74b956dc1368ccc217fcb6ef67f6ced5761",
+      "bytes": 157
     },
     {
       "file": "tools/compositing_workflow_addon/scene_effects.py",
-      "expected_sha256": "a1ae79078498fb3b684a3bd8f576b7fb017cfd5ce54bfc4007fb0403f01c2c52",
-      "bytes": 27142
+      "expected_sha256": "6a74fe699d6a4e56525ba23c6df7846c1f1992b6f67f1c0b5ad9fcf47ea93097",
+      "bytes": 26969
+    },
+    {
+      "file": "tools/compositing_workflow_addon/workbench.py",
+      "expected_sha256": "da4a52fca4f2550e0299e2ef1707b65eccfaa612307afe61296a80c8703113a3",
+      "bytes": 21475
+    },
+    {
+      "file": "tools/compositing_workflow_addon/workbench_render_worker.py",
+      "expected_sha256": "531a96bf3ae2ab93f517a1ba45c8abced1d628f0a161eaa5da300ccb5d850529",
+      "bytes": 2047
     }
   ],
   "schema_documents": [
@@ -2058,18 +2088,18 @@
     },
     {
       "file": "scripts/verify_archives.py",
-      "expected_sha256": "5f98240ac0155b57e7f2baf3c5a9a136d40df66b484db598624f7f972cba951f",
-      "bytes": 5533
+      "expected_sha256": "06bbb9f7c1df4c36e7f570c333d7b012a16ea5b47a93014a5068cf2ad7990951",
+      "bytes": 5721
     },
     {
       "file": "scripts/verify_release.py",
-      "expected_sha256": "74d4f8adbce1c8fddfa1d08668c26e673fa7c3a4cf08abfce9e4d93c82f5587e",
-      "bytes": 10987
+      "expected_sha256": "89bd305a5ccd25cbb4daa853d1c8a9e6f641eef345cb29d7f43a61a2e932cd13",
+      "bytes": 12059
     },
     {
       "file": "skills/blender-compositing/SKILL.md",
-      "expected_sha256": "719f9ebb2d859920082c7d053c391293d3a309de62c74b1aa7294a9ae41ad011",
-      "bytes": 11129
+      "expected_sha256": "4ecc209b90a5d3497db45b353157fd53a409021751441e0625ad6b1b8fcfde3c",
+      "bytes": 11789
     },
     {
       "file": "skills/blender-compositing/agents/openai.yaml",
@@ -2148,8 +2178,8 @@
     },
     {
       "file": "skills/blender-compositing/references/sources.md",
-      "expected_sha256": "78427154430e42455ab0ad903885d5994ee2308ff4d14ba1c3b6d707b5322ffc",
-      "bytes": 2765
+      "expected_sha256": "76749742287790c0406d034002566ae634be5c61ebf8a946da17dc3b7297b42c",
+      "bytes": 3365
     },
     {
       "file": "skills/blender-compositing/references/usage.md",
@@ -2173,8 +2203,8 @@
     },
     {
       "file": "skills/blender-compositing/source-index.json",
-      "expected_sha256": "3de005952a57ac1e356c2773f75f2fcaec3e853323ba17d239a2c204a4007489",
-      "bytes": 32511
+      "expected_sha256": "36414c1675f57e83221b44506ce28ff64b5807096cce0bab434e7f914ae59bdf",
+      "bytes": 33484
     },
     {
       "file": "tools/compositing_workflow_addon/LICENSE",
@@ -2185,13 +2215,108 @@
       "file": "tools/compositing_workflow_addon/README.md",
       "expected_sha256": "791f198b96ee07a5e8689d0a1141b81cde9562a23bffd25bba4f114ec7ae068f",
       "bytes": 1180
+    },
+    {
+      "file": "tools/compositing_workflow_addon/_ui_kit/__init__.py",
+      "expected_sha256": "45817192185bb89c37e55f05172d3a069dcea26815f0619c796aea1141dbb305",
+      "bytes": 1441
+    },
+    {
+      "file": "tools/compositing_workflow_addon/_ui_kit/hud_overlay.py",
+      "expected_sha256": "5c8c441cfe6b5486c458ed8787530ba43a7713f2323787c5f8ccb774e36fbebb",
+      "bytes": 10895
+    },
+    {
+      "file": "tools/compositing_workflow_addon/_ui_kit/icons.py",
+      "expected_sha256": "b0e9ff36dda9a13d932dbe84e0fbbd7f1ab7ed4b019483a5b7a75d3be1e95be2",
+      "bytes": 3111
+    },
+    {
+      "file": "tools/compositing_workflow_addon/_ui_kit/icons/brand_compositing_32.png",
+      "expected_sha256": "9ab0bf85919b0b1b67a3eeddad50d5a57520a04ef7a2972984243213a73f7216",
+      "bytes": 2253
+    },
+    {
+      "file": "tools/compositing_workflow_addon/_ui_kit/icons/brand_compositing_64.png",
+      "expected_sha256": "a2eb130c3a01b7943e56f42b23b8b8008846a0f632a2a8a8140ae9afa810c2ab",
+      "bytes": 6368
+    },
+    {
+      "file": "tools/compositing_workflow_addon/_ui_kit/icons/compositing_crypto_cdl_32.png",
+      "expected_sha256": "a0b189eed9452f313b40c79db4986660e0d9e1e8a111a6f37c2b4180c3ffa5bd",
+      "bytes": 902
+    },
+    {
+      "file": "tools/compositing_workflow_addon/_ui_kit/icons/compositing_light_mix_32.png",
+      "expected_sha256": "943f163e5e241eca70635e2e4af38ec92bae8c94b5c8ba387552604e14fbf7fb",
+      "bytes": 319
+    },
+    {
+      "file": "tools/compositing_workflow_addon/_ui_kit/icons/compositing_relight_preview_32.png",
+      "expected_sha256": "a790df9afacb54b794ccd8aa1e70f3b4dfc42bd81887197d64428feb17b114f5",
+      "bytes": 477
+    },
+    {
+      "file": "tools/compositing_workflow_addon/_ui_kit/icons/compositing_scene_effects_32.png",
+      "expected_sha256": "d097bab9914c97f1d927dd0d47a109412d25166b3ddd9a5af46644e5f348bcf7",
+      "bytes": 407
+    },
+    {
+      "file": "tools/compositing_workflow_addon/_ui_kit/icons/status_error_32.png",
+      "expected_sha256": "0a9a87ad97c82a9729b59079ce67fbe3166611738619e4d4ec9ab70ba3132752",
+      "bytes": 704
+    },
+    {
+      "file": "tools/compositing_workflow_addon/_ui_kit/icons/status_info_32.png",
+      "expected_sha256": "57e4325f1f045ac8414d00d308462d982d2c3571284f135ec72b234d4cf31149",
+      "bytes": 698
+    },
+    {
+      "file": "tools/compositing_workflow_addon/_ui_kit/icons/status_ok_32.png",
+      "expected_sha256": "6af6193c52c8b4c2df5f9dbf38ed43d5680ce3ca567626ec10d7d9689074304c",
+      "bytes": 824
+    },
+    {
+      "file": "tools/compositing_workflow_addon/_ui_kit/icons/status_running_32.png",
+      "expected_sha256": "f1c5d82ed8f87d8859c14da5d1b8f137801ae873f8b37b6ad52119645fe897cb",
+      "bytes": 821
+    },
+    {
+      "file": "tools/compositing_workflow_addon/_ui_kit/icons/status_safe_32.png",
+      "expected_sha256": "a79fc1d8e65fdb0985b6397254e00323112905cbe4c56eda782c842b10d8dece",
+      "bytes": 723
+    },
+    {
+      "file": "tools/compositing_workflow_addon/_ui_kit/icons/status_warn_32.png",
+      "expected_sha256": "b0dd7fbf27eeffc90e31136b681193eae447a3da6f30dc2233dbbda0355d9e51",
+      "bytes": 577
+    },
+    {
+      "file": "tools/compositing_workflow_addon/_ui_kit/job_runner.py",
+      "expected_sha256": "c6444283c0db59297b051f7e2742b8cec4f2065eac37befa70ef1ecf1e3ed6e4",
+      "bytes": 8128
+    },
+    {
+      "file": "tools/compositing_workflow_addon/_ui_kit/layout_kit.py",
+      "expected_sha256": "8667077d9f6724a3f546fddf7a3e9b30dd867d8c5e91d92a3b7762760b7ea635",
+      "bytes": 8427
+    },
+    {
+      "file": "tools/compositing_workflow_addon/_ui_kit/sidebar_dock.py",
+      "expected_sha256": "2f7828bb48be41983dc75b32c60495fcf840b05b51484feea5e0970dc0266572",
+      "bytes": 25879
+    },
+    {
+      "file": "tools/compositing_workflow_addon/_ui_kit/theme_tokens.py",
+      "expected_sha256": "2d3035966030d949629190a54c4a7eb60705487409bd6f31bd0652b976905900",
+      "bytes": 11791
     }
   ],
   "runtime_identity_algorithm": "Sorted exact top-level tools/blenderctl/*.py + tools/compositing_workflow_addon/*.py + addon manifest; JSON file/expected_sha256 only, sort_keys and compact separators; SHA256",
   "support_scope": "Original 7 Python + manifest geometry persistence imports and two public Blender support scripts; separately inventoried, no other-domain certification",
   "sequence_producer_identity": "49801a5c64273a1d1d6c2b8661965448cc5da1efad6440ad36cee8ca6a5bd017",
   "sequence_identity_scope": "Sequence declared producer subset, distinct from complete runtime identity; historical a968 evidence is not relabelled",
-  "native_archive_sha256": "ccebc1128167377e5e57f407c83cd87a7959effa629040df041231b2597e2001",
+  "native_archive_sha256": "a199452692d6c938dd62520698f2b0f74c09ffc9fa8325c8068e9f38b3202bf3",
   "verified_code_mapping": {
     "runtime": "42d6baf5ebf37dbde179cb3ee61919a7bbf4098e8274ad2642b711e7955827fa",
     "sequence": "49801a5c64273a1d1d6c2b8661965448cc5da1efad6440ad36cee8ca6a5bd017",
@@ -2220,147 +2345,472 @@
   },
   "native_archive_layout": [
     {
+      "file": "__init__.py",
+      "date_time": [
+        2026,
+        11,
+        28,
+        16,
+        0,
+        0
+      ],
+      "create_system": 3,
+      "external_attr": 2175008768
+    },
+    {
+      "file": "_ui_kit/__init__.py",
+      "date_time": [
+        2026,
+        11,
+        28,
+        16,
+        0,
+        0
+      ],
+      "create_system": 3,
+      "external_attr": 2175008768
+    },
+    {
+      "file": "_ui_kit/hud_overlay.py",
+      "date_time": [
+        2026,
+        11,
+        28,
+        16,
+        0,
+        0
+      ],
+      "create_system": 3,
+      "external_attr": 2175008768
+    },
+    {
+      "file": "_ui_kit/icons.py",
+      "date_time": [
+        2026,
+        11,
+        28,
+        16,
+        0,
+        0
+      ],
+      "create_system": 3,
+      "external_attr": 2175008768
+    },
+    {
+      "file": "_ui_kit/icons/brand_compositing_32.png",
+      "date_time": [
+        2026,
+        11,
+        28,
+        16,
+        0,
+        0
+      ],
+      "create_system": 3,
+      "external_attr": 2175008768
+    },
+    {
+      "file": "_ui_kit/icons/brand_compositing_64.png",
+      "date_time": [
+        2026,
+        11,
+        28,
+        16,
+        0,
+        0
+      ],
+      "create_system": 3,
+      "external_attr": 2175008768
+    },
+    {
+      "file": "_ui_kit/icons/compositing_crypto_cdl_32.png",
+      "date_time": [
+        2026,
+        11,
+        28,
+        16,
+        0,
+        0
+      ],
+      "create_system": 3,
+      "external_attr": 2175008768
+    },
+    {
+      "file": "_ui_kit/icons/compositing_light_mix_32.png",
+      "date_time": [
+        2026,
+        11,
+        28,
+        16,
+        0,
+        0
+      ],
+      "create_system": 3,
+      "external_attr": 2175008768
+    },
+    {
+      "file": "_ui_kit/icons/compositing_relight_preview_32.png",
+      "date_time": [
+        2026,
+        11,
+        28,
+        16,
+        0,
+        0
+      ],
+      "create_system": 3,
+      "external_attr": 2175008768
+    },
+    {
+      "file": "_ui_kit/icons/compositing_scene_effects_32.png",
+      "date_time": [
+        2026,
+        11,
+        28,
+        16,
+        0,
+        0
+      ],
+      "create_system": 3,
+      "external_attr": 2175008768
+    },
+    {
+      "file": "_ui_kit/icons/status_error_32.png",
+      "date_time": [
+        2026,
+        11,
+        28,
+        16,
+        0,
+        0
+      ],
+      "create_system": 3,
+      "external_attr": 2175008768
+    },
+    {
+      "file": "_ui_kit/icons/status_info_32.png",
+      "date_time": [
+        2026,
+        11,
+        28,
+        16,
+        0,
+        0
+      ],
+      "create_system": 3,
+      "external_attr": 2175008768
+    },
+    {
+      "file": "_ui_kit/icons/status_ok_32.png",
+      "date_time": [
+        2026,
+        11,
+        28,
+        16,
+        0,
+        0
+      ],
+      "create_system": 3,
+      "external_attr": 2175008768
+    },
+    {
+      "file": "_ui_kit/icons/status_running_32.png",
+      "date_time": [
+        2026,
+        11,
+        28,
+        16,
+        0,
+        0
+      ],
+      "create_system": 3,
+      "external_attr": 2175008768
+    },
+    {
+      "file": "_ui_kit/icons/status_safe_32.png",
+      "date_time": [
+        2026,
+        11,
+        28,
+        16,
+        0,
+        0
+      ],
+      "create_system": 3,
+      "external_attr": 2175008768
+    },
+    {
+      "file": "_ui_kit/icons/status_warn_32.png",
+      "date_time": [
+        2026,
+        11,
+        28,
+        16,
+        0,
+        0
+      ],
+      "create_system": 3,
+      "external_attr": 2175008768
+    },
+    {
+      "file": "_ui_kit/job_runner.py",
+      "date_time": [
+        2026,
+        11,
+        28,
+        16,
+        0,
+        0
+      ],
+      "create_system": 3,
+      "external_attr": 2175008768
+    },
+    {
+      "file": "_ui_kit/layout_kit.py",
+      "date_time": [
+        2026,
+        11,
+        28,
+        16,
+        0,
+        0
+      ],
+      "create_system": 3,
+      "external_attr": 2175008768
+    },
+    {
+      "file": "_ui_kit/sidebar_dock.py",
+      "date_time": [
+        2026,
+        11,
+        28,
+        16,
+        0,
+        0
+      ],
+      "create_system": 3,
+      "external_attr": 2175008768
+    },
+    {
+      "file": "_ui_kit/theme_tokens.py",
+      "date_time": [
+        2026,
+        11,
+        28,
+        16,
+        0,
+        0
+      ],
+      "create_system": 3,
+      "external_attr": 2175008768
+    },
+    {
       "file": "blender_manifest.toml",
       "date_time": [
         2026,
         11,
-        26,
-        15,
-        42,
-        24
+        28,
+        16,
+        0,
+        0
       ],
-      "create_system": 0,
-      "external_attr": 2176188416
+      "create_system": 3,
+      "external_attr": 2175008768
+    },
+    {
+      "file": "c5.py",
+      "date_time": [
+        2026,
+        11,
+        28,
+        16,
+        0,
+        0
+      ],
+      "create_system": 3,
+      "external_attr": 2175008768
+    },
+    {
+      "file": "c5_ocio.py",
+      "date_time": [
+        2026,
+        11,
+        28,
+        16,
+        0,
+        0
+      ],
+      "create_system": 3,
+      "external_attr": 2175008768
     },
     {
       "file": "contract.py",
       "date_time": [
         2026,
-        10,
-        10,
-        5,
-        14,
-        18
+        11,
+        28,
+        16,
+        0,
+        0
       ],
-      "create_system": 0,
-      "external_attr": 2176188416
+      "create_system": 3,
+      "external_attr": 2175008768
     },
     {
       "file": "core.py",
       "date_time": [
         2026,
         11,
-        19,
-        2,
-        39,
-        20
+        28,
+        16,
+        0,
+        0
       ],
-      "create_system": 0,
-      "external_attr": 2176188416
+      "create_system": 3,
+      "external_attr": 2175008768
     },
     {
       "file": "depth_contract.py",
       "date_time": [
         2026,
-        10,
-        13,
-        23,
-        40,
-        4
+        11,
+        28,
+        16,
+        0,
+        0
       ],
-      "create_system": 0,
-      "external_attr": 2176188416
+      "create_system": 3,
+      "external_attr": 2175008768
     },
     {
       "file": "depth_estimate_contract.py",
       "date_time": [
         2026,
-        10,
-        12,
-        6,
-        49,
-        42
+        11,
+        28,
+        16,
+        0,
+        0
       ],
-      "create_system": 0,
-      "external_attr": 2176188416
+      "create_system": 3,
+      "external_attr": 2175008768
     },
     {
       "file": "depth_math.py",
       "date_time": [
         2026,
-        10,
-        13,
-        23,
-        40,
-        4
+        11,
+        28,
+        16,
+        0,
+        0
       ],
-      "create_system": 0,
-      "external_attr": 2176188416
+      "create_system": 3,
+      "external_attr": 2175008768
+    },
+    {
+      "file": "host_compat.py",
+      "date_time": [
+        2026,
+        11,
+        28,
+        16,
+        0,
+        0
+      ],
+      "create_system": 3,
+      "external_attr": 2175008768
     },
     {
       "file": "movie_contract.py",
       "date_time": [
         2026,
-        10,
-        10,
-        5,
-        39,
-        14
+        11,
+        28,
+        16,
+        0,
+        0
       ],
-      "create_system": 0,
-      "external_attr": 2176188416
+      "create_system": 3,
+      "external_attr": 2175008768
+    },
+    {
+      "file": "relight_launch_worker.py",
+      "date_time": [
+        2026,
+        11,
+        28,
+        16,
+        0,
+        0
+      ],
+      "create_system": 3,
+      "external_attr": 2175008768
     },
     {
       "file": "relight_preview_ui.py",
       "date_time": [
         2026,
-        10,
-        26,
-        23,
-        8,
-        8
+        11,
+        28,
+        16,
+        0,
+        0
       ],
-      "create_system": 0,
-      "external_attr": 2176188416
+      "create_system": 3,
+      "external_attr": 2175008768
     },
     {
       "file": "runtime.py",
       "date_time": [
         2026,
         11,
-        19,
-        2,
         28,
-        38
+        16,
+        0,
+        0
       ],
-      "create_system": 0,
-      "external_attr": 2176188416
+      "create_system": 3,
+      "external_attr": 2175008768
     },
     {
       "file": "scene_effects.py",
       "date_time": [
         2026,
         11,
-        26,
-        14,
-        19,
-        38
+        28,
+        16,
+        0,
+        0
       ],
-      "create_system": 0,
-      "external_attr": 2176188416
+      "create_system": 3,
+      "external_attr": 2175008768
     },
     {
-      "file": "__init__.py",
+      "file": "workbench.py",
       "date_time": [
         2026,
         11,
-        26,
-        15,
-        42,
-        24
+        28,
+        16,
+        0,
+        0
       ],
-      "create_system": 0,
-      "external_attr": 2176188416
+      "create_system": 3,
+      "external_attr": 2175008768
+    },
+    {
+      "file": "workbench_render_worker.py",
+      "date_time": [
+        2026,
+        11,
+        28,
+        16,
+        0,
+        0
+      ],
+      "create_system": 3,
+      "external_attr": 2175008768
     }
   ]
 }
