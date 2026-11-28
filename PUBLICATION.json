@@ -1953,8 +1953,8 @@
     },
     {
       "file": ".gitignore",
-      "expected_sha256": "149ea81e327ab572a52c78e0361900ccb29b106b8be236bbfa34b05b15e77a73",
-      "bytes": 98
+      "expected_sha256": "60b8cf7e4e956f82c32fb0210a26fc6549e7e3f17aeef0e9ad41380602b55e8d",
+      "bytes": 152
     },
     {
       "file": "LICENSE",

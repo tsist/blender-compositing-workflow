@@ -11,3 +11,4 @@ dist/
 *.png
 *.mp4
 *.log
+!tools/compositing_workflow_addon/_ui_kit/icons/*.png
